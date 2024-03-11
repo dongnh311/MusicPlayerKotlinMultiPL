@@ -10,6 +10,10 @@ plugins {
 
 kotlin {
 
+    // Init lib
+    val precompose_version = "1.5.0"
+    val koin_version = "3.5.0"
+
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -28,7 +32,6 @@ kotlin {
             isStatic = true
         }
     }
-    val sqlDelightVersion = "1.5.5"
     sourceSets {
         
         androidMain.dependencies {
@@ -41,6 +44,7 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
+            implementation(compose.animation)
             implementation(compose.material)
             implementation(compose.ui)
             implementation(compose.components.resources)
@@ -51,6 +55,7 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.runtime)
+            implementation(libs.koin.core)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -87,6 +92,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     buildFeatures {
         compose = true

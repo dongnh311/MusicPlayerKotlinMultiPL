@@ -1,3 +1,5 @@
+package commonShare
+
 import platform.UIKit.UIDevice
 
 class IOSPlatform: Platform {

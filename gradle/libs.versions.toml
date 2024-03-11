@@ -14,10 +14,12 @@ compose = "1.6.2"
 compose-plugin = "1.6.0"
 composeBom = "2024.02.02"
 junit = "4.13.2"
+koinCore = "3.5.0"
 kotlin = "1.9.22"
 kotlinxCoroutinesCore = "1.7.3"
 kotlinxDatetime = "0.4.0"
 ktorVersion = "2.3.7"
+precompose = "1.5.0"
 sqlDelightVersion = "1.5.5"
 uiTooling = "1.6.3"
 uiToolingPreview = "1.6.3"
@@ -30,6 +32,8 @@ androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = 
 androidx-ui-tooling-preview-v111 = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreviewVersion" }
 androidx-ui-tooling-preview-v163 = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
 androidx-ui-tooling-v163 = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinCore" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -51,6 +55,9 @@ ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "kto
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
 androidx-ui-tooling-preview-desktop = { group = "androidx.compose.ui", name = "ui-tooling-preview-desktop", version.ref = "uiToolingPreviewDesktop" }
 native-driver = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqlDelightVersion" }
+precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
+precompose-molecule = { module = "moe.tlaster:precompose-molecule", version.ref = "precompose" }
+precompose-viewmodel = { module = "moe.tlaster:precompose-viewmodel", version.ref = "precompose" }
 runtime = { module = "com.squareup.sqldelight:runtime", version.ref = "sqlDelightVersion" }
 
 [plugins]

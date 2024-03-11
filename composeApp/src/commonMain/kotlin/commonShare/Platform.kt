@@ -1,3 +1,5 @@
+package commonShare
+
 interface Platform {
     val name: String
 }

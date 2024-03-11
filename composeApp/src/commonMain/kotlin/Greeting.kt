@@ -1,3 +1,4 @@
+import commonShare.getPlatform
 import kotlin.random.Random
 
 class Greeting {

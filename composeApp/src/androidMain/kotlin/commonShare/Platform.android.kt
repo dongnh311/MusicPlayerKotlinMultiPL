@@ -1,3 +1,5 @@
+package commonShare
+
 import android.os.Build
 
 class AndroidPlatform : Platform {
