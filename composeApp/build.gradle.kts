@@ -4,9 +4,12 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    kotlin("plugin.serialization") version "1.9.22"
+    id("com.squareup.sqldelight").version("1.5.5")
 }
 
 kotlin {
+
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -25,12 +28,15 @@ kotlin {
             isStatic = true
         }
     }
-    
+    val sqlDelightVersion = "1.5.5"
     sourceSets {
         
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.android)
+            implementation(libs.androidx.ui.tooling.preview.v163)
+            implementation(libs.android.driver)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -39,6 +45,16 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.runtime)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+            implementation(libs.native.driver)
         }
     }
 }
@@ -72,8 +88,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        compose = true
+    }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
+        debugImplementation(platform(libs.androidx.compose.bom))
+        debugApi(compose.uiTooling)
     }
 }
-
