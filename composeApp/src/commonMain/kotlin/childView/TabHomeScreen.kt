@@ -1,4 +1,4 @@
-package view
+package childView
 
 import Greeting
 import androidx.compose.foundation.layout.Arrangement
@@ -8,17 +8,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
-import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import cafe.adriel.voyager.navigator.tab.Tab
+import cafe.adriel.voyager.navigator.tab.TabOptions
 import co.touchlab.kermit.Logger
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import view.HomeScreen
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -27,29 +31,23 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
  * Phone : +84397199197.
  */
 
-class HomeScreen: Screen {
-    @Composable
-    @Preview
-    override fun Content() {
-        LifecycleEffect(
-            onStarted = { Logger.e {"onStarted HomeScreen"} },
-            onDisposed = { Logger.e("onDisposed HomeScreen") }
-        )
+object TabHomeScreen : Tab {
+    override val options: TabOptions
+        @Composable
+        get() {
+            val icon = rememberVectorPainter(Icons.Default.Home)
 
-        val greetingList = remember { Greeting().greetList() }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { Logger.e("Click on button") }) {
-                Text("Click me!")
-            }
-            Column(
-                modifier = Modifier.padding(all = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                greetingList.forEach { greeting ->
-                    Text(greeting)
-                    Divider()
-                }
+            return remember {
+                TabOptions(
+                    index = 0u,
+                    title = "Home",
+                    icon = icon
+                )
             }
         }
+
+    @Composable
+    override fun Content() {
+        HomeScreen().Content()
     }
 }

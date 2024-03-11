@@ -11,8 +11,6 @@ plugins {
 kotlin {
 
     // Init lib
-    val precompose_version = "1.5.0"
-    val koin_version = "3.5.0"
 
     androidTarget {
         compilations.all {
@@ -46,6 +44,7 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.animation)
             implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -56,6 +55,14 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.runtime)
             implementation(libs.koin.core)
+
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.screenmodel)
+            implementation(libs.voyager.bottom.sheet.navigator)
+            implementation(libs.voyager.tab.navigator)
+            implementation(libs.voyager.transitions)
+
+            implementation(libs.kermit)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

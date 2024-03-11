@@ -14,17 +14,21 @@ compose = "1.6.2"
 compose-plugin = "1.6.0"
 composeBom = "2024.02.02"
 junit = "4.13.2"
+kermit = "2.0.3"
 koinCore = "3.5.0"
 kotlin = "1.9.22"
 kotlinxCoroutinesCore = "1.7.3"
 kotlinxDatetime = "0.4.0"
 ktorVersion = "2.3.7"
+napierVersion = "2.7.1"
 precompose = "1.5.0"
 sqlDelightVersion = "1.5.5"
 uiTooling = "1.6.3"
 uiToolingPreview = "1.6.3"
 uiToolingPreviewVersion = "1.1.1"
 uiToolingPreviewDesktop = "1.6.3"
+voyagerVersion = "1.0.0"
+material3Android = "1.2.1"
 
 [libraries]
 android-driver = { module = "com.squareup.sqldelight:android-driver", version.ref = "sqlDelightVersion" }
@@ -32,6 +36,7 @@ androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = 
 androidx-ui-tooling-preview-v111 = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreviewVersion" }
 androidx-ui-tooling-preview-v163 = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
 androidx-ui-tooling-v163 = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
+kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinCore" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -54,11 +59,18 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorVer
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktorVersion" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorVersion" }
 androidx-ui-tooling-preview-desktop = { group = "androidx.compose.ui", name = "ui-tooling-preview-desktop", version.ref = "uiToolingPreviewDesktop" }
+napier = { module = "io.github.aakira:napier", version.ref = "napierVersion" }
 native-driver = { module = "com.squareup.sqldelight:native-driver", version.ref = "sqlDelightVersion" }
 precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
 precompose-molecule = { module = "moe.tlaster:precompose-molecule", version.ref = "precompose" }
 precompose-viewmodel = { module = "moe.tlaster:precompose-viewmodel", version.ref = "precompose" }
 runtime = { module = "com.squareup.sqldelight:runtime", version.ref = "sqlDelightVersion" }
+voyager-bottom-sheet-navigator = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyagerVersion" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyagerVersion" }
+voyager-screenmodel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyagerVersion" }
+voyager-tab-navigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyagerVersion" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyagerVersion" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
