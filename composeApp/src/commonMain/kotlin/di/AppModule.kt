@@ -4,6 +4,11 @@ import network.services.AccountServices
 import network.services.MusicServices
 import org.koin.dsl.module
 import singleton.NetworkManager
+import viewModel.AccountViewModel
+import viewModel.EventDetailViewModel
+import viewModel.HomeViewModel
+import viewModel.MainViewModel
+import viewModel.RankingViewModel
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -11,7 +16,7 @@ import singleton.NetworkManager
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-object AppModule {
+class AppModule {
     val appModule = module {
 
     }
@@ -19,5 +24,13 @@ object AppModule {
     val networkModule = module {
         single { NetworkManager.apiNetRest.ktorfit.create<AccountServices>() }
         single { NetworkManager.apiNetRest.ktorfit.create<MusicServices>() }
+    }
+
+    val viewModels = module {
+        factory { HomeViewModel() }
+        factory { AccountViewModel() }
+        factory { EventDetailViewModel() }
+        factory { MainViewModel() }
+        factory { RankingViewModel() }
     }
 }

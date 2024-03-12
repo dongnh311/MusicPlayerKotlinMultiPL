@@ -8,17 +8,23 @@ import singleton.NetworkManager
 import styles.MusicPlayerTheme
 import view.HomeScreen
 import view.MainScreen
+import viewModel.MainViewModel
 
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 @Preview
 fun App() {
+    // Koin
+    val module = AppModule()
     startKoin {
-        modules(AppModule.appModule, AppModule.networkModule)
+        modules(module.appModule, module.networkModule, module.viewModels)
         allowOverride(false)
     }
+    // Di
     NetworkManager.iniAPIRest("https://www.google.com/")
+
+    // Screen
     MusicPlayerTheme {
         Navigator(
             screen = MainScreen(),

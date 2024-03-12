@@ -14,6 +14,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import co.touchlab.kermit.Logger
+import view.AccountScreen
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -38,6 +39,6 @@ class TabAccountScreen : Tab {
 
     @Composable
     override fun Content() {
-
+        AccountScreen().Content()
     }
 }

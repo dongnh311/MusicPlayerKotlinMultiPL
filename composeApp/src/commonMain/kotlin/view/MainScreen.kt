@@ -1,42 +1,36 @@
 package view
 
-import Greeting
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
+import androidx.compose.material.Colors
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import base.BaseScreen
-import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
-import cafe.adriel.voyager.core.registry.rememberScreen
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
+import base.BaseViewModel
+import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabDisposable
 import cafe.adriel.voyager.navigator.tab.TabNavigator
-import cafe.adriel.voyager.navigator.tab.TabNavigatorContent
 import childView.TabAccountScreen
 import childView.TabHomeScreen
 import childView.TabRankingScreen
-import co.touchlab.kermit.Logger
+import singleton.ViewManager
+import styles.colorPrimaryBackground
+import styles.textTittleHome
+import viewModel.MainViewModel
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -44,14 +38,18 @@ import co.touchlab.kermit.Logger
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class MainScreen : BaseScreen() {
+class MainScreen : BaseScreen<MainViewModel>() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun makeContentForView() {
+        viewModel = getScreenModel<MainViewModel>()
+
         val tabHomeScreen = remember { TabHomeScreen() }
         val tabRankingScreen = remember { TabRankingScreen() }
         val tabAccountScreen = remember { TabAccountScreen() }
+
+        ViewManager.parentNavigation = navigator
         TabNavigator(
             tabHomeScreen,
             tabDisposable = {
@@ -59,13 +57,13 @@ class MainScreen : BaseScreen() {
                     navigator = it,
                     tabs = listOf(tabHomeScreen, tabRankingScreen, tabAccountScreen)
                 )
-            }
+            },
         ) { tabNavigator ->
             Scaffold(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().background(colorPrimaryBackground),
                 topBar = {
                     TopAppBar(
-                        title = { Text(text = tabNavigator.current.options.title) }
+                        title = { Text(text = tabNavigator.current.options.title, style = textTittleHome()) }
                     )
                 },
                 content = {

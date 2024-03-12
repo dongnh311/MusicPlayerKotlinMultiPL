@@ -10,8 +10,6 @@ plugins {
 
 kotlin {
 
-    // Init lib
-
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -30,6 +28,8 @@ kotlin {
             isStatic = true
         }
     }
+
+    // Init lib
     sourceSets {
         
         androidMain.dependencies {
@@ -50,11 +50,18 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.runtime)
+
+            // Kotlin
+            implementation(libs.kotlin.stdlib)
+
+            // Ktor
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
-            implementation(libs.runtime)
+
+            // Koin
             implementation(libs.koin.core)
 
             // Ktorfit
@@ -66,6 +73,7 @@ kotlin {
             implementation(libs.voyager.bottom.sheet.navigator)
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.transitions)
+            implementation(libs.voyager.koin)
 
             // Log
             implementation(libs.kermit)

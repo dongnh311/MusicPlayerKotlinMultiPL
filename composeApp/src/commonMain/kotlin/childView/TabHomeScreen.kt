@@ -18,9 +18,11 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import cafe.adriel.voyager.transitions.SlideTransition
 import co.touchlab.kermit.Logger
 import view.HomeScreen
 
@@ -47,6 +49,10 @@ class TabHomeScreen : Tab {
 
     @Composable
     override fun Content() {
-        HomeScreen().Content()
+        Navigator(screen = HomeScreen()) { navigator ->
+            SlideTransition(navigator = navigator) {screen->
+                screen.Content()
+            }
+        }
     }
 }
