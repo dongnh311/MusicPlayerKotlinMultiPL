@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import base.BaseScreen
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -27,15 +28,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
  * Phone : +84397199197.
  */
 
-class HomeScreen: Screen {
-    @Composable
-    @Preview
-    override fun Content() {
-        LifecycleEffect(
-            onStarted = { Logger.e {"onStarted HomeScreen"} },
-            onDisposed = { Logger.e("onDisposed HomeScreen") }
-        )
+class HomeScreen: BaseScreen() {
 
+    @Composable
+    override fun makeContentForView() {
         val greetingList = remember { Greeting().greetList() }
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = { Logger.e("Click on button") }) {
@@ -51,5 +47,11 @@ class HomeScreen: Screen {
                 }
             }
         }
+    }
+
+    override fun onStartedScreen() {
+    }
+
+    override fun onDisposedScreen() {
     }
 }

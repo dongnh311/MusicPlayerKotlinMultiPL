@@ -19,4 +19,10 @@ class RankingScreen: BaseScreen() {
     override fun makeContentForView() {
         Text("Ranking Screen!")
     }
+
+    override fun onStartedScreen() {
+    }
+
+    override fun onDisposedScreen() {
+    }
 }

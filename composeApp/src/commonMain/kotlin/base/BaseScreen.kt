@@ -3,6 +3,9 @@ package base
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import co.touchlab.kermit.Logger
 
 /**
@@ -13,11 +16,20 @@ import co.touchlab.kermit.Logger
  */
 abstract class BaseScreen : Screen {
 
+   lateinit var navigator: Navigator
+
     @Composable
     final override fun Content() {
+        navigator = LocalNavigator.currentOrThrow
         LifecycleEffect(
-            onStarted = { Logger.e {"onStarted ${this.key}"} },
-            onDisposed = { Logger.e("onDisposed ${this.key}") }
+            onStarted = {
+                Logger.e {"onStarted ${this.key}"}
+                onStartedScreen()
+        },
+            onDisposed = {
+                Logger.e("onDisposed ${this.key}")
+                onDisposedScreen()
+            }
 
         )
         makeContentForView()
@@ -28,4 +40,14 @@ abstract class BaseScreen : Screen {
      */
     @Composable
     abstract fun makeContentForView()
+
+    /**
+     * Event when screen start
+     */
+    abstract fun onStartedScreen()
+
+    /**
+     * Event when screen disposed
+     */
+    abstract fun onDisposedScreen()
 }

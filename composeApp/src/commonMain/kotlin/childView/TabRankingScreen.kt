@@ -21,7 +21,7 @@ import view.RankingScreen
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-object TabRankingScreen : Tab {
+class TabRankingScreen : Tab {
 
     override val options: TabOptions
         @Composable

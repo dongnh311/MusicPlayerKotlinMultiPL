@@ -1,6 +1,9 @@
 package di
 
+import network.services.AccountServices
+import network.services.MusicServices
 import org.koin.dsl.module
+import singleton.NetworkManager
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -11,5 +14,10 @@ import org.koin.dsl.module
 object AppModule {
     val appModule = module {
 
+    }
+
+    val networkModule = module {
+        single { NetworkManager.apiNetRest.ktorfit.create<AccountServices>() }
+        single { NetworkManager.apiNetRest.ktorfit.create<MusicServices>() }
     }
 }

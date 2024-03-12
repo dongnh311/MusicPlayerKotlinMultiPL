@@ -21,7 +21,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import base.BaseScreen
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
+import cafe.adriel.voyager.core.registry.rememberScreen
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -42,21 +44,20 @@ import co.touchlab.kermit.Logger
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class MainScreen : Screen {
+class MainScreen : BaseScreen() {
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    override fun Content() {
-        LifecycleEffect(
-            onStarted = { Logger.e {"onStarted MainScreen"} },
-            onDisposed = { Logger.e("onDisposed MainScreen") }
-        )
-
+    override fun makeContentForView() {
+        val tabHomeScreen = remember { TabHomeScreen() }
+        val tabRankingScreen = remember { TabRankingScreen() }
+        val tabAccountScreen = remember { TabAccountScreen() }
         TabNavigator(
-            TabHomeScreen,
+            tabHomeScreen,
             tabDisposable = {
                 TabDisposable(
                     navigator = it,
-                    tabs = listOf(TabHomeScreen, TabRankingScreen, TabAccountScreen)
+                    tabs = listOf(tabHomeScreen, tabRankingScreen, tabAccountScreen)
                 )
             }
         ) { tabNavigator ->
@@ -72,13 +73,19 @@ class MainScreen : Screen {
                 },
                 bottomBar = {
                     BottomNavigation {
-                        TabNavigationItem(TabHomeScreen)
-                        TabNavigationItem(TabRankingScreen)
-                        TabNavigationItem(TabAccountScreen)
+                        TabNavigationItem(tabHomeScreen)
+                        TabNavigationItem(tabRankingScreen)
+                        TabNavigationItem(tabAccountScreen)
                     }
                 }
             )
         }
+    }
+
+    override fun onStartedScreen() {
+    }
+
+    override fun onDisposedScreen() {
     }
 
     @Composable

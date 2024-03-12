@@ -21,7 +21,7 @@ import co.touchlab.kermit.Logger
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-object TabAccountScreen : Tab {
+class TabAccountScreen : Tab {
     override val options: TabOptions
         @Composable
         get() {

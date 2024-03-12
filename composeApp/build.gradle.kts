@@ -53,15 +53,21 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.logging)
             implementation(libs.runtime)
             implementation(libs.koin.core)
 
+            // Ktorfit
+            implementation(libs.ktorfit.lib)
+
+            // Navigation
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.screenmodel)
             implementation(libs.voyager.bottom.sheet.navigator)
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.transitions)
 
+            // Log
             implementation(libs.kermit)
         }
         iosMain.dependencies {

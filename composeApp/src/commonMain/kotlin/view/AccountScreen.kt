@@ -1,6 +1,7 @@
 package view
 
 import androidx.compose.runtime.Composable
+import base.BaseScreen
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.core.screen.Screen
 import co.touchlab.kermit.Logger
@@ -11,13 +12,15 @@ import co.touchlab.kermit.Logger
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class AccountScreen : Screen{
+class AccountScreen : BaseScreen(){
 
     @Composable
-    override fun Content() {
-        LifecycleEffect(
-            onStarted = { Logger.e {"onStarted HomeScreen"} },
-            onDisposed = { Logger.e("onDisposed HomeScreen") }
-        )
+    override fun makeContentForView() {
+    }
+
+    override fun onStartedScreen() {
+    }
+
+    override fun onDisposedScreen() {
     }
 }
