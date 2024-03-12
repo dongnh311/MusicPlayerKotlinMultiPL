@@ -1,6 +1,6 @@
-package viewModel
+package model
 
-import base.BaseViewModel
+import kotlinx.serialization.Serializable
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -8,6 +8,5 @@ import base.BaseViewModel
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class AccountViewModel: BaseViewModel() {
-
-}
+@Serializable
+data class ErrorModel(var code: String? = null)

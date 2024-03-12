@@ -1,6 +1,7 @@
-package viewModel
+package network.response
 
-import base.BaseViewModel
+import base.BaseResponseModel
+import model.EventModel
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -8,6 +9,5 @@ import base.BaseViewModel
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class AccountViewModel: BaseViewModel() {
-
+class NotifyResponse : BaseResponseModel<MutableList<EventModel>>() {
 }

@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.core.component.KoinComponent
 import utils.interfaces.OnAPIErrorEvent
 import utils.interfaces.OnAPIRequestEvent
 
@@ -18,7 +19,7 @@ import utils.interfaces.OnAPIRequestEvent
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-abstract class BaseViewModel: ScreenModel {
+abstract class BaseViewModel: ScreenModel, KoinComponent {
     // Call back on call api
     var onApiRequestEvent : OnAPIRequestEvent? = null
 

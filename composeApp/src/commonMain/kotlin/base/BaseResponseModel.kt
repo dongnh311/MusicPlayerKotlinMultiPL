@@ -1,6 +1,6 @@
-package viewModel
+package base
 
-import base.BaseViewModel
+import model.ErrorModel
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -8,6 +8,10 @@ import base.BaseViewModel
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class AccountViewModel: BaseViewModel() {
+abstract class BaseResponseModel<T> {
+    var data: T? = null
 
+    var result: String? = null
+
+    var error: ErrorModel? = null
 }

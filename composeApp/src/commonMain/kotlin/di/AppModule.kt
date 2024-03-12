@@ -1,6 +1,7 @@
 package di
 
 import network.services.AccountServices
+import network.services.EventServices
 import network.services.MusicServices
 import org.koin.dsl.module
 import singleton.NetworkManager
@@ -24,6 +25,7 @@ class AppModule {
     val networkModule = module {
         single { NetworkManager.apiNetRest.ktorfit.create<AccountServices>() }
         single { NetworkManager.apiNetRest.ktorfit.create<MusicServices>() }
+        single { NetworkManager.apiNetRest.ktorfit.create<EventServices>() }
     }
 
     val viewModels = module {

@@ -45,6 +45,7 @@ class HomeScreen: BaseScreen<HomeViewModel>() {
         val detailScreen = EventDetailScreen()
         viewModel = getScreenModel<HomeViewModel>()
 
+        val listEvent = viewModel.loadEvents()
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
                 if (ViewManager.parentNavigation != null) {

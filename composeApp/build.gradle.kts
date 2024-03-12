@@ -6,7 +6,12 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     kotlin("plugin.serialization") version "1.9.22"
     id("com.squareup.sqldelight").version("1.5.5")
+    id("com.google.devtools.ksp") version "1.9.22-1.0.16"
+    id("de.jensklingenberg.ktorfit") version "1.12.0"
 }
+
+val ktorVersion = "2.3.7"
+val ktorfitVersion = "1.12.0"
 
 kotlin {
 
@@ -124,5 +129,26 @@ android {
         debugImplementation(libs.compose.ui.tooling)
         debugImplementation(platform(libs.androidx.compose.bom))
         debugApi(compose.uiTooling)
+    }
+}
+
+dependencies {
+    with("de.jensklingenberg.ktorfit:ktorfit-ksp:1.10.1") {
+        add("kspCommonMainMetadata", this)
+        add("kspAndroid", this)
+        add("kspAndroidTest", this)
+        add("kspIosX64", this)
+        add("kspIosX64Test", this)
+        add("kspIosArm64", this)
+        add("kspIosArm64Test", this)
+        add("kspIosSimulatorArm64", this)
+        add("kspIosSimulatorArm64Test", this)
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "11"
+        allWarningsAsErrors = false
     }
 }

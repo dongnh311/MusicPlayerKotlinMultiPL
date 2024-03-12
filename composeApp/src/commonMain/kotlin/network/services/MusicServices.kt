@@ -1,7 +1,7 @@
 package network.services
 
 import de.jensklingenberg.ktorfit.http.GET
-import model.MusicObject
+import model.MusicModel
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -10,6 +10,6 @@ import model.MusicObject
  * Phone : +84397199197.
  */
 interface MusicServices {
-    @GET("")
-    suspend fun loadListMusics(): List<MusicObject>
+    @GET("/endpont")
+    suspend fun loadListMusics(): List<MusicModel>
 }
