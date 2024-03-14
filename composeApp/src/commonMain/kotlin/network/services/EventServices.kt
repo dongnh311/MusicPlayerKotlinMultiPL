@@ -4,6 +4,7 @@ import de.jensklingenberg.ktorfit.Response
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Url
 import model.EventModel
+import network.response.NotifyResponse
 
 /**
  * Project : MusicPlayerKotlinMultiPL

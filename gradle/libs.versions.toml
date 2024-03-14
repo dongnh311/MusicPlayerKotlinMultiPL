@@ -10,15 +10,18 @@ androidx-core-ktx = "1.12.0"
 androidx-espresso-core = "3.5.1"
 androidx-material = "1.11.0"
 androidx-test-junit = "1.1.5"
+coilCompose = "3.0.0-alpha01"
 compose = "1.6.2"
 compose-plugin = "1.6.0"
 composeBom = "2024.02.02"
 gradle = "7.3.1"
+gson = "2.10.1"
+imageLoader = "1.7.8"
 junit = "4.13.2"
 kermit = "2.0.3"
 koinCore = "3.5.0"
 kotlin = "1.9.22"
-kspVersion = "1.9.23-1.0.19"
+kspVersion = "1.9.22-1.0.19"
 kotlinxCoroutinesCore = "1.7.3"
 kotlinxDatetime = "0.4.0"
 ktorClientContentNegotiation = "1.12.0"
@@ -46,7 +49,13 @@ androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = 
 androidx-ui-tooling-preview-v111 = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreviewVersion" }
 androidx-ui-tooling-preview-v163 = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreview" }
 androidx-ui-tooling-v163 = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiTooling" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "imageLoader" }
+image-loader-extension-blur = { module = "io.github.qdsfdhvh:image-loader-extension-blur", version.ref = "imageLoader" }
+image-loader-extension-moko-resources = { module = "io.github.qdsfdhvh:image-loader-extension-moko-resources", version.ref = "imageLoader" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koinCore" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }

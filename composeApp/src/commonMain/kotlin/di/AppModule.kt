@@ -3,7 +3,6 @@ package di
 import network.services.AccountServices
 import network.services.EventServices
 import network.services.MusicServices
-import org.koin.dsl.module
 import singleton.NetworkManager
 import viewModel.AccountViewModel
 import viewModel.EventDetailViewModel
@@ -18,23 +17,5 @@ import viewModel.RankingViewModel
  * Phone : +84397199197.
  */
 class AppModule {
-    val appModule = module {
 
-    }
-
-    val networkModule = module {
-        single { NetworkManager.apiNetRest.ktorfit.create<AccountServices>() }
-        single { NetworkManager.apiNetRest.ktorfit.create<MusicServices>() }
-        single { NetworkManager.apiNetRest.ktorfit.create<EventServices>() }
-    }
-
-    val viewModels = module {
-        factory { HomeViewModel() }
-        factory { AccountViewModel() }
-        factory { EventDetailViewModel() }
-        factory { MainViewModel() }
-        factory { RankingViewModel() }
-    }
 }
-
-fun appModule() = listOf(AppModule().appModule, AppModule().networkModule, AppModule().viewModels)

@@ -1,5 +1,6 @@
 package base
 
+import kotlinx.serialization.Serializable
 import model.ErrorModel
 
 /**
@@ -8,6 +9,7 @@ import model.ErrorModel
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
+@Serializable
 abstract class BaseResponseModel<T> {
     var data: T? = null
 

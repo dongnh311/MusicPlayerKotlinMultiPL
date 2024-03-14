@@ -83,7 +83,11 @@ class ApiNetworkRest {
     private fun makeKtorClient() : HttpClient { val urlAPI = this@ApiNetworkRest.baseUrl.ifEmpty { "https://google.com" }
        return  HttpClient() {
             install(ContentNegotiation) {
-                json(Json { isLenient = true; ignoreUnknownKeys = true })
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                })
             }
             install(Logging) {
                 logger = Logger.DEFAULT

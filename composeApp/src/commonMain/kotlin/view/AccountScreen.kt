@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import base.BaseScreen
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
 import co.touchlab.kermit.Logger
 import viewModel.AccountViewModel
 import viewModel.MainViewModel
@@ -25,7 +24,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
 
     @Composable
     override fun makeContentForView() {
-        viewModel = getScreenModel<AccountViewModel>()
+        viewModel = AccountViewModel()
 
         Scaffold(modifier = Modifier.background(Color.Red).fillMaxSize()) {
             Text("AccountScreen")

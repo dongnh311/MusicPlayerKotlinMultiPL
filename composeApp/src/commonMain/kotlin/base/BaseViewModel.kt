@@ -1,5 +1,6 @@
 package base
 
+import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -9,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.core.component.KoinComponent
 import utils.interfaces.OnAPIErrorEvent
 import utils.interfaces.OnAPIRequestEvent
 
@@ -19,7 +19,7 @@ import utils.interfaces.OnAPIRequestEvent
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-abstract class BaseViewModel: ScreenModel, KoinComponent {
+abstract class BaseViewModel: ScreenModel {
     // Call back on call api
     var onApiRequestEvent : OnAPIRequestEvent? = null
 
@@ -58,6 +58,7 @@ abstract class BaseViewModel: ScreenModel, KoinComponent {
     /**
      * Hide dialog when dialog is showing
      */
+
     fun stopWorking() {
         onApiRequestEvent?.onStopCallApi()
     }

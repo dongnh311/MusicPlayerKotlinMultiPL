@@ -5,8 +5,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     id("kotlinx-serialization")
-    id("com.google.devtools.ksp")
-    id("de.jensklingenberg.ktorfit")
+    id("com.google.devtools.ksp") version "1.9.22-1.0.16"
+    id("de.jensklingenberg.ktorfit") version "1.12.0"
 }
 
 val ktorVersion = "2.3.6"
@@ -64,12 +64,8 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
 
-            // Koin
-            implementation(libs.koin.core)
-
             // Ktorfit
             implementation(libs.ktorfit.lib)
-
 
             // Navigation
             implementation(libs.voyager.navigator)
@@ -77,10 +73,13 @@ kotlin {
             implementation(libs.voyager.bottom.sheet.navigator)
             implementation(libs.voyager.tab.navigator)
             implementation(libs.voyager.transitions)
-            implementation(libs.voyager.koin)
 
             // Log
             implementation(libs.kermit)
+
+            // Compose ImageLoader
+            implementation(libs.image.loader)
+            api(libs.image.loader.extension.moko.resources)
         }
         iosMain.dependencies {
             implementation(libs.native.driver)
@@ -144,23 +143,19 @@ dependencies {
     }
 }
 
-//tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-//    kotlinOptions {
-//        jvmTarget = "11"
-//        allWarningsAsErrors = false
-//    }
-//}
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "11"
+        allWarningsAsErrors = false
+    }
+}
 
 task("testClasses").doLast {
     println("This is a dummy testClasses task")
 }
 
-//tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
-//    if(name != "kspCommonMainKotlinMetadata") {
-//        dependsOn("kspCommonMainKotlinMetadata")
-//    }
-//}
-
-//kotlin.sourceSets.commonMain {
-//    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-//}
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
+    if(name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}

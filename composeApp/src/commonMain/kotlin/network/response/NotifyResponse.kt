@@ -1,6 +1,7 @@
 package network.response
 
 import base.BaseResponseModel
+import kotlinx.serialization.Serializable
 import model.EventModel
 
 /**
@@ -9,5 +10,6 @@ import model.EventModel
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
+@Serializable
 class NotifyResponse : BaseResponseModel<MutableList<EventModel>>() {
 }

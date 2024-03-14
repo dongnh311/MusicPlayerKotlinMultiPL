@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import base.BaseScreen
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
 import co.touchlab.kermit.Logger
 import viewModel.HomeViewModel
 import viewModel.RankingViewModel
@@ -20,7 +19,7 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
 
     @Composable
     override fun makeContentForView() {
-        viewModel = getScreenModel<RankingViewModel>()
+        viewModel = RankingViewModel()
         Text("Ranking Screen!")
     }
 

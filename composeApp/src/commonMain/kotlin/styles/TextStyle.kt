@@ -1,10 +1,10 @@
 package styles
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 
 /**
@@ -25,6 +25,18 @@ fun textTittleHome() : TextStyle {
         fontSize = 26.sp,
         fontStyle = FontStyle.Normal,
         fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Start,
         color = colorPrimaryText
+    )
+}
+
+@Composable
+fun textTittleContent() : TextStyle {
+    return TextStyle(
+        fontSize = 22.sp,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Normal,
+        color = colorPrimaryText,
+        textAlign = TextAlign.Start
     )
 }

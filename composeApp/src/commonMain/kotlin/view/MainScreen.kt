@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import base.BaseScreen
 import base.BaseViewModel
-import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
@@ -43,7 +42,7 @@ class MainScreen : BaseScreen<MainViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun makeContentForView() {
-        viewModel = getScreenModel<MainViewModel>()
+        viewModel = MainViewModel()
 
         val tabHomeScreen = remember { TabHomeScreen() }
         val tabRankingScreen = remember { TabRankingScreen() }

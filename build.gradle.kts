@@ -15,9 +15,18 @@ buildscript {
         classpath(libs.kotlin.gradle.plugin)
         classpath(libs.gradle)
         classpath(libs.kotlin.serialization)
-        classpath(libs.ktorfit.gradle.plugin)
-        classpath(libs.ksp.gradle.plugin)
-        classpath(libs.ksp.symbol.processing.api)
+    }
+}
+
+allprojects {
+    repositories {
+        gradlePluginPortal()
+        google()
+        // mavenLocal()
+        mavenCentral()
+        maven {
+            url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 package singleton
 
+import kotlinx.serialization.json.Json
 import network.ApiNetworkRest
 
 /**
@@ -18,5 +19,12 @@ object NetworkManager {
      */
     fun iniAPIRest(baseUrl: String) {
         apiNetRest.createKtor(baseUrl)
+    }
+
+    // Config manager
+    val jsonManager = Json {
+        prettyPrint = true
+        isLenient = true
+        ignoreUnknownKeys = true
     }
 }

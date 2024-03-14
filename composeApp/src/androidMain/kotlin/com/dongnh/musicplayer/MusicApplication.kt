@@ -2,8 +2,6 @@ package com.dongnh.musicplayer
 
 import android.app.Application
 import di.AppModule
-import di.appModule
-import org.koin.core.context.startKoin
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -14,8 +12,5 @@ import org.koin.core.context.startKoin
 class MusicApplication: Application() {
     override fun onCreate() {
         super.onCreate()
-//        startKoin {
-//            modules(appModule())
-//        }
     }
 }

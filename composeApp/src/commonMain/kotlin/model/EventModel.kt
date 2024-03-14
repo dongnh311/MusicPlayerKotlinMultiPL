@@ -11,4 +11,11 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 class EventModel : BaseModel() {
+    var title: String = ""
+    var subTitle: String = ""
+    var content: String = ""
+    var image: String? = ""
+    var createAt: Long = 0
+    var expireAt: Long? = 0
+    var type: Int = 0
 }

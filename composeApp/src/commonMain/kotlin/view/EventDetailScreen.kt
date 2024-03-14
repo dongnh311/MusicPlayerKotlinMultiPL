@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import base.BaseScreen
-import cafe.adriel.voyager.koin.getScreenModel
 import styles.colorPrimaryBackground
 import styles.textTittleHome
 import viewModel.AccountViewModel
@@ -36,7 +35,7 @@ class EventDetailScreen: BaseScreen<EventDetailViewModel>() {
 
     @Composable
     override fun makeContentForView() {
-        viewModel = getScreenModel<EventDetailViewModel>()
+        viewModel = EventDetailViewModel()
 
         Scaffold(modifier = Modifier.background(Color.Red).fillMaxSize(), backgroundColor = colorPrimaryBackground,
             topBar = {

@@ -9,9 +9,15 @@ import kotlinx.serialization.Serializable
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
+@Serializable
 open class BaseModel {
-    open var id: String = ""
+    @SerialName("id")
+    open var id: Int = 0
+
+    @SerialName("createdAt")
     var createdAt: Long = 0L
+
+    @SerialName("updatedAt")
     var updatedAt: Long? = 0L
 
     /**
