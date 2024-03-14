@@ -48,6 +48,7 @@ class ApiNetworkRest {
         this@ApiNetworkRest.ktorfit = Ktorfit.Builder()
             .baseUrl(url)
             .httpClient(ktorClient)
+            .converterFactories()
             .build()
     }
 

@@ -36,3 +36,5 @@ class AppModule {
         factory { RankingViewModel() }
     }
 }
+
+fun appModule() = listOf(AppModule().appModule, AppModule().networkModule, AppModule().viewModels)

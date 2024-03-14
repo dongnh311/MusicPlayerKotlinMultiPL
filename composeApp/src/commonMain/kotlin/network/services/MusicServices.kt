@@ -10,6 +10,6 @@ import model.MusicModel
  * Phone : +84397199197.
  */
 interface MusicServices {
-    @GET("/endpont")
+    @GET("/endPoint")
     suspend fun loadListMusics(): List<MusicModel>
 }

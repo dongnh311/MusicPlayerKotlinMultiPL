@@ -12,9 +12,12 @@ buildscript {
         }
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
-        classpath("com.android.tools.build:gradle:7.3.1")
-
+        classpath(libs.kotlin.gradle.plugin)
+        classpath(libs.gradle)
+        classpath(libs.kotlin.serialization)
+        classpath(libs.ktorfit.gradle.plugin)
+        classpath(libs.ksp.gradle.plugin)
+        classpath(libs.ksp.symbol.processing.api)
     }
 }
 

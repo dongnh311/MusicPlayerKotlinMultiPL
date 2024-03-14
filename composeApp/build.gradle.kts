@@ -4,13 +4,12 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
-    kotlin("plugin.serialization") version "1.9.22"
-    id("com.squareup.sqldelight").version("1.5.5")
-    id("com.google.devtools.ksp") version "1.9.22-1.0.16"
-    id("de.jensklingenberg.ktorfit") version "1.12.0"
+    id("kotlinx-serialization")
+    id("com.google.devtools.ksp")
+    id("de.jensklingenberg.ktorfit")
 }
 
-val ktorVersion = "2.3.7"
+val ktorVersion = "2.3.6"
 val ktorfitVersion = "1.12.0"
 
 kotlin {
@@ -40,7 +39,6 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.ktor.client.android)
             implementation(libs.androidx.ui.tooling.preview.v163)
             implementation(libs.android.driver)
         }
@@ -61,16 +59,17 @@ kotlin {
             implementation(libs.kotlin.stdlib)
 
             // Ktor
-            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.serialization.v236)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.ktor.client.logging)
 
             // Koin
             implementation(libs.koin.core)
 
             // Ktorfit
             implementation(libs.ktorfit.lib)
+
 
             // Navigation
             implementation(libs.voyager.navigator)
@@ -84,7 +83,6 @@ kotlin {
             implementation(libs.kermit)
         }
         iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
             implementation(libs.native.driver)
         }
     }
@@ -133,7 +131,7 @@ android {
 }
 
 dependencies {
-    with("de.jensklingenberg.ktorfit:ktorfit-ksp:1.10.1") {
+    with("de.jensklingenberg.ktorfit:ktorfit-ksp:$ktorfitVersion") {
         add("kspCommonMainMetadata", this)
         add("kspAndroid", this)
         add("kspAndroidTest", this)
@@ -146,9 +144,23 @@ dependencies {
     }
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "11"
-        allWarningsAsErrors = false
-    }
+//tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+//    kotlinOptions {
+//        jvmTarget = "11"
+//        allWarningsAsErrors = false
+//    }
+//}
+
+task("testClasses").doLast {
+    println("This is a dummy testClasses task")
 }
+
+//tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
+//    if(name != "kspCommonMainKotlinMetadata") {
+//        dependsOn("kspCommonMainKotlinMetadata")
+//    }
+//}
+
+//kotlin.sourceSets.commonMain {
+//    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+//}
