@@ -22,7 +22,7 @@ import view.AccountScreen
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class TabAccountScreen : Tab {
+object TabAccountScreen : Tab {
     override val options: TabOptions
         @Composable
         get() {

@@ -1,8 +1,10 @@
 package view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Colors
@@ -15,6 +17,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import base.BaseScreen
 import base.BaseViewModel
@@ -44,9 +48,9 @@ class MainScreen : BaseScreen<MainViewModel>() {
     override fun makeContentForView() {
         viewModel = MainViewModel()
 
-        val tabHomeScreen = remember { TabHomeScreen() }
-        val tabRankingScreen = remember { TabRankingScreen() }
-        val tabAccountScreen = remember { TabAccountScreen() }
+        val tabHomeScreen = remember { TabHomeScreen }
+        val tabRankingScreen = remember { TabRankingScreen }
+        val tabAccountScreen = remember { TabAccountScreen }
 
         ViewManager.parentNavigation = navigator
         TabNavigator(
@@ -66,7 +70,15 @@ class MainScreen : BaseScreen<MainViewModel>() {
                     )
                 },
                 content = {
-                    CurrentTab()
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(
+                                bottom = it.calculateBottomPadding()
+                            )
+                    ) {
+                        CurrentTab()
+                    }
                 },
                 bottomBar = {
                     BottomNavigation {

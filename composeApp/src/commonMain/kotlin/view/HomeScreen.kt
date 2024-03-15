@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -68,6 +69,7 @@ import kotlinx.coroutines.yield
 import model.EventModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import singleton.ViewManager
+import styles.colorPrimaryBackground
 import styles.paddingStartEnd
 import styles.paddingTop
 import styles.paddingTopStartEnd
@@ -93,81 +95,83 @@ class HomeScreen: BaseScreen<HomeViewModel>() {
 
         val detailScreen = EventDetailScreen()
 
-//        if (ViewManager.parentNavigation != null) {
-//            ViewManager.parentNavigation?.push(detailScreen)
-//        } else {
-//            navigator.push(detailScreen)
-//        }
-
         val pagerState = rememberPagerState(initialPage = 0, pageCount = {return@rememberPagerState listEvents.size})
         val coroutineScope = rememberCoroutineScope()
-        var pageSize by remember { mutableStateOf(IntSize.Zero) }
-        val lastIndex by remember(pagerState.currentPage) {
-            derivedStateOf { pagerState.currentPage == listEvents.size - 1 }
-        }
 
-        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Events", style = textTittleContent(), modifier = Modifier.fillMaxWidth().paddingTopStartEnd())
-
-            Box(Modifier.fillMaxWidth(), ) {
-                Row(modifier = Modifier.fillMaxWidth().paddingTop(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center,)
-                {
-                    HorizontalPager(
-                        state = pagerState,
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .shadow(1.dp, RoundedCornerShape(8.dp))
-                                .background(Color.White)
-                                .fillMaxWidth()
-                                .height(200.dp),
-                            contentAlignment = Alignment.Center
+        LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxHeight().background(
+            colorPrimaryBackground
+        ), horizontalAlignment = Alignment.CenterHorizontally) {
+            item {
+                Text("Events", style = textTittleContent(), modifier = Modifier.fillMaxWidth().paddingTopStartEnd())
+            }
+            item {
+                Box(Modifier.fillMaxWidth()) {
+                    Row(modifier = Modifier.fillMaxWidth().paddingTop(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,)
+                    {
+                        HorizontalPager(
+                            state = pagerState,
                         ) {
-                            val painter = if (listEvents[it].image != null) rememberImagePainter(listEvents[it].image!!)  else rememberImagePainter("https://..")
-                            Image(
-                                painter = painter,
-                                contentDescription = "image",
-                                modifier = Modifier.fillMaxWidth(),
-                                contentScale = ContentScale.FillWidth,
-                            )
+                            Box(
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .shadow(1.dp, RoundedCornerShape(8.dp))
+                                    .background(Color.White)
+                                    .fillMaxWidth()
+                                    .height(200.dp).clickable {
+                                                if (ViewManager.parentNavigation != null) {
+                                                    ViewManager.parentNavigation?.push(detailScreen)
+                                                } else {
+                                                    navigator.push(detailScreen)
+                                                }
+                                    },
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                val painter = if (listEvents[it].image != null) rememberImagePainter(listEvents[it].image!!)  else rememberImagePainter("https://..")
+                                Image(
+                                    painter = painter,
+                                    contentDescription = "image",
+                                    modifier = Modifier.fillMaxWidth(),
+                                    contentScale = ContentScale.FillWidth,
+                                )
+                            }
+                        }
+                    }
+
+                    PagerIndicator(pagerState = pagerState, modifier = Modifier
+                        .align(Alignment.BottomCenter).padding(bottom = 8.dp)) {
+                        coroutineScope.launch {
+                            pagerState.scrollToPage(it)
                         }
                     }
                 }
-
-                PagerIndicator(pagerState = pagerState, modifier = Modifier
-                    .align(Alignment.BottomCenter).padding(bottom = 8.dp)) {
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(it)
-                    }
-                }
             }
 
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                // Add a single item
-                item {
-                    Text(text = "First item", modifier = Modifier.paddingTopStartEnd())
-                }
-
-                // Add 5 items
-                items(100) { index ->
-                    Text(text = "Item: $index")
-                }
-
-                // Add another single item
-                item {
-                    Text(text = "Last item")
-                }
+            // Add a single item
+            item {
+                Text(text = "News", style = textTittleContent(), modifier = Modifier.fillMaxWidth().paddingTopStartEnd())
             }
+
+            // Add 5 items
+            items(101) { index ->
+                Text(text = "Item: $index", modifier = Modifier.fillParentMaxWidth())
+            }
+
+            // Add another single item
+            item {
+                Text(text = "Last item")
+            }
+
         }
     }
 
     override fun onStartedScreen() {
-        viewModel.screenModelScope.launch {
-            viewModel.loadEvents().collect {
-                if (it != null) listEvents = it
+        if (listEvents.isEmpty()) {
+            viewModel.screenModelScope.launch {
+                viewModel.loadEvents().collect {
+                    if (it != null) listEvents = it
+                }
             }
         }
     }

@@ -32,7 +32,8 @@ import view.HomeScreen
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class TabHomeScreen : Tab {
+object TabHomeScreen : Tab {
+    private val homeScreen = HomeScreen()
     override val options: TabOptions
         @Composable
         get() {
@@ -49,7 +50,7 @@ class TabHomeScreen : Tab {
 
     @Composable
     override fun Content() {
-        Navigator(screen = HomeScreen()) { navigator ->
+        Navigator(screen = homeScreen) { navigator ->
             SlideTransition(navigator = navigator) {screen->
                 screen.Content()
             }
