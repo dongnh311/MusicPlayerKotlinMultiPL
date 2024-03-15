@@ -7,6 +7,7 @@ plugins {
     id("kotlinx-serialization")
     id("com.google.devtools.ksp") version "1.9.22-1.0.16"
     id("de.jensklingenberg.ktorfit") version "1.12.0"
+    id("com.google.gms.google-services")
 }
 
 val ktorVersion = "2.3.6"
@@ -17,7 +18,7 @@ kotlin {
     androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "11"
+                jvmTarget = "17"
             }
         }
     }
@@ -80,6 +81,14 @@ kotlin {
             // Compose ImageLoader
             implementation(libs.image.loader)
             api(libs.image.loader.extension.moko.resources)
+
+            // Firebase
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.firestore)
+            implementation(libs.firebase.common)
+            implementation(libs.firebase.auth)
+            implementation(libs.firebase.storage)
+            implementation(libs.firebase.database)
         }
         iosMain.dependencies {
             implementation(libs.native.driver)
@@ -107,14 +116,9 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
@@ -122,10 +126,33 @@ android {
     buildFeatures {
         compose = true
     }
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("musicplayer")
+            storePassword = "MusicPlayer001@"
+            keyAlias = "MusicPlayerAlias"
+            keyPassword = "MusicPlayer001@"
+        }
+    }
+    buildTypes {
+        getByName("debug") {
+            //applicationIdSuffix = ".debug"
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.txt")
+        }
+    }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
         debugImplementation(platform(libs.androidx.compose.bom))
         debugApi(compose.uiTooling)
+        implementation(libs.firebase.common.ktx)
     }
 }
 
@@ -133,19 +160,15 @@ dependencies {
     with("de.jensklingenberg.ktorfit:ktorfit-ksp:$ktorfitVersion") {
         add("kspCommonMainMetadata", this)
         add("kspAndroid", this)
-        add("kspAndroidTest", this)
         add("kspIosX64", this)
-        add("kspIosX64Test", this)
         add("kspIosArm64", this)
-        add("kspIosArm64Test", this)
         add("kspIosSimulatorArm64", this)
-        add("kspIosSimulatorArm64Test", this)
     }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
         allWarningsAsErrors = false
     }
 }
@@ -155,7 +178,8 @@ task("testClasses").doLast {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
-    if(name != "kspCommonMainKotlinMetadata") {
+    if (name != "kspCommonMainKotlinMetadata") {
         dependsOn("kspCommonMainKotlinMetadata")
     }
 }
+

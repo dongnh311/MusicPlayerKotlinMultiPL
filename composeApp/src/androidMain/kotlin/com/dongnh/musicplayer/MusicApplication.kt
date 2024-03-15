@@ -1,6 +1,8 @@
 package com.dongnh.musicplayer
 
 import android.app.Application
+import com.google.firebase.Firebase
+import com.google.firebase.initialize
 import di.AppModule
 
 /**
@@ -12,5 +14,6 @@ import di.AppModule
 class MusicApplication: Application() {
     override fun onCreate() {
         super.onCreate()
+        Firebase.initialize(this)
     }
 }

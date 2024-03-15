@@ -11,7 +11,8 @@ import model.ErrorModel
  */
 @Serializable
 abstract class BaseResponseModel<T> {
-    var data: T? = null
+    // Fix for IOs
+    abstract var data: T?
 
     var result: String? = null
 

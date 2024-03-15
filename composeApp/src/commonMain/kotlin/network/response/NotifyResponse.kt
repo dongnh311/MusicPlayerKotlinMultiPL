@@ -12,4 +12,5 @@ import model.EventModel
  */
 @Serializable
 class NotifyResponse : BaseResponseModel<MutableList<EventModel>>() {
+    override var data: MutableList<EventModel>? = null
 }
