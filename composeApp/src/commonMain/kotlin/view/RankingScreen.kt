@@ -17,9 +17,10 @@ import viewModel.RankingViewModel
  */
 class RankingScreen: BaseScreen<RankingViewModel>() {
 
+    override var viewModel: RankingViewModel  = RankingViewModel()
+
     @Composable
     override fun makeContentForView() {
-        viewModel = RankingViewModel()
         Text("Ranking Screen!")
     }
 

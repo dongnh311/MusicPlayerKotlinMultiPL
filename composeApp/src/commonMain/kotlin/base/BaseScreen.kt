@@ -28,7 +28,7 @@ abstract class BaseScreen<V: BaseViewModel> : Screen, OnAPIRequestEvent, OnAPIEr
    lateinit var navigator: Navigator
 
    // viewModel
-   lateinit var viewModel: V
+   abstract var viewModel: V
 
    // Save value
    lateinit var isShowLoading: MutableState<Boolean>

@@ -43,10 +43,11 @@ import viewModel.MainViewModel
  */
 class MainScreen : BaseScreen<MainViewModel>() {
 
+    override var viewModel: MainViewModel = MainViewModel()
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun makeContentForView() {
-        viewModel = MainViewModel()
 
         val tabHomeScreen = remember { TabHomeScreen }
         val tabRankingScreen = remember { TabRankingScreen }
@@ -65,9 +66,11 @@ class MainScreen : BaseScreen<MainViewModel>() {
             Scaffold(
                 modifier = Modifier.fillMaxSize().background(colorPrimaryBackground),
                 topBar = {
-                    TopAppBar(
-                        title = { Text(text = tabNavigator.current.options.title, style = textTittleHome()) }
-                    )
+                    if (tabNavigator.current.options.title != "Account") {
+                        TopAppBar(
+                            title = { Text(text = tabNavigator.current.options.title, style = textTittleHome()) }
+                        )
+                    }
                 },
                 content = {
                     Box(

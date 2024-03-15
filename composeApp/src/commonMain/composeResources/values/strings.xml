@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">My awesome app</string>
+    <string name="title">Some title</string>
+    <string name="login_with_email">Login with email</string>
+</resources>

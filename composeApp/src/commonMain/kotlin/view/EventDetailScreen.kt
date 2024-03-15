@@ -33,10 +33,10 @@ import viewModel.EventDetailViewModel
  */
 class EventDetailScreen: BaseScreen<EventDetailViewModel>() {
 
+    override var viewModel: EventDetailViewModel = EventDetailViewModel()
+
     @Composable
     override fun makeContentForView() {
-        viewModel = EventDetailViewModel()
-
         Scaffold(modifier = Modifier.background(Color.Red).fillMaxSize(), backgroundColor = colorPrimaryBackground,
             topBar = {
                 Row(horizontalArrangement = Arrangement.Start,

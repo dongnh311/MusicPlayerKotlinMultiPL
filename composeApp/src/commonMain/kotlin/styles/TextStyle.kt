@@ -40,3 +40,14 @@ fun textTittleContent() : TextStyle {
         textAlign = TextAlign.Start
     )
 }
+
+@Composable
+fun textButton() : TextStyle {
+    return TextStyle(
+        fontSize = 16.sp,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Normal,
+        color = colorPrimaryText,
+        textAlign = TextAlign.Start
+    )
+}

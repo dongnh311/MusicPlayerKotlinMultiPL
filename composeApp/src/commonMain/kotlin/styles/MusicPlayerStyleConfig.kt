@@ -35,6 +35,10 @@ val primaryDarkVariant = Color(0xFF00001a)
 val darkSecondary = Color(0xFF402810)
 val darkSecondaryVariant = Color(0xFF200000)
 
+val colorDisable = Color(0xFFCCCCCC)
+val colorFacebook = Color(0xFF4267B2)
+val colorMainApp = Color(0xFF7209B7)
+
 // Text
 val colorPrimaryText: Color @Composable get() = if (!isSystemInDarkTheme()) colorBlack else colorWhite
 

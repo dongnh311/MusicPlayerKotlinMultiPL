@@ -86,13 +86,13 @@ import viewModel.HomeViewModel
 
 class HomeScreen: BaseScreen<HomeViewModel>() {
 
+    override var viewModel: HomeViewModel = HomeViewModel()
+
     private var listEvents =  mutableListOf<EventModel>()
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
     override fun makeContentForView() {
-        viewModel = HomeViewModel()
-
         val detailScreen = EventDetailScreen()
 
         val pagerState = rememberPagerState(initialPage = 0, pageCount = {return@rememberPagerState listEvents.size})
@@ -116,7 +116,7 @@ class HomeScreen: BaseScreen<HomeViewModel>() {
                             Box(
                                 modifier = Modifier
                                     .padding(10.dp)
-                                    .shadow(1.dp, RoundedCornerShape(8.dp))
+                                    .shadow(10.dp, RoundedCornerShape(8.dp))
                                     .background(Color.White)
                                     .fillMaxWidth()
                                     .height(200.dp).clickable {

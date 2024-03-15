@@ -1,6 +1,7 @@
 package styles
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,3 +22,9 @@ fun Modifier.paddingTopStartEnd() = this.padding(start = 16.dp, end = 16.dp, top
 
 @Composable
 fun Modifier.paddingTop() = this.padding(top = 8.dp)
+
+@Composable
+fun iconSize24dp() = Modifier.size(24.dp)
+
+@Composable
+fun iconSize20dp() = Modifier.size(20.dp)
