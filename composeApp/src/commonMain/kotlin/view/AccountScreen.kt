@@ -32,6 +32,9 @@ import cafe.adriel.voyager.core.screen.Screen
 import childView.LoginField
 import childView.PasswordField
 import co.touchlab.kermit.Logger
+import commonShare.OnLoginGoogleCallBack
+import commonShare.UserModel
+import commonShare.loadFireBaseAuthControl
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_email
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_facebook
@@ -62,6 +65,8 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
 
     override var viewModel: AccountViewModel = AccountViewModel()
 
+    val firebaseAuth = loadFireBaseAuthControl()
+
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
@@ -69,6 +74,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
         val loginWithAccount = remember { mutableStateOf(false) }
         val emailLogin = remember { mutableStateOf("") }
         val password = remember { mutableStateOf("") }
+
         if (isLogin.value) {
 
         } else {
@@ -121,7 +127,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                     } else {
                         Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                             Button(onClick = {
-
+                                makeLoginWithGoogle()
                             }, modifier = Modifier.width(250.dp), shape = RoundedCornerShape(35.dp), colors = buttonColorsGoogle()) {
                                 Icon(
                                     painter = painterResource(Res.drawable.btn_google),
@@ -192,5 +198,22 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
     }
 
     override fun onDisposedScreen() {
+    }
+
+    fun makeLoginWithGoogle() {
+        firebaseAuth.onLoginGoogleCallBack = object : OnLoginGoogleCallBack {
+            override fun onStartLogin() {
+                Logger.e("Google Start login")
+            }
+
+            override fun onLoginComplete(userModel: UserModel) {
+                Logger.e("Google login done")
+            }
+
+            override fun onLoginFail(exception: Exception) {
+                Logger.e("Google login error", exception)
+            }
+        }
+        firebaseAuth.logInWithGoogle()
     }
 }

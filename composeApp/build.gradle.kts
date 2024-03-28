@@ -42,6 +42,19 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.ui.tooling.preview.v163)
             implementation(libs.android.driver)
+
+            // Import the BoM for the Firebase platform
+            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:32.8.0"))
+
+            // Add the dependency for the Firebase Authentication library
+            // When using the BoM, you don't specify versions in Firebase library dependencies
+            implementation("com.google.firebase:firebase-auth")
+
+            // Also add the dependency for the Google Play services library and specify its version
+            implementation("com.google.android.gms:play-services-auth:21.0.0")
+
+            // Log helper
+            implementation("com.jakewharton.timber:timber:5.0.1")
         }
         commonMain.dependencies {
             implementation(compose.runtime)

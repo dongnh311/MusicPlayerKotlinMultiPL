@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">google.com</domain>
+        <domain includeSubdomains="true">ifcfg.me</domain>
+        <domain includeSubdomains="true">a61.easemob.com</domain>
+        <domain includeSubdomains="true">k.kakaocdn.net</domain>
+    </domain-config>
+</network-security-config>

@@ -14,6 +14,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             App()
         }
+        // Save context
+        AndroidMusicPlayerSingleton.mainActivity = this@MainActivity
+        AndroidMusicPlayerSingleton.androidFirebaseAuthControl.initGoogleSignIn()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AndroidMusicPlayerSingleton.mainActivity = null
     }
 }
 
