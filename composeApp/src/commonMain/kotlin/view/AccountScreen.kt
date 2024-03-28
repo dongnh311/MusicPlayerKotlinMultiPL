@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,8 +34,8 @@ import childView.LoginField
 import childView.PasswordField
 import co.touchlab.kermit.Logger
 import commonShare.OnLoginGoogleCallBack
-import commonShare.UserModel
 import commonShare.loadFireBaseAuthControl
+import model.UserModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_email
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_facebook
@@ -65,16 +66,16 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
 
     override var viewModel: AccountViewModel = AccountViewModel()
 
-    val firebaseAuth = loadFireBaseAuthControl()
+    private val firebaseAuth = loadFireBaseAuthControl()
+
+    private val isLogin = mutableStateOf(false)
+    private val loginWithAccount = mutableStateOf(false)
+    private val emailLogin = mutableStateOf("")
+    private val password = mutableStateOf("")
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
-        val isLogin = remember { mutableStateOf(false) }
-        val loginWithAccount = remember { mutableStateOf(false) }
-        val emailLogin = remember { mutableStateOf("") }
-        val password = remember { mutableStateOf("") }
-
         if (isLogin.value) {
 
         } else {

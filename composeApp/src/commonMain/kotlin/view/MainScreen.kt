@@ -48,18 +48,13 @@ class MainScreen : BaseScreen<MainViewModel>() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun makeContentForView() {
-
-        val tabHomeScreen = remember { TabHomeScreen }
-        val tabRankingScreen = remember { TabRankingScreen }
-        val tabAccountScreen = remember { TabAccountScreen }
-
         ViewManager.parentNavigation = navigator
         TabNavigator(
-            tabHomeScreen,
+            TabHomeScreen,
             tabDisposable = {
                 TabDisposable(
                     navigator = it,
-                    tabs = listOf(tabHomeScreen, tabRankingScreen, tabAccountScreen)
+                    tabs = listOf(TabHomeScreen, TabRankingScreen, TabAccountScreen)
                 )
             },
         ) { tabNavigator ->
@@ -85,9 +80,9 @@ class MainScreen : BaseScreen<MainViewModel>() {
                 },
                 bottomBar = {
                     BottomNavigation {
-                        TabNavigationItem(tabHomeScreen)
-                        TabNavigationItem(tabRankingScreen)
-                        TabNavigationItem(tabAccountScreen)
+                        TabNavigationItem(TabHomeScreen)
+                        TabNavigationItem(TabRankingScreen)
+                        TabNavigationItem(TabAccountScreen)
                     }
                 }
             )
@@ -107,7 +102,8 @@ class MainScreen : BaseScreen<MainViewModel>() {
         BottomNavigationItem(
             selected = tabNavigator.current.key == tab.key,
             onClick = { tabNavigator.current = tab },
-            icon = { Icon(painter = tab.options.icon!!, contentDescription = tab.options.title) }
+            icon = { Icon(painter = tab.options.icon!!, contentDescription = tab.options.title) },
+            label = { Text(tab.options.title) }
         )
     }
 }

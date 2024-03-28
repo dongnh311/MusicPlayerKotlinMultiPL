@@ -1,5 +1,7 @@
 package commonShare
 
+import model.UserModel
+
 /**
  * Project : MusicPlayerKotlinMultiPL
  * Created by DongNH on 28/03/2024.
@@ -22,7 +24,3 @@ interface OnLoginGoogleCallBack {
 }
 expect fun loadFireBaseAuthControl() : FireBaseAuthControl<*, *>
 
-class UserModel {
-    var userName: String = ""
-    var profileImage: String = ""
-}

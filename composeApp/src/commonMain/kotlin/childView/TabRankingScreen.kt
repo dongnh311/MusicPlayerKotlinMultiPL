@@ -23,6 +23,8 @@ import view.RankingScreen
  */
 object TabRankingScreen : Tab {
 
+    private val rankingScreen = RankingScreen()
+
     override val options: TabOptions
         @Composable
         get() {
@@ -38,6 +40,6 @@ object TabRankingScreen : Tab {
         }
     @Composable
     override fun Content() {
-        RankingScreen().Content()
+        rankingScreen.Content()
     }
 }

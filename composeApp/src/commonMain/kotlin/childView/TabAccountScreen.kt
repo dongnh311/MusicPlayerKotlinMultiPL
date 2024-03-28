@@ -23,6 +23,9 @@ import view.AccountScreen
  * Phone : +84397199197.
  */
 object TabAccountScreen : Tab {
+
+    private val accountScreen = AccountScreen()
+
     override val options: TabOptions
         @Composable
         get() {
@@ -39,6 +42,6 @@ object TabAccountScreen : Tab {
 
     @Composable
     override fun Content() {
-        AccountScreen().Content()
+        accountScreen.Content()
     }
 }
