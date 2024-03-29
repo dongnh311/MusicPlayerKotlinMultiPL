@@ -1,5 +1,8 @@
 package model
 
+import base.BaseModel
+import const.ACCOUNT_TYPE_FREE
+import const.PLATFORM_ANDROID
 import kotlinx.serialization.Serializable
 
 /**
@@ -9,7 +12,11 @@ import kotlinx.serialization.Serializable
  * Phone : +84397199197.
  */
 @Serializable
-class UserModel {
+class UserModel: BaseModel() {
     var userName: String = ""
     var profileImage: String = ""
+    var platform: String = PLATFORM_ANDROID
+    var fcmToken: String = ""
+    var coin: Double = 0.0
+    var accountType: Int = ACCOUNT_TYPE_FREE
 }

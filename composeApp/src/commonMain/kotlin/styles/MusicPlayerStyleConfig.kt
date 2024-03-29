@@ -2,7 +2,6 @@ package styles
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.Colors
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
@@ -27,8 +26,8 @@ val lightSecondaryVariant = Color(0xFFefd8bf)
 
 val colorBlack = Color(0xFF000000)
 val colorWhite = Color(0xFFFFFFFF)
-val RedErrorDark = Color(0xFFB00020)
-val RedErrorLight = Color(0xFFEF5350)
+val redErrorDark = Color(0xFFB00020)
+val redErrorLight = Color(0xFFEF5350)
 
 val primaryDark = Color(0xFF102840)
 val primaryDarkVariant = Color(0xFF00001a)
@@ -39,8 +38,15 @@ val colorDisable = Color(0xFFCCCCCC)
 val colorFacebook = Color(0xFF4267B2)
 val colorMainApp = Color(0xFF7209B7)
 
+val colorAccountLight = Color(0xFFEEFCB3)
+val colorAccountDark = Color(0xFF3B3C34)
+
+
 // Text
 val colorPrimaryText: Color @Composable get() = if (!isSystemInDarkTheme()) colorBlack else colorWhite
+val colorSecondText: Color @Composable get() = if (!isSystemInDarkTheme()) darkSecondary else lightSecondary
+
+val colorAccountCard: Color @Composable get() = if (!isSystemInDarkTheme()) colorAccountLight else colorAccountDark
 
 private val lightThemeColors = lightColors(
     primary = primaryLight,
@@ -49,8 +55,8 @@ private val lightThemeColors = lightColors(
     secondary = lightSecondary,
     secondaryVariant = lightSecondaryVariant,
     onSecondary = colorBlack,
-    error = RedErrorDark,
-    onError = RedErrorLight,
+    error = redErrorDark,
+    onError = redErrorLight,
     background = backgroundColor,
     onBackground = onBackground,
     )
@@ -62,8 +68,8 @@ private val darkThemeColors = darkColors(
     secondary = darkSecondary,
     secondaryVariant = darkSecondaryVariant,
     onSecondary = colorWhite,
-    error = RedErrorLight,
-    onError = RedErrorLight,
+    error = redErrorLight,
+    onError = redErrorLight,
     background = backgroundColor,
     onBackground = onBackground
 )

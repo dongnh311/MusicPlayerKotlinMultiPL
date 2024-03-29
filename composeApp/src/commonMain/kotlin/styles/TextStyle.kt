@@ -51,3 +51,25 @@ fun textButton() : TextStyle {
         textAlign = TextAlign.Start
     )
 }
+
+@Composable
+fun textContentPrimary() : TextStyle {
+    return TextStyle(
+        fontSize = 16.sp,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Normal,
+        color = colorPrimaryText,
+        textAlign = TextAlign.Start
+    )
+}
+
+@Composable
+fun textContentSecond() : TextStyle {
+    return TextStyle(
+        fontSize = 14.sp,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Normal,
+        color = colorSecondText,
+        textAlign = TextAlign.Start
+    )
+}

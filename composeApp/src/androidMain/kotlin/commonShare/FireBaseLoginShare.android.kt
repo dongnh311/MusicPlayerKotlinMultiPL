@@ -110,6 +110,7 @@ class AndroidFirebaseAuthControl : FireBaseAuthControl<GoogleSignInClient, Activ
                     Timber.d("signInWithCredential:success")
                     val user = auth.currentUser
                     val userModel = UserModel()
+                    userModel.id = user?.uid.toString()
                     userModel.userName = user?.displayName.toStringRemoveNull()
                     userModel.profileImage = user?.photoUrl?.toString().toStringRemoveNull()
                     //userModel.userName = user?.displayName.toString()

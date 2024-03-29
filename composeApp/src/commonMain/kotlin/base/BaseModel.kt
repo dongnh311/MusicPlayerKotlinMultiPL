@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 open class BaseModel {
     @SerialName("id")
-    open var id: Int = 0
+    open var id: String = ""
 
     @SerialName("createdAt")
     var createdAt: Long = 0L
