@@ -1,5 +1,23 @@
 <resources>
     <string name="app_name">My awesome app</string>
     <string name="title">Some title</string>
-    <string name="login_with_email">Login with email</string>
+    <string name="login_with_email">Login With Email</string>
+    <string name="create_new_account">Create New Account</string>
+    <string name="create_new_account_title">Create Account</string>
+    <string name="create_new_account_name">Email</string>
+    <string name="create_new_account_name_pl">Enter Your Email</string>
+    <string name="create_new_account_password">Password</string>
+    <string name="create_new_account_password_pl">Enter Your Password</string>
+    <string name="create_new_account_re_password">Re-Password</string>
+    <string name="create_new_account_btn">Create</string>
+
+    <string name="forgot_password">Forgot Password</string>
+    <string name="forgot_password_email">Email</string>
+    <string name="forgot_password_email_pl">Enter Your Email</string>
+    <string name="forgot_password_btn">Reset</string>
+
+    <string name="btn_ok">Ok</string>
+    <string name="btn_cancel">Cancel</string>
+
+    <string name="forgot_password_content">We have sent your email the information to change your password, please check your email and follow the instructions.</string>
 </resources>

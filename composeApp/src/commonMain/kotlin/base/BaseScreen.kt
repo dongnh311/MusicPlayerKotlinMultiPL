@@ -10,8 +10,13 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import co.touchlab.kermit.Logger
+import musicplayerkotlinmultipl.composeapp.generated.resources.Res
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_ok
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import utils.dialogs.ShowDialogConfirm
 import utils.dialogs.ShowDialogLoading
+import utils.dialogs.ShowDialogMessage
 import utils.interfaces.OnAPIErrorEvent
 import utils.interfaces.OnAPIRequestEvent
 import kotlin.reflect.typeOf
@@ -37,11 +42,15 @@ abstract class BaseScreen<V: BaseViewModel> : Screen, OnAPIRequestEvent, OnAPIEr
    // Show dialog confirm
    private lateinit var isOpenDialogConfirm: MutableState<Boolean>
 
+   // Show dialog Message
+   private lateinit var isOpenDialogMessage: MutableState<Boolean>
+
     @Composable
     final override fun Content() {
         navigator = LocalNavigator.currentOrThrow
         isShowLoading = remember { mutableStateOf(false) }
         isOpenDialogConfirm = remember { mutableStateOf(false) }
+        isOpenDialogMessage = remember { mutableStateOf(false) }
 
         LifecycleEffect(
             onStarted = {
@@ -126,6 +135,11 @@ abstract class BaseScreen<V: BaseViewModel> : Screen, OnAPIRequestEvent, OnAPIEr
             isShowLoading.value = false
         }
 
+        // Dismiss dialog message first
+        if (isOpenDialogMessage.value) {
+            isOpenDialogMessage.value = false
+        }
+
         // Show dialog confirm
         ShowDialogConfirm(
             isOpenDialogConfirm,
@@ -140,6 +154,45 @@ abstract class BaseScreen<V: BaseViewModel> : Screen, OnAPIRequestEvent, OnAPIEr
             callBackRight = {
                 isOpenDialogConfirm.value = false
                 callBackRight.invoke()
+            }
+        )
+    }
+
+    /**
+     * Show dialog button message
+     *
+     * @param title
+     * @param content
+     * @param textButtonOk
+     * @param callBackOk
+     */
+    @OptIn(ExperimentalResourceApi::class)
+    @Composable
+    fun showDialogMessage(title: String = "",
+                          content: String,
+                          textButtonOk: String = stringResource(Res.string.btn_ok),
+                          callBackOk: ()-> Unit) {
+
+        isOpenDialogMessage.value = true
+
+        // Dismiss dialog loading first
+        if (isShowLoading.value) {
+            isShowLoading.value = false
+        }
+
+        // Dismiss dialog loading first
+        if (isOpenDialogConfirm.value) {
+            isOpenDialogConfirm.value = false
+        }
+
+        ShowDialogMessage(
+            isOpenDialogMessage,
+            title = title,
+            content = content,
+            textButtonOk = textButtonOk,
+            callBackOk = {
+                isOpenDialogMessage.value = false
+                callBackOk.invoke()
             }
         )
     }

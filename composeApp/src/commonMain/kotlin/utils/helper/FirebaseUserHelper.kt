@@ -25,9 +25,10 @@ class FirebaseUserHelper {
     /**
      * Sign Out auth
      */
-    suspend fun logoutAuth() {
+    suspend fun logoutAuth(callback: () -> Unit) {
         if (auth.currentUser != null) {
             auth.signOut()
+            callback.invoke()
         }
     }
 

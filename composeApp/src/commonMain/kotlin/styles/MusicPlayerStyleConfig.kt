@@ -19,7 +19,7 @@ val colorPrimaryBackground: Color @Composable get() = if (isSystemInDarkTheme())
 
 val backgroundColor = Color(0xFFFFFFFF)
 val onBackground = Color(0xFF19191C)
-val primaryLight = Color(0xFFbfd5ef)
+val primaryLight = Color(0xFF9400C8)
 val primaryLightVariant = Color(0xFFf2ffff)
 val lightSecondary = Color(0xFFefd8bf)
 val lightSecondaryVariant = Color(0xFFefd8bf)
@@ -29,7 +29,7 @@ val colorWhite = Color(0xFFFFFFFF)
 val redErrorDark = Color(0xFFB00020)
 val redErrorLight = Color(0xFFEF5350)
 
-val primaryDark = Color(0xFF102840)
+val primaryDark = Color(0xFF9400C8)
 val primaryDarkVariant = Color(0xFF00001a)
 val darkSecondary = Color(0xFF402810)
 val darkSecondaryVariant = Color(0xFF200000)
@@ -38,15 +38,17 @@ val colorDisable = Color(0xFFCCCCCC)
 val colorFacebook = Color(0xFF4267B2)
 val colorMainApp = Color(0xFF7209B7)
 
-val colorAccountLight = Color(0xFFEEFCB3)
-val colorAccountDark = Color(0xFF3B3C34)
+val colorAccountLight = Color(0xFFBF45EA)
+val colorAccountDark = Color(0xFFBF45EA)
 
 
 // Text
 val colorPrimaryText: Color @Composable get() = if (!isSystemInDarkTheme()) colorBlack else colorWhite
 val colorSecondText: Color @Composable get() = if (!isSystemInDarkTheme()) darkSecondary else lightSecondary
 
-val colorAccountCard: Color @Composable get() = if (!isSystemInDarkTheme()) colorAccountLight else colorAccountDark
+val colorAccountCard: Color @Composable get() = if (!isSystemInDarkTheme()) colorWhite else colorAccountDark
+
+val colorButtonCancel: Color @Composable get() = if (isSystemInDarkTheme()) colorAccountDark else colorWhite
 
 private val lightThemeColors = lightColors(
     primary = primaryLight,

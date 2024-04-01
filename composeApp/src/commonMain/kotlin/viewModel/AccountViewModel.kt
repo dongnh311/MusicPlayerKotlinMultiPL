@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import base.BaseViewModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
+import commonShare.OnLoginGoogleCallBack
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import model.UserModel
@@ -27,7 +28,7 @@ class AccountViewModel: BaseViewModel() {
      *
      * @param userModel
      */
-    fun checkInformationUserAndSave(userModel: UserModel) {
+    fun checkInformationUserAndSave(userModel: UserModel, callBack: () -> Unit) {
         this@AccountViewModel.screenModelScope.launch {
             startWorking()
             firebaseUser.checkUserInformationExits(userModel.id).collect {
@@ -38,6 +39,7 @@ class AccountViewModel: BaseViewModel() {
                     firebaseUser.loadUserDetailInformation(userModel.id).collect {user ->
                         userDataModel.value = user
                         stopWorking()
+                        callBack.invoke()
                     }
                 }
             }

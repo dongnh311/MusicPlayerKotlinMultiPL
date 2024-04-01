@@ -1,9 +1,14 @@
 package styles
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 
 /**
@@ -28,3 +33,19 @@ fun iconSize24dp() = Modifier.size(24.dp)
 
 @Composable
 fun iconSize20dp() = Modifier.size(20.dp)
+
+@Composable
+fun buttonDialog() = Modifier.clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
+
+@Composable
+fun Modifier.backgroundGradient() = Modifier
+    .background(
+        brush = Brush.verticalGradient(
+            startY = 0f,
+            endY = 1000f,
+            colors = listOf(
+                primaryLight,
+                colorAccountLight
+            )
+        )
+    )

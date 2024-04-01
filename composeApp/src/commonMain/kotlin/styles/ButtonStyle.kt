@@ -27,3 +27,9 @@ fun buttonColorsEmail() = ButtonDefaults.buttonColors(
     backgroundColor = colorMainApp,
     disabledBackgroundColor = colorDisable,
 )
+
+@Composable
+fun buttonColorsCancel() = ButtonDefaults.buttonColors(
+    backgroundColor = colorButtonCancel,
+    disabledBackgroundColor = colorDisable,
+)
