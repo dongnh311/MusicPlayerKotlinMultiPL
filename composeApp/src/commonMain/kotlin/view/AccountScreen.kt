@@ -24,6 +24,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import base.BaseScreen
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
+import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
 import childView.LoginField
 import childView.PasswordField
@@ -45,6 +47,7 @@ import co.touchlab.kermit.Logger
 import com.seiko.imageloader.rememberImagePainter
 import commonShare.OnLoginGoogleCallBack
 import commonShare.loadFireBaseAuthControl
+import kotlinx.coroutines.launch
 import model.UserModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_email
@@ -63,6 +66,7 @@ import styles.buttonColorsFacebook
 import styles.buttonColorsGoogle
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
+import styles.iconSize24dp
 import styles.textButton
 import styles.textContentPrimary
 import styles.textContentSecond
@@ -88,22 +92,24 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
     private val loginWithAccount = mutableStateOf(false)
     private val emailLogin = mutableStateOf("")
     private val password = mutableStateOf("")
+    private val isLogout =  mutableStateOf(false)
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
+        val userModel = remember { viewModel.userDataModel }
+
         if (isLogin.value) {
             // Load user
             if (viewModel.userDataModel.value.id.isEmpty()) {
                 viewModel.loadUserInformation(viewModel.firebaseUser.loadUserId())
             }
-            val userModel = remember { mutableStateOf(viewModel.userDataModel.value) }
 
             Row(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.Top) {
                 Card(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        ,
+                        .fillMaxWidth().padding(16.dp)
+                    ,
                     elevation = CardDefaults.cardElevation(
                         defaultElevation =  10.dp,
                     ),
@@ -118,15 +124,18 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                     ),
                     content = {
                         Box(modifier = Modifier.padding(16.dp)) {
-                            Button(
+                            IconButton(
                                 onClick = {
-
+                                    isLogout.value = true
                                 },
                                 modifier = Modifier.size(width = 45.dp, height = 45.dp).align(Alignment.TopEnd),
                                 content = {
                                     // Specify the icon using the icon parameter
-                                    Image(painter = painterResource(Res.drawable.btn_logout), contentDescription = null)
-                                    Spacer(modifier = Modifier.width(36.dp)) // Adjust spacing
+                                    Icon(painter = painterResource(Res.drawable.btn_logout),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(40.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
                                 }
                             )
                             Row(
@@ -134,7 +143,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(16.dp)
+                                    .padding(0.dp)
                             ) {
                                 val painter = if (userModel.value.profileImage.isNotEmpty()) rememberImagePainter(userModel.value.profileImage)  else rememberImagePainter("https://..")
                                 Image(
@@ -191,7 +200,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                             password.value = it
                                         },
                                         submit = {
-                                                 Logger.e("Click login on keyboard")
+                                            Logger.e("Click login on keyboard")
                                         },
                                         modifier = Modifier.fillMaxWidth()
                                     )
@@ -271,6 +280,11 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                 }
             }
         }
+
+        // Make for logout
+        if (isLogout.value) {
+            logoutUser()
+        }
     }
 
     override fun onStartedScreen() {
@@ -298,5 +312,28 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
             }
         }
         firebaseAuth.logInWithGoogle()
+    }
+
+    /**
+     * Logout user
+     *
+     */
+    @Composable
+    private fun logoutUser() {
+        showDialogConfirm(
+            content = "Are you sure to logout?",
+            textButtonLeft = "Cancel",
+            textButtonRight = "Logout",
+            callBackLeft = {
+                isLogout.value = false
+            },
+            callBackRight = {
+                isLogout.value = false
+                viewModel.screenModelScope.launch {
+                    viewModel.firebaseUser.logoutAuth()
+                }
+            }
+        )
+
     }
 }

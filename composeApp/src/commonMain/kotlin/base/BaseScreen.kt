@@ -10,6 +10,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import co.touchlab.kermit.Logger
+import utils.dialogs.ShowDialogConfirm
 import utils.dialogs.ShowDialogLoading
 import utils.interfaces.OnAPIErrorEvent
 import utils.interfaces.OnAPIRequestEvent
@@ -31,12 +32,16 @@ abstract class BaseScreen<V: BaseViewModel> : Screen, OnAPIRequestEvent, OnAPIEr
    abstract var viewModel: V
 
    // Save value
-   lateinit var isShowLoading: MutableState<Boolean>
+   private lateinit var isShowLoading: MutableState<Boolean>
+
+   // Show dialog confirm
+   private lateinit var isOpenDialogConfirm: MutableState<Boolean>
 
     @Composable
     final override fun Content() {
         navigator = LocalNavigator.currentOrThrow
         isShowLoading = remember { mutableStateOf(false) }
+        isOpenDialogConfirm = remember { mutableStateOf(false) }
 
         LifecycleEffect(
             onStarted = {
@@ -52,7 +57,7 @@ abstract class BaseScreen<V: BaseViewModel> : Screen, OnAPIRequestEvent, OnAPIEr
         makeContentForView()
 
         if (isShowLoading.value) {
-            ShowDialogLoading {
+            ShowDialogLoading(isShowLoading) {
                 Logger.e("Dismiss dialog loading")
             }
         }
@@ -95,5 +100,47 @@ abstract class BaseScreen<V: BaseViewModel> : Screen, OnAPIRequestEvent, OnAPIEr
     }
 
     override fun onUpdate(status: Int) {
+    }
+
+    /**
+     * Show dialog confirm
+     *
+     * @param title
+     * @param content
+     * @param textButtonLeft
+     * @param textButtonRight
+     * @param callBackLeft
+     * @param callBackRight
+     */
+    @Composable
+    fun showDialogConfirm(title: String = "",
+                          content: String,
+                          textButtonLeft: String = "Cancel",
+                          textButtonRight: String = "OK",
+                          callBackLeft: ()-> Unit,
+                          callBackRight: ()-> Unit) {
+        isOpenDialogConfirm.value = true
+
+        // Dismiss dialog loading first
+        if (isShowLoading.value) {
+            isShowLoading.value = false
+        }
+
+        // Show dialog confirm
+        ShowDialogConfirm(
+            isOpenDialogConfirm,
+            title = title,
+            content = content,
+            textButtonLeft = textButtonLeft,
+            textButtonRight = textButtonRight,
+            callBackLeft = {
+                isOpenDialogConfirm.value = false
+                callBackLeft.invoke()
+            },
+            callBackRight = {
+                isOpenDialogConfirm.value = false
+                callBackRight.invoke()
+            }
+        )
     }
 }

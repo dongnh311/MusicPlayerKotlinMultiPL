@@ -16,8 +16,11 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.Card
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,16 +36,16 @@ import androidx.compose.ui.window.DialogProperties
  * Phone : +84397199197.
  */
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShowDialogLoading(onDismissRequest: ()->Unit) {
-    val openDialog = remember { mutableStateOf(true) }
-    if (openDialog.value) {
-        Dialog(
+fun ShowDialogLoading(isShowDialog: MutableState<Boolean>, onDismissRequest: ()->Unit) {
+    if (isShowDialog.value) {
+        BasicAlertDialog(
             onDismissRequest = {
                 onDismissRequest.invoke()
-                openDialog.value = false
+                isShowDialog.value = false
             },
-            DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         ) {
             Box(
                 modifier = Modifier.fillMaxSize(),
