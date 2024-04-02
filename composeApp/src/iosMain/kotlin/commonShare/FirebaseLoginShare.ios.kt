@@ -1,6 +1,6 @@
 package commonShare
 
-import com.seiko.imageloader.util.Logger
+import co.touchlab.kermit.Logger
 import platform.UserNotifications.UNAuthorizationOptions
 import singleton.MusicPlayerSingleton
 
@@ -28,7 +28,7 @@ class IOsFireBaseAuth: FireBaseAuthControl<Any, Any> {
     override suspend fun loadFcmToken(): String {
         val text = iosMusicPlayerSingleTon?.loadTextForTest()
         text?.let {
-            co.touchlab.kermit.Logger.e("Text ${it}")
+            Logger.e("Text ${it}")
         }
         return fcmToken
     }

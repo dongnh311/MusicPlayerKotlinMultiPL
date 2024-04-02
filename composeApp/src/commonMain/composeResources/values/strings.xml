@@ -34,6 +34,9 @@
     <string name="reset_password_re_password">Re-Password</string>
     <string name="reset_password_btn_save">Save</string>
 
+    <string name="user_information_error_information">Please update personal information.</string>
+    <string name="user_information_update_pass">Password update successful, please log in again.</string>
+
     <string name="user_information_name">Name</string>
     <string name="user_information_name_pl">Enter Your Name</string>
     <string name="user_information_coin">Coin :</string>

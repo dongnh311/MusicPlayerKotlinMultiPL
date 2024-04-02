@@ -144,6 +144,8 @@ class FirebaseUserHelper {
         firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("profileImage", userModel.profileImage))
         firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("fcmToken", userModel.fcmToken))
         firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("platform", userModel.platform))
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("dayOfBrith", userModel.dayOfBrith))
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("accountType", userModel.accountType))
     }
 
     /**
@@ -165,6 +167,24 @@ class FirebaseUserHelper {
         trySend(firebaseStore.collection(FB_DATABASE_USER).document(userId).get().exists)
         awaitClose {
             close()
+        }
+    }
+
+    /**
+     * Update new Password
+     *
+     * @param email
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    suspend fun updateNewPassword(oldPassword: String, newPassword: String) : Boolean {
+        val result = auth.signInWithEmailAndPassword(auth.currentUser?.email.toString(), oldPassword)
+        return if (result.user != null) {
+            auth.currentUser?.updatePassword(newPassword)
+            true
+        } else {
+            false
         }
     }
 }

@@ -60,6 +60,7 @@ import com.seiko.imageloader.rememberImagePainter
 import commonShare.DecimalFormat
 import commonShare.OnLoginGoogleCallBack
 import commonShare.loadFireBaseAuthControl
+import const.LOGIN_BY_EMAIL
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import model.UserModel
@@ -93,6 +94,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_pa
 import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_password_pl
 import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_re_password
 import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_title
+import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_error_information
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -395,6 +397,8 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         viewModel.loginWithEmailPassword(emailLogin.value, password.value) {
                             if (it.isNotEmpty()) {
                                 viewModel.loadUserInformationAndCheck(it) {user ->
+                                    user.loginType = LOGIN_BY_EMAIL
+                                    user.email = emailLogin.value
                                     if (user.userName.isEmpty()) {
                                         val userInformationScreen = UserInformationScreen(user)
                                         navigator.push(userInformationScreen)
@@ -547,68 +551,79 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun showViewAccount(userModel: MutableState<UserModel>) {
-        Row(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.Top) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth().padding(16.dp).clickable(enabled = true) {
-                        val userInformationScreen = UserInformationScreen(userModel.value)
-                        navigator.push(userInformationScreen)
-                    }
-                ,
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation =  10.dp,
-                ),
-                shape = RoundedCornerShape(
-                    topEnd = 5.dp,
-                    topStart = 5.dp,
-                    bottomEnd = 5.dp,
-                    bottomStart = 5.dp
-                ),
-                colors = CardDefaults.cardColors(
-                    containerColor = colorAccountCard
-                ),
-                content = {
-                    Box(modifier = Modifier.padding(16.dp)) {
-                        IconButton(
-                            onClick = {
-                                isLogout.value = true
-                            },
-                            modifier = Modifier.size(width = 45.dp, height = 45.dp).align(Alignment.TopEnd),
-                            content = {
-                                // Specify the icon using the icon parameter
-                                Icon(painter = painterResource(Res.drawable.btn_logout),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(40.dp),
-                                )
-                                Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
-                            }
-                        )
-                        Row(
-                            horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(0.dp)
-                        ) {
-                            val painter = if (userModel.value.profileImage.isNotEmpty()) rememberImagePainter(userModel.value.profileImage) else painterResource(Res.drawable.avatar_default)
-                            Image(
-                                painter = painter,
-                                contentDescription = "avatar",
-                                contentScale = ContentScale.Crop,            // crop the image if it's not a square
-                                modifier = Modifier
-                                    .size(84.dp)
-                                    .clip(CircleShape)                       // clip to the circle shape
-                                    .border(2.dp, Color.Gray, CircleShape)   // add a border (optional)
+        if (userModel.value.userName.isEmpty()) {
+            showDialogMessage(
+                title = "",
+                content = stringResource(Res.string.user_information_error_information),
+                callBackOk = {
+                    val userInformationScreen = UserInformationScreen(userModel.value)
+                    navigator.push(userInformationScreen)
+                }
+            )
+        } else {
+            Row(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.Top) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth().padding(16.dp).clickable(enabled = true) {
+                            val userInformationScreen = UserInformationScreen(userModel.value)
+                            navigator.push(userInformationScreen)
+                        }
+                    ,
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation =  10.dp,
+                    ),
+                    shape = RoundedCornerShape(
+                        topEnd = 5.dp,
+                        topStart = 5.dp,
+                        bottomEnd = 5.dp,
+                        bottomStart = 5.dp
+                    ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = colorAccountCard
+                    ),
+                    content = {
+                        Box(modifier = Modifier.padding(16.dp)) {
+                            IconButton(
+                                onClick = {
+                                    isLogout.value = true
+                                },
+                                modifier = Modifier.size(width = 45.dp, height = 45.dp).align(Alignment.TopEnd),
+                                content = {
+                                    // Specify the icon using the icon parameter
+                                    Icon(painter = painterResource(Res.drawable.btn_logout),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(40.dp),
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
+                                }
                             )
-                            // Add another single item
-                            Column(modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
-                                Text(text = userModel.value.userName, style = textContentPrimary(), modifier = Modifier.padding(bottom = 8.dp))
-                                Text(text = "Coin : " + DecimalFormat().format(userModel.value.coin), style = textContentSecond(), modifier = Modifier.padding(top = 8.dp))
+                            Row(
+                                horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(0.dp)
+                            ) {
+                                val painter = if (userModel.value.profileImage.isNotEmpty()) rememberImagePainter(userModel.value.profileImage) else painterResource(Res.drawable.avatar_default)
+                                Image(
+                                    painter = painter,
+                                    contentDescription = "avatar",
+                                    contentScale = ContentScale.Crop,            // crop the image if it's not a square
+                                    modifier = Modifier
+                                        .size(84.dp)
+                                        .clip(CircleShape)                       // clip to the circle shape
+                                        .border(2.dp, Color.Gray, CircleShape)   // add a border (optional)
+                                )
+                                // Add another single item
+                                Column(modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
+                                    Text(text = userModel.value.userName, style = textContentPrimary(), modifier = Modifier.padding(bottom = 8.dp))
+                                    Text(text = "Coin : " + DecimalFormat().format(userModel.value.coin), style = textContentSecond(), modifier = Modifier.padding(top = 8.dp))
+                                }
                             }
                         }
                     }
-                }
-            )
+                )
+            }
         }
     }
 

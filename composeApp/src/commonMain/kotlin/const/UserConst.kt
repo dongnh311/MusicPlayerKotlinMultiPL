@@ -7,16 +7,16 @@ package const
  * Phone : +84397199197.
  */
 
-val ACCOUNT_TYPE_FREE = 1
-val ACCOUNT_TYPE_VIP = 2
-val ACCOUNT_TYPE_SUPPER_VIP = 3
+const val ACCOUNT_TYPE_FREE = 1
+const val ACCOUNT_TYPE_VIP = 2
+const val ACCOUNT_TYPE_SUPPER_VIP = 3
 
-val PLATFORM_ANDROID = "Android"
-val PLATFORM_IOS = "IOs"
+const val PLATFORM_ANDROID = "Android"
+const val PLATFORM_IOS = "IOs"
 
-val LOGIN_BY_GOOGLE = "Google"
-val LOGIN_BY_FACEBOOK = "FaceBook"
-val LOGIN_BY_EMAIL = "Email"
+const val LOGIN_BY_GOOGLE = "Google"
+const val LOGIN_BY_FACEBOOK = "FaceBook"
+const val LOGIN_BY_EMAIL = "Email"
 
 val EMAIL_ADDRESS_REGEX = Regex(
 "[a-zA-Z0-9+._%\\-]{1,256}" +

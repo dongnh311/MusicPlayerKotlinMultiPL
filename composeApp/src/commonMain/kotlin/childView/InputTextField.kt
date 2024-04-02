@@ -38,7 +38,7 @@ fun InputTextField (
     keyboardActions: KeyboardActions,
     keyboardOptions: KeyboardOptions,
     enabled: Boolean = true,
-    readOnly: Boolean = true
+    readOnly: Boolean = false
 ) {
     OutlinedTextField(
         value = value,

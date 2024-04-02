@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -53,10 +54,14 @@ import base.BaseScreen
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import childView.InputPasswordField
 import childView.InputTextField
+import co.touchlab.kermit.Logger
 import com.seiko.imageloader.rememberImagePainter
+import commonShare.CallBackResultPermission
 import commonShare.DecimalFormat
+import commonShare.loadPermissionControl
 import const.ACCOUNT_TYPE_FREE
 import const.ACCOUNT_TYPE_VIP
+import const.PERMISSION_GRAND
 import const.PLATFORM_ANDROID
 import model.UserModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
@@ -88,6 +93,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_password
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_platform
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_re_password
+import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_update_pass
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -119,6 +125,9 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
     private val newRePassword = mutableStateOf("")
 
     private val isEnableButtonSave = mutableStateOf(false)
+
+    private val isUpdatePasswordDone = mutableStateOf(false)
+    private val isUpdateInformationDone = mutableStateOf(false)
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
@@ -152,7 +161,7 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                         bottom = it.calculateBottomPadding()
                     )
             ) {
-                Column(modifier = Modifier.fillMaxWidth().padding(all = 16.dp).verticalScroll(rememberScrollState()),
+                Column(modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(all = 16.dp).verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                     val painter = if (userAvatar.value.isNotEmpty()) rememberImagePainter(userAvatar.value) else painterResource(Res.drawable.avatar_default)
                     Box(modifier = Modifier) {
@@ -169,7 +178,8 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                         // Edit avatar
                         IconButton(
                             onClick = {
-
+                                Logger.e("Click update avatar")
+                                handleUpdateAvatar()
                             },
                             modifier = Modifier.size(width = 40.dp, height = 40.dp).padding().align(
                                 Alignment.BottomEnd
@@ -408,17 +418,33 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                         placeholder = stringResource(Res.string.user_information_old_password_pl),
                     )
 
-                    Spacer(modifier = Modifier.heightIn(min = 50.dp).weight(1f))
+                    Spacer(modifier = Modifier.heightIn(min = 50.dp).weight(1f).padding(bottom = 16.dp))
 
                     // Button Save
                     Button(onClick = {
-
+                        controlToSaveUserInformation()
                     }, modifier = Modifier.width(150.dp).padding(top = 16.dp, bottom = 16.dp).buttonCommonModifier(), enabled = isEnableButtonSave.value) {
                         Text(stringResource(Res.string.reset_password_btn_save))
                     }
+
+                    Spacer(modifier = Modifier.height(10.dp).weight(1f).padding(bottom = 16.dp))
                 }
             }
         })
+
+        // Update password done
+        if (isUpdatePasswordDone.value) {
+            showDialogMessage(
+                title = "",
+                content = stringResource(Res.string.user_information_update_pass),
+                callBackOk = {
+                    isUpdatePasswordDone.value = false
+                    viewModel.logoutAccount {
+                        navigator.pop()
+                    }
+                }
+            )
+        }
     }
 
     override fun onStartedScreen() {
@@ -455,4 +481,49 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                     newPassword.value == newRePassword.value && checkNameAndBrith
         }
     }
+
+    /**
+     * Save user information
+     */
+    private fun controlToSaveUserInformation() {
+        userModel.userName = userName.value
+        userModel.dayOfBrith = brithDay.value
+        userModel.profileImage = userAvatar.value
+        viewModel.updateInformationOfUser(userModel) {
+            Logger.e("Update account information complete")
+        }
+
+        // Update Password
+        if (currentPassword.value.isNotEmpty()) {
+            viewModel.changeNewPassword(oldPassword = currentPassword.value, newPassword.value) {
+                isUpdatePasswordDone.value = true
+            }
+        }
+    }
+
+    /**
+     * Handle to load pick image for avatar
+     */
+    private fun handleUpdateAvatar() {
+        val permissionControl = loadPermissionControl()
+        permissionControl.callBackResultPermission = object : CallBackResultPermission {
+            override fun onResultPermission(result: Int) {
+                if (result == PERMISSION_GRAND) {
+                    val listImages = permissionControl.loadAllImageMedia()
+                    Logger.e("Load image on device : ${listImages.size}")
+                } else {
+
+                }
+            }
+        }
+
+        if (permissionControl.checkPermissionStorage()) {
+            val listImages = permissionControl.loadAllImageMedia()
+            Logger.e("Load image on device : ${listImages.size}")
+        } else {
+            permissionControl.requestPermissionStorage()
+            Logger.e("Request permission")
+        }
+    }
+
 }
