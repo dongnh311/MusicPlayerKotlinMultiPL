@@ -15,6 +15,8 @@ interface FireBaseAuthControl<T, R> {
     var onLoginGoogleCallBack: OnLoginGoogleCallBack?
 
     fun logInWithGoogle()
+
+    suspend fun loadFcmToken() : String
 }
 
 interface OnLoginGoogleCallBack {

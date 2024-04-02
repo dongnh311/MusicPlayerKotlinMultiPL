@@ -53,6 +53,8 @@ kotlin {
             // Also add the dependency for the Google Play services library and specify its version
             implementation("com.google.android.gms:play-services-auth:21.0.0")
 
+            implementation(libs.firebase.messaging.ktx)
+
             // Log helper
             implementation("com.jakewharton.timber:timber:5.0.1")
         }

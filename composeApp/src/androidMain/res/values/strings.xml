@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MusicPlayerKotlinMultiPL</string>
+    <string name="default_notification_channel_id">Music_Player_Channel</string>
 </resources>

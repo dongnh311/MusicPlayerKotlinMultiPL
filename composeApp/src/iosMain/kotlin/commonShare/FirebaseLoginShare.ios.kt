@@ -13,7 +13,12 @@ class IOsFireBaseAuth: FireBaseAuthControl<Any, Any> {
     override lateinit var resultLauncherGoogle: Any
 
     override  var onLoginGoogleCallBack: OnLoginGoogleCallBack? = null
+
     override fun logInWithGoogle() {}
+
+    override suspend fun loadFcmToken(): String {
+        return ""
+    }
 }
 
 actual fun loadFireBaseAuthControl(): FireBaseAuthControl<*, *>  = IOsFireBaseAuth()

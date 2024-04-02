@@ -3,6 +3,7 @@ package utils.helper
 import const.FB_DATABASE_USER
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseAuth
+import dev.gitlive.firebase.auth.FirebaseUser
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.firestore.firestore
 import kotlinx.coroutines.channels.awaitClose
@@ -50,6 +51,64 @@ class FirebaseUserHelper {
         return auth.currentUser?.uid.toString()
     }
 
+    /**
+     * Create new account with email and password
+     *
+     * @param email
+     * @param password
+     * @return
+     */
+    suspend fun createNewAccountWithEmail(email: String, password: String) : FirebaseUser? {
+        val result = auth.createUserWithEmailAndPassword(email, password)
+        return result.user
+    }
+
+    /**
+     * Login with email and password
+     *
+     * @param email
+     * @param password
+     * @return
+     */
+    suspend fun loginWithEmailPassword(email: String, password: String): String {
+        val result = auth.signInWithEmailAndPassword(email, password)
+        return if (result.user?.uid?.isNotEmpty() == true) {
+            result.user?.uid.toString()
+        } else {
+            ""
+        }
+    }
+
+    /**
+     * Send email reset pass word
+     *
+     * @param email
+     */
+    suspend fun forgotPassword(email: String) {
+        auth.sendPasswordResetEmail(email)
+    }
+
+    /**
+     * Update new password
+     *
+     * @param password
+     * @param code
+     */
+    suspend fun resetPasswordForEmail( code: String, password: String) {
+        auth.confirmPasswordReset(code, password)
+    }
+
+    /**
+     * Send email verify to user
+     */
+    suspend fun sendVerifiedEmail() {
+        auth.currentUser?.let {
+            if (!it.isEmailVerified) {
+                auth.languageCode = "vi"
+                it.sendEmailVerification()
+            }
+        }
+    }
 
     /**
      * Write user to firebase
@@ -73,6 +132,28 @@ class FirebaseUserHelper {
         awaitClose {
             close()
         }
+    }
+
+    /**
+     * Update information of user
+     *
+     * @param userModel
+     */
+    suspend fun updateInformationUser(userModel: UserModel) {
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("userName", userModel.userName))
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("profileImage", userModel.profileImage))
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("fcmToken", userModel.fcmToken))
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("platform", userModel.platform))
+    }
+
+    /**
+     * Update token and platform
+     *
+     * @param userModel
+     */
+    suspend fun updatePlatformAndToken(userModel: UserModel) {
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("fcmToken", userModel.fcmToken))
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("platform", userModel.platform))
     }
 
     /**

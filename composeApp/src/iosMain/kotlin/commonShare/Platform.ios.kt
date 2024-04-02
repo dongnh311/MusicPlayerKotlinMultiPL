@@ -1,9 +1,9 @@
 package commonShare
 
-import platform.UIKit.UIDevice
+import const.PLATFORM_IOS
 
 class IOSPlatform: Platform {
-    override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
+    override val name: String = PLATFORM_IOS
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()

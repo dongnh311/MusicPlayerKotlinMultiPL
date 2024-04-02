@@ -60,9 +60,11 @@ import com.seiko.imageloader.rememberImagePainter
 import commonShare.DecimalFormat
 import commonShare.OnLoginGoogleCallBack
 import commonShare.loadFireBaseAuthControl
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import model.UserModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
+import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_email
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_facebook
@@ -70,7 +72,9 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.btn_google
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_logout
 import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account
 import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account_btn
+import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account_fail
 import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account_name
+import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account_name_pl
 import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account_password
 import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account_password_pl
 import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account_re_password
@@ -78,9 +82,17 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_accoun
 import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password
 import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_btn
 import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_content
+import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_done
 import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_email
 import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_email_pl
 import musicplayerkotlinmultipl.composeapp.generated.resources.login_with_email
+import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_btn_save
+import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_code
+import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_code_pl
+import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_password
+import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_password_pl
+import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_re_password
+import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -115,6 +127,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
 
     private val emailLogin = mutableStateOf("")
     private val password = mutableStateOf("")
+    private val isEnableButtonLogin = mutableStateOf(false)
 
     private val newAccountEmail = mutableStateOf("")
     private val newAccountPassword = mutableStateOf("")
@@ -124,19 +137,27 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
     private val emailToReset = mutableStateOf("")
     private val isEnableButtonReset = mutableStateOf(false)
 
+    private val resetCodeEmail = mutableStateOf("")
+    private val resetPassword = mutableStateOf("")
+    private val resetRePassword = mutableStateOf("")
+    private val isEnableSavePassword = mutableStateOf(false)
+    private val isSavePasswordDone = mutableStateOf(false)
+
     private val isLoginWithAccount = mutableStateOf(false)
     private val isCreateNewAccount =  mutableStateOf(false)
     private val isForgotAccount = mutableStateOf(false)
     private val isResetEmailDone = mutableStateOf(false)
+    private val isShowResetPassword = mutableStateOf(false)
 
-    private lateinit var  focusManager: FocusManager
+    private val isErrorCreateAccount = mutableStateOf(false)
+
+    private lateinit var focusManager: FocusManager
     private var keyboardController : SoftwareKeyboardController? = null
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
         val userModel = remember { viewModel.userDataModel }
-
         // Focus
         focusManager = LocalFocusManager.current
         // Keyboard control
@@ -154,17 +175,15 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                 if (isShowButtonBack.value) {
                     IconButton(
                         onClick = {
-                            isLoginWithAccount.value = false
-                            isCreateNewAccount.value = false
-                            isForgotAccount.value = false
-                            isShowButtonBack.value = false
+                            resetAllViewToDefault()
                         },
-                        modifier = Modifier.size(width = 45.dp, height = 45.dp).align(Alignment.TopStart),
+                        modifier = Modifier.size(width = 40.dp, height = 40.dp).align(Alignment.TopStart),
                         content = {
                             // Specify the icon using the icon parameter
                             Icon(painter = painterResource(Res.drawable.btn_back),
                                 contentDescription = null,
-                                modifier = Modifier.size(35.dp),
+                                modifier = Modifier.size(30.dp),
+                                tint = Color.Unspecified,
                             )
                             Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
                         }
@@ -180,6 +199,9 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         isShowButtonBack.value = true
                     } else if (isForgotAccount.value) { // Forgot
                         showViewForgotPassword()
+                        isShowButtonBack.value = true
+                    } else if (isShowResetPassword.value) {
+                        showViewSaveNewPassword()
                         isShowButtonBack.value = true
                     } else {
                         // Login with SNN
@@ -198,9 +220,37 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
         if (isResetEmailDone.value) {
             showMessageEmailResetDone()
         }
+
+        // Make error create account
+        if (isErrorCreateAccount.value) {
+            showDialogMessage(
+                title = "",
+                content = stringResource(Res.string.create_new_account_fail)
+            ) {
+                isErrorCreateAccount.value = false
+            }
+        }
+
+        // Update password
+        if (isSavePasswordDone.value) {
+            showDialogMessage(
+                title = "",
+                content = stringResource(Res.string.forgot_password_done)
+            ) {
+                isSavePasswordDone.value = false
+                resetAllViewToDefault()
+            }
+        }
     }
 
     override fun onStartedScreen() {
+        if (viewModel.tokenFCM.isEmpty()) {
+            // Load fcm
+            viewModel.screenModelScope.launch {
+                viewModel.tokenFCM = firebaseAuth.loadFcmToken()
+                Logger.e("FCM Token : ${viewModel.tokenFCM}")
+            }
+        }
     }
 
     override fun onDisposedScreen() {
@@ -269,7 +319,6 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                     modifier = Modifier
                         .weight(1f)
                         .offset(x= (-20).dp / 2) //default icon width = 24.dp
-
                 )
             }
         }
@@ -324,6 +373,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         value = emailLogin.value,
                         onChange = {
                             emailLogin.value = it
+                            isEnableButtonLogin.value = checkDataToLogin()
                         },
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -332,6 +382,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         value = password.value,
                         onChange = {
                             password.value = it
+                            isEnableButtonLogin.value = checkDataToLogin()
                         },
                         submit = {
                             Logger.e("Click login on keyboard")
@@ -341,31 +392,63 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
 
                     // Button login
                     Button(onClick = {
-
-                    }, modifier = Modifier.width(150.dp).padding(bottom = 0.dp)) {
+                        viewModel.loginWithEmailPassword(emailLogin.value, password.value) {
+                            if (it.isNotEmpty()) {
+                                viewModel.loadUserInformationAndCheck(it) {user ->
+                                    if (user.userName.isEmpty()) {
+                                        val userInformationScreen = UserInformationScreen(user)
+                                        navigator.push(userInformationScreen)
+                                    } else {
+                                        isLogin.value = true
+                                    }
+                                }
+                            }
+                        }
+                    }, modifier = Modifier.width(150.dp).padding(bottom = 0.dp), enabled = isEnableButtonLogin.value) {
                         Text("Login")
                     }
 
-                    // Create account
-                    Text(
-                        modifier = Modifier.drawBehind {
-                            val strokeWidthPx = 1.dp.toPx()
-                            val verticalOffset = size.height - 2.sp.toPx()
-                            drawLine(
-                                color = Color.Blue,
-                                strokeWidth = strokeWidthPx,
-                                start = Offset(0f, verticalOffset),
-                                end = Offset(size.width, verticalOffset)
-                            )
-                        }.clickable(true) {
-                            Logger.e("Create account")
-                            isLoginWithAccount.value = false
-                            isCreateNewAccount.value = true
-                            isForgotAccount.value = false
+                    // Forgot
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        // Create account
+                        Text(
+                            modifier = Modifier.drawBehind {
+                                val strokeWidthPx = 1.dp.toPx()
+                                val verticalOffset = size.height - 2.sp.toPx()
+                                drawLine(
+                                    color = Color.Blue,
+                                    strokeWidth = strokeWidthPx,
+                                    start = Offset(0f, verticalOffset),
+                                    end = Offset(size.width, verticalOffset)
+                                )
+                            }.clickable(true) {
+                                Logger.e("Create account")
+                                isLoginWithAccount.value = false
+                                isCreateNewAccount.value = true
+                                isForgotAccount.value = false
 
-                        }, color = Color.Blue,
-                        text = stringResource(Res.string.create_new_account),
-                    )
+                            }, color = Color.Blue,
+                            text = stringResource(Res.string.create_new_account),
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(
+                            modifier = Modifier.drawBehind {
+                                val strokeWidthPx = 1.dp.toPx()
+                                val verticalOffset = size.height - 2.sp.toPx()
+                                drawLine(
+                                    color = Color.Blue,
+                                    strokeWidth = strokeWidthPx,
+                                    start = Offset(0f, verticalOffset),
+                                    end = Offset(size.width, verticalOffset)
+                                )
+                            }.clickable(true) {
+                                isLoginWithAccount.value = false
+                                isCreateNewAccount.value = false
+                                isForgotAccount.value = true
+                            }, color = Color.Blue, textAlign = TextAlign.End,
+                            text = "Forgot password?",
+                        )
+                    }
 
                     Spacer(modifier = Modifier.padding(bottom = 8.dp))
                 }
@@ -400,7 +483,8 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                             isEnableButtonCreate.value = checkDataCreateIsCorrect()
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(Res.string.create_new_account_name)
+                        label = stringResource(Res.string.create_new_account_name),
+                        placeholder = stringResource(Res.string.create_new_account_name_pl)
                     )
 
                     // Password
@@ -447,31 +531,11 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
 
                     // Button Create
                     Button(onClick = {
-
+                        viewModel.createNewAccountEmail(newAccountEmail.value, newAccountPassword.value) {
+                            handleUpdateUserInformation(it)
+                        }
                     }, modifier = Modifier.width(150.dp).padding(bottom = 0.dp), enabled = isEnableButtonCreate.value) {
                         Text(stringResource(Res.string.create_new_account_btn))
-                    }
-
-                    // Forgot
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                        Spacer(modifier = Modifier.fillMaxWidth().weight(1f))
-                        Text(
-                            modifier = Modifier.drawBehind {
-                                val strokeWidthPx = 1.dp.toPx()
-                                val verticalOffset = size.height - 2.sp.toPx()
-                                drawLine(
-                                    color = Color.Blue,
-                                    strokeWidth = strokeWidthPx,
-                                    start = Offset(0f, verticalOffset),
-                                    end = Offset(size.width, verticalOffset)
-                                )
-                            }.clickable(true) {
-                                isLoginWithAccount.value = false
-                                isCreateNewAccount.value = false
-                                isForgotAccount.value = true
-                            }, color = Color.Blue, textAlign = TextAlign.End,
-                            text = "Forgot password?",
-                        )
                     }
 
                     Spacer(modifier = Modifier.padding(bottom = 8.dp))
@@ -486,7 +550,10 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
         Row(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.Top) {
             Card(
                 modifier = Modifier
-                    .fillMaxWidth().padding(16.dp)
+                    .fillMaxWidth().padding(16.dp).clickable(enabled = true) {
+                        val userInformationScreen = UserInformationScreen(userModel.value)
+                        navigator.push(userInformationScreen)
+                    }
                 ,
                 elevation = CardDefaults.cardElevation(
                     defaultElevation =  10.dp,
@@ -523,7 +590,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                 .fillMaxWidth()
                                 .padding(0.dp)
                         ) {
-                            val painter = if (userModel.value.profileImage.isNotEmpty()) rememberImagePainter(userModel.value.profileImage)  else rememberImagePainter("https://..")
+                            val painter = if (userModel.value.profileImage.isNotEmpty()) rememberImagePainter(userModel.value.profileImage) else painterResource(Res.drawable.avatar_default)
                             Image(
                                 painter = painter,
                                 contentDescription = "avatar",
@@ -543,6 +610,98 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                 }
             )
         }
+    }
+
+    /**
+     * View for verify and save new password
+     *
+     */
+    @OptIn(ExperimentalResourceApi::class)
+    @Composable
+    private fun showViewSaveNewPassword() {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation =  10.dp,
+            ),
+            content = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 30.dp)
+                ) {
+                    // Add another single item
+                    Text(text = stringResource(Res.string.reset_password_title), style = textTittleContent(), modifier = Modifier.padding(top = 16.dp))
+                    LoginField(
+                        value = resetCodeEmail.value,
+                        onChange = {
+                            resetCodeEmail.value = it
+                            isEnableSavePassword.value = checkDataSaveNewPassword()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = stringResource(Res.string.reset_password_code),
+                        placeholder = stringResource(Res.string.reset_password_code_pl)
+                    )
+
+                    // Password
+                    InputPasswordField(
+                        value = resetPassword.value,
+                        onChange = {
+                            resetPassword.value = it
+                            isEnableSavePassword.value = checkDataSaveNewPassword()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                focusManager.moveFocus(FocusDirection.Down)
+                            }
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Password
+                        ),
+                        label = stringResource(Res.string.reset_password_password),
+                        placeholder = stringResource(Res.string.reset_password_password_pl),
+                    )
+
+                    // Re-password
+                    InputPasswordField(
+                        value = newAccountRePassword.value,
+                        onChange = {
+                            newAccountRePassword.value = it
+                            isEnableButtonCreate.value = checkDataCreateIsCorrect()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                keyboardController?.hide()
+                            }
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Password
+                        ),
+                        label = stringResource(Res.string.reset_password_re_password),
+                        placeholder = stringResource(Res.string.reset_password_password_pl),
+                    )
+
+                    // Button Save
+                    Button(onClick = {
+                        viewModel.resetPasswordWithCode(resetCodeEmail.value, resetPassword.value) {
+                            isSavePasswordDone.value = true
+                        }
+                    }, modifier = Modifier.width(150.dp).padding(bottom = 0.dp), enabled = isEnableButtonCreate.value) {
+                        Text(stringResource(Res.string.reset_password_btn_save))
+                    }
+
+                    Spacer(modifier = Modifier.padding(bottom = 8.dp))
+                }
+            }
+        )
     }
 
     @OptIn(ExperimentalResourceApi::class)
@@ -619,6 +778,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
             isCreateNewAccount.value = false
             isForgotAccount.value = false
             isShowButtonBack.value = false
+            isShowResetPassword.value = true
         }
     }
 
@@ -642,6 +802,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                 Logger.e("Google login error", exception)
             }
         }
+
         firebaseAuth.logInWithGoogle()
     }
 
@@ -664,6 +825,51 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                 newAccountPassword.value.length >= 6 && newAccountRePassword.value.length >= 6 &&
                 newAccountPassword.value == newAccountRePassword.value && newAccountEmail.value.isNotEmpty() &&
                 newAccountEmail.value.checkEmailValidate()
+    }
+
+    /**
+     * Check data is validate for update new password
+     *
+     * @return
+     */
+    private fun checkDataSaveNewPassword() : Boolean {
+        return resetPassword.value.isNotEmpty() && resetRePassword.value.isNotEmpty() &&
+                resetPassword.value.length >= 6 && resetRePassword.value.length >= 6 &&
+                resetPassword.value == resetRePassword.value && resetCodeEmail.value.isNotEmpty()
+    }
+
+    /**
+     * Check information login is validate
+     *
+     * @return
+     */
+    private fun checkDataToLogin(): Boolean {
+        return emailLogin.value.isNotEmpty() && emailLogin.value.checkEmailValidate() && password.value.isNotEmpty() && password.value.length >= 6
+    }
+
+    /**
+     * Handle update user
+     *
+     * @param userModel
+     */
+    private fun handleUpdateUserInformation(userModel: UserModel?) {
+        if (userModel != null) {
+            val userInformationScreen = UserInformationScreen(userModel)
+            navigator.push(userInformationScreen)
+        } else {
+            isErrorCreateAccount.value = true
+        }
+    }
+
+    /**
+     * Reset all view to default
+     */
+    private fun resetAllViewToDefault() {
+        isLoginWithAccount.value = false
+        isCreateNewAccount.value = false
+        isForgotAccount.value = false
+        isShowResetPassword.value = false
+        isShowButtonBack.value = false
     }
 }
 

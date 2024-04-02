@@ -2,6 +2,7 @@ package base
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -15,9 +16,11 @@ open class BaseModel {
     open var id: String = ""
 
     @SerialName("createdAt")
+    @Transient
     var createdAt: Long = 0L
 
     @SerialName("updatedAt")
+    @Transient
     var updatedAt: Long? = 0L
 
     /**

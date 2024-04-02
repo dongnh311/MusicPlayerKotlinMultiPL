@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import com.dongnh.musicplayer.AndroidMusicPlayerSingleton
 import com.dongnh.musicplayer.MainActivity
 import com.dongnh.musicplayer.R
@@ -11,10 +12,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import const.LOGIN_BY_GOOGLE
+import const.PLATFORM_ANDROID
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import model.UserModel
 import timber.log.Timber
 import utils.exts.toStringRemoveNull
@@ -113,7 +123,8 @@ class AndroidFirebaseAuthControl : FireBaseAuthControl<GoogleSignInClient, Activ
                     userModel.id = user?.uid.toString()
                     userModel.userName = user?.displayName.toStringRemoveNull()
                     userModel.profileImage = user?.photoUrl?.toString().toStringRemoveNull()
-                    //userModel.userName = user?.displayName.toString()
+                    userModel.loginType = LOGIN_BY_GOOGLE
+                    userModel.platform = PLATFORM_ANDROID
                     onLoginGoogleCallBack?.onLoginComplete(userModel)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -124,6 +135,24 @@ class AndroidFirebaseAuthControl : FireBaseAuthControl<GoogleSignInClient, Activ
             .addOnFailureListener {
                 Timber.e(it)
             }
+    }
+
+    override suspend fun loadFcmToken() : String {
+        val job = CoroutineScope(Dispatchers.IO).async {
+            val jobResult =
+                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        Timber.e("Fetching FCM registration token failed" + task.exception)
+                        return@OnCompleteListener
+                    }
+                })
+
+            jobResult.await()
+
+            return@async jobResult.result
+        }
+
+        return job.await()
     }
 }
 

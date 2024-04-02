@@ -2,6 +2,7 @@ package model
 
 import base.BaseModel
 import const.ACCOUNT_TYPE_FREE
+import const.LOGIN_BY_GOOGLE
 import const.PLATFORM_ANDROID
 import kotlinx.serialization.Serializable
 
@@ -15,8 +16,22 @@ import kotlinx.serialization.Serializable
 class UserModel: BaseModel() {
     var userName: String = ""
     var profileImage: String = ""
+    var dayOfBrith: String = ""
     var platform: String = PLATFORM_ANDROID
     var fcmToken: String = ""
     var coin: Double = 0.0
     var accountType: Int = ACCOUNT_TYPE_FREE
+    var loginType: String = LOGIN_BY_GOOGLE
+
+    /**
+     * Clone data
+     *
+     * @param userModel
+     */
+    fun cloneDataFromFirebase(userModel: UserModel) {
+        this.userName = userModel.userName
+        this.profileImage = userModel.profileImage
+        this.coin = userModel.coin
+        this.accountType = userModel.accountType
+    }
 }

@@ -2,15 +2,20 @@ package childView
 
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
@@ -31,7 +36,9 @@ fun InputTextField (
     placeholder: String = "",
     leadingIcon: @Composable () -> Unit,
     keyboardActions: KeyboardActions,
-    keyboardOptions: KeyboardOptions
+    keyboardOptions: KeyboardOptions,
+    enabled: Boolean = true,
+    readOnly: Boolean = true
 ) {
     OutlinedTextField(
         value = value,
@@ -43,6 +50,8 @@ fun InputTextField (
         placeholder = { Text(placeholder) },
         label = { Text(label) },
         singleLine = true,
-        visualTransformation = VisualTransformation.None
+        visualTransformation = VisualTransformation.None,
+        enabled = enabled,
+        readOnly = readOnly
     )
 }
