@@ -9,16 +9,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
@@ -87,6 +91,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import styles.buttonCommonModifier
 import styles.colorPrimaryText
 import styles.primaryDark
 import styles.textContentPrimary
@@ -114,8 +119,6 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
     private val newRePassword = mutableStateOf("")
 
     private val isEnableButtonSave = mutableStateOf(false)
-
-
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
@@ -149,7 +152,8 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                         bottom = it.calculateBottomPadding()
                     )
             ) {
-                Column(modifier = Modifier.fillMaxWidth().padding(all = 16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Column(modifier = Modifier.fillMaxWidth().padding(all = 16.dp).verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                     val painter = if (userAvatar.value.isNotEmpty()) rememberImagePainter(userAvatar.value) else painterResource(Res.drawable.avatar_default)
                     Box(modifier = Modifier) {
                         Image(
@@ -404,12 +408,12 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                         placeholder = stringResource(Res.string.user_information_old_password_pl),
                     )
 
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.heightIn(min = 50.dp).weight(1f))
 
                     // Button Save
                     Button(onClick = {
 
-                    }, modifier = Modifier.width(150.dp).padding(bottom = 0.dp), enabled = isEnableButtonSave.value) {
+                    }, modifier = Modifier.width(150.dp).padding(top = 16.dp, bottom = 16.dp).buttonCommonModifier(), enabled = isEnableButtonSave.value) {
                         Text(stringResource(Res.string.reset_password_btn_save))
                     }
                 }
@@ -441,7 +445,8 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
      * @return
      */
     private fun checkToEnableButtonSave() : Boolean {
-        val checkNameAndBrith = userName.value.isNotEmpty() && userName.value != userModel.userName || brithDay.value.isNotEmpty() && brithDay.value != userModel.dayOfBrith
+        val checkNameAndBrith = userName.value.isNotEmpty() && userName.value != userModel.userName ||
+                brithDay.value.isNotEmpty() && brithDay.value != userModel.dayOfBrith || userAvatar.value.isNotEmpty() && userAvatar.value != userModel.profileImage
         return if (currentPassword.value.isEmpty() && newPassword.value.isEmpty() && newRePassword.value.isEmpty()) {
             checkNameAndBrith
         } else {

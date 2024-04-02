@@ -2,6 +2,8 @@ package commonShare
 
 import platform.Foundation.NSNumber
 import platform.Foundation.NSNumberFormatter
+import platform.darwin.NSInteger
+
 /**
  * Project : MusicPlayerKotlinMultiPL
  * Created by DongNH on 01/04/2024.
@@ -14,24 +16,15 @@ actual class DecimalFormat actual constructor() {
         formatter.minimumFractionDigits = 0u
         formatter.maximumFractionDigits = 2u
         formatter.numberStyle = 1u // Decimal
-        val numberObject: NSNumber
-        when (number) {
-            is Int -> {
-                numberObject = NSNumber(number)
-            }
-            is Double -> {
-                numberObject = NSNumber(number)
-            }
-            is Long -> {
-                numberObject = NSNumber(number)
-            }
-            is Float -> {
-                numberObject = NSNumber(number)
-            }
-            else -> {
-                numberObject = NSNumber(0)
-            }
+        formatter.groupingSeparator = ","
+        formatter.decimalSeparator = "."
+        formatter.setPositiveFormat(pattern)
+        return try {
+            val numberObject: NSNumber = NSNumber(number as Double)
+            formatter.stringFromNumber(numberObject)!!
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "0"
         }
-        return formatter.stringFromNumber(numberObject)!!
     }
 }

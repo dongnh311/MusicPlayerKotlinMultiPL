@@ -1,5 +1,9 @@
 package commonShare
 
+import com.seiko.imageloader.util.Logger
+import platform.UserNotifications.UNAuthorizationOptions
+import singleton.MusicPlayerSingleton
+
 /**
  * Project : MusicPlayerKotlinMultiPL
  * Created by DongNH on 28/03/2024.
@@ -7,18 +11,36 @@ package commonShare
  * Phone : +84397199197.
  */
 
+val iosFireBaseAuth = IOsFireBaseAuth()
+var iosMusicPlayerSingleTon: MusicPlayerSingleTonIOs? = null
+
 class IOsFireBaseAuth: FireBaseAuthControl<Any, Any> {
     override lateinit var googleSignInClient: Any
 
     override lateinit var resultLauncherGoogle: Any
 
-    override  var onLoginGoogleCallBack: OnLoginGoogleCallBack? = null
+    override var onLoginGoogleCallBack: OnLoginGoogleCallBack? = null
+
+    var fcmToken = ""
 
     override fun logInWithGoogle() {}
 
     override suspend fun loadFcmToken(): String {
-        return ""
+        val text = iosMusicPlayerSingleTon?.loadTextForTest()
+        text?.let {
+            co.touchlab.kermit.Logger.e("Text ${it}")
+        }
+        return fcmToken
     }
 }
 
-actual fun loadFireBaseAuthControl(): FireBaseAuthControl<*, *>  = IOsFireBaseAuth()
+actual fun loadFireBaseAuthControl(): FireBaseAuthControl<*, *>  = iosFireBaseAuth
+
+fun configSingletonForIos(musicPlayerSingleTonIOs: MusicPlayerSingleTonIOs) {
+    iosMusicPlayerSingleTon = musicPlayerSingleTonIOs
+}
+
+interface MusicPlayerSingleTonIOs {
+    fun loadTextForTest(): String
+}
+

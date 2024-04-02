@@ -1,8 +1,10 @@
 package styles
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,6 +37,9 @@ fun iconSize24dp() = Modifier.size(24.dp)
 fun iconSize20dp() = Modifier.size(20.dp)
 
 @Composable
+fun iconSize30dp() = Modifier.size(30.dp)
+
+@Composable
 fun buttonDialog() = Modifier.clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
 
 @Composable
@@ -49,3 +54,6 @@ fun Modifier.backgroundGradient() = Modifier
             )
         )
     )
+
+@Composable
+fun Modifier.buttonCommonModifier() = Modifier.width(200.dp).height(45.dp)

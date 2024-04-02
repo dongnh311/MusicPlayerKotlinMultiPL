@@ -1,7 +1,11 @@
 package styles
 
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -33,3 +37,4 @@ fun buttonColorsCancel() = ButtonDefaults.buttonColors(
     backgroundColor = colorButtonCancel,
     disabledBackgroundColor = colorDisable,
 )
+
