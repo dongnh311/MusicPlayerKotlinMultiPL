@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,10 +24,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
@@ -52,7 +48,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import base.BaseScreen
-import cafe.adriel.voyager.navigator.tab.CurrentTab
 import childView.InputPasswordField
 import childView.InputTextField
 import co.touchlab.kermit.Logger
@@ -62,6 +57,8 @@ import commonShare.DecimalFormat
 import commonShare.loadPermissionControl
 import const.ACCOUNT_TYPE_FREE
 import const.ACCOUNT_TYPE_VIP
+import const.LOGIN_BY_FACEBOOK
+import const.LOGIN_BY_GOOGLE
 import const.PERMISSION_GRAND
 import const.PLATFORM_ANDROID
 import model.ImagePickerModel
@@ -71,23 +68,26 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_buy_coin
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_edit
-import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_email
-import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_email_pl
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_email
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_facebook
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_google
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_android
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin_supper_vip
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin_vip
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_ios
+import musicplayerkotlinmultipl.composeapp.generated.resources.pick_image_fail_permission
 import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_btn_save
-import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_password
-import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_password_pl
-import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_re_password
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_account_type
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_account_type_free
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_account_type_vip
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_brith_day
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_brith_day_pl
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_coin
+import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_login_with
+import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_login_with_email
+import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_login_with_facebook
+import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_login_with_google
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_name
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_name_pl
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_old_password
@@ -99,15 +99,10 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import singleton.ViewManager
 import styles.buttonCommonModifier
 import styles.buttonSize32dp
-import styles.colorPrimaryText
-import styles.iconSize24dp
-import styles.paddingTopBottom
 import styles.primaryDark
 import styles.textContentPrimary
-import styles.textContentSecond
 import viewModel.UserInformationViewModel
 
 /**
@@ -134,6 +129,8 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
 
     private val isUpdatePasswordDone = mutableStateOf(false)
     private val isUpdateInformationDone = mutableStateOf(false)
+
+    private val isShowDialogFailPermission = mutableStateOf(false)
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
@@ -324,7 +321,7 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                         )
                     }
 
-                    // Platform
+                    // Type
                     Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
                         border = BorderStroke(1.dp, color = primaryDark),
                         shape = RoundedCornerShape(4.dp)
@@ -347,6 +344,58 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                                 painterResource(Res.drawable.icon_coin_supper_vip)
                             }
                         }
+                        IconButton(
+                            onClick = {
+
+                            },
+                            modifier = Modifier.size(width = 40.dp, height = 40.dp).padding(end = 16.dp),
+                            content = {
+                                // Specify the icon using the icon parameter
+                                Icon(painter = icon,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(30.dp),
+                                    tint = Color.Unspecified,
+                                )
+                                Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
+                            }
+                        )
+                    }
+
+                    // Account
+                    Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
+                        border = BorderStroke(1.dp, color = primaryDark),
+                        shape = RoundedCornerShape(4.dp)
+                    ),
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+                        Text(text = stringResource(Res.string.user_information_login_with),
+                            style = textContentPrimary(), modifier = Modifier.weight(1f).padding(start = 16.dp, top= 16.dp, bottom = 16.dp))
+
+                        val icon = when (userModel.loginType) {
+                            LOGIN_BY_GOOGLE -> {
+                                painterResource(Res.drawable.btn_google)
+                            }
+                            LOGIN_BY_FACEBOOK -> {
+                                painterResource(Res.drawable.btn_facebook)
+                            }
+                            else -> {
+                                painterResource(Res.drawable.btn_email)
+                            }
+                        }
+
+                        val typeAccount  = when (userModel.loginType) {
+                            LOGIN_BY_GOOGLE -> {
+                                stringResource(Res.string.user_information_login_with_google)
+                            }
+                            LOGIN_BY_FACEBOOK -> {
+                                stringResource(Res.string.user_information_login_with_facebook)
+                            }
+                            else -> {
+                                stringResource(Res.string.user_information_login_with_email)
+                            }
+                        }
+
+                        Text(text = typeAccount,
+                            style = textContentPrimary(), modifier = Modifier.padding(end = 8.dp))
                         IconButton(
                             onClick = {
 
@@ -454,6 +503,18 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                 }
             )
         }
+
+        // Show dialog need permission
+        if (isShowDialogFailPermission.value) {
+            showDialogMessage(
+                title = "",
+                content = stringResource(Res.string.pick_image_fail_permission),
+                callBackOk = {
+                    isShowDialogFailPermission.value = false
+                    // TODO : Goto setting
+                }
+            )
+        }
     }
 
     override fun onStartedScreen() {
@@ -522,6 +583,7 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                     Logger.e("Load image on device : ${listImages.size}")
                 } else {
                     Logger.e("Fail to request permission")
+                    isShowDialogFailPermission.value = true
                 }
             }
         }
@@ -533,7 +595,13 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
             navigator.push(pickImageScreen)
             pickImageScreen.onSelectedImageAvatar = object : PickImageScreen.OnSelectedImageAvatar {
                 override fun onSelectedImage(imagePickerModel: ImagePickerModel) {
-
+                    Logger.e("Callback item image selected : ${imagePickerModel.mediaPath}")
+                    userAvatar.value = imagePickerModel.mediaPath
+                    viewModel.uploadAvatar(this@UserInformationScreen.userModel, imagePickerModel) {
+                        viewModel.updateInformationOfUser(this@UserInformationScreen.userModel) {
+                            Logger.e("Update new path for avatar to firebase done")
+                        }
+                    }
                 }
             }
         } else {

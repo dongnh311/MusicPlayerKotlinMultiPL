@@ -41,6 +41,7 @@ val colorMainApp = Color(0xFF7209B7)
 val colorAccountLight = Color(0xFFBF45EA)
 val colorAccountDark = Color(0xFFBF45EA)
 
+val colorPrimaryApp = Color(0xFF9400C8)
 
 // Text
 val colorPrimaryText: Color @Composable get() = if (!isSystemInDarkTheme()) colorBlack else colorWhite

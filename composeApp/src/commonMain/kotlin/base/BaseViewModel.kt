@@ -42,6 +42,9 @@ abstract class BaseViewModel: ScreenModel {
         }
     }
 
+    // CoroutineScope on background
+    val coroutineScope = CoroutineScope(dispatchersIO + coroutineExceptionHandler)
+
     final override fun onDispose() {
         super.onDispose()
         Logger.e("onDispose ScreenModel Name : ${this@BaseViewModel}")
@@ -129,7 +132,7 @@ abstract class BaseViewModel: ScreenModel {
         crossinline progressInLayout: (T) -> Unit,
         crossinline onErrorThrowable: (Throwable) -> Unit
     ) {
-        CoroutineScope(dispatchersIO + coroutineExceptionHandler).launch {
+        coroutineScope.launch {
             try {
                 // Open dialog
                 this@BaseViewModel.screenModelScope.launch {

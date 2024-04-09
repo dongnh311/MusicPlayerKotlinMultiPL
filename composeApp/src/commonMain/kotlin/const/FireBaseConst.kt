@@ -10,3 +10,6 @@ const val FB_DATABASE_USER = "users"
 const val FB_DATABASE_RANKINGS = "rankings"
 const val FB_DATABASE_NEW = "newMusics"
 const val FB_DATABASE_FORYOU = "forYou"
+
+// Upload storage
+const val FIREBASE_STORAGE_AVATAR = "avatar"

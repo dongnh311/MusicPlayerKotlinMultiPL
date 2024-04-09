@@ -1,5 +1,6 @@
 package view
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -24,6 +24,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
@@ -59,18 +60,38 @@ import co.touchlab.kermit.Logger
 import com.seiko.imageloader.rememberImagePainter
 import commonShare.DecimalFormat
 import commonShare.OnLoginGoogleCallBack
+import commonShare.getPlatform
 import commonShare.loadFireBaseAuthControl
+import const.ACCOUNT_TYPE_FREE
+import const.ACCOUNT_TYPE_VIP
 import const.LOGIN_BY_EMAIL
-import kotlinx.coroutines.coroutineScope
+import const.LOGIN_BY_FACEBOOK
+import const.LOGIN_BY_GOOGLE
 import kotlinx.coroutines.launch
 import model.UserModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
+import musicplayerkotlinmultipl.composeapp.generated.resources.account_about
+import musicplayerkotlinmultipl.composeapp.generated.resources.account_albums
+import musicplayerkotlinmultipl.composeapp.generated.resources.account_coin_history
+import musicplayerkotlinmultipl.composeapp.generated.resources.account_my_favourite
+import musicplayerkotlinmultipl.composeapp.generated.resources.account_play_history
+import musicplayerkotlinmultipl.composeapp.generated.resources.account_play_list
+import musicplayerkotlinmultipl.composeapp.generated.resources.account_settings
+import musicplayerkotlinmultipl.composeapp.generated.resources.account_version
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_about
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_album
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_email
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_facebook
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_fav_active
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_google
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_logout
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_my_coin
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_play_history
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_playlist
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_setting
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_version
 import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account
 import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account_btn
 import musicplayerkotlinmultipl.composeapp.generated.resources.create_new_account_fail
@@ -86,6 +107,9 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_c
 import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_done
 import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_email
 import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_email_pl
+import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin
+import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin_supper_vip
+import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin_vip
 import musicplayerkotlinmultipl.composeapp.generated.resources.login_with_email
 import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_btn_save
 import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_code
@@ -94,14 +118,21 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_pa
 import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_password_pl
 import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_re_password
 import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_title
+import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_account_type
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_error_information
+import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_login_with
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import styles.buttonColorAccount
 import styles.buttonColorsEmail
 import styles.buttonColorsFacebook
 import styles.buttonColorsGoogle
 import styles.colorAccountCard
+import styles.colorPrimaryApp
+import styles.iconSize30dp
+import styles.paddingTop16StartEnd16
+import styles.paddingTop8StartEnd16
 import styles.textButton
 import styles.textContentPrimary
 import styles.textContentSecond
@@ -562,69 +593,354 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                 }
             )
         } else {
-            Row(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.Top) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth().padding(16.dp).clickable(enabled = true) {
-                            val userInformationScreen = UserInformationScreen(userModel.value)
-                            navigator.push(userInformationScreen)
-                        }
-                    ,
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation =  10.dp,
-                    ),
-                    shape = RoundedCornerShape(
-                        topEnd = 5.dp,
-                        topStart = 5.dp,
-                        bottomEnd = 5.dp,
-                        bottomStart = 5.dp
-                    ),
-                    colors = CardDefaults.cardColors(
-                        containerColor = colorAccountCard
-                    ),
-                    content = {
-                        Box(modifier = Modifier.padding(16.dp)) {
-                            IconButton(
-                                onClick = {
-                                    isLogout.value = true
-                                },
-                                modifier = Modifier.size(width = 45.dp, height = 45.dp).align(Alignment.TopEnd),
-                                content = {
-                                    // Specify the icon using the icon parameter
-                                    Icon(painter = painterResource(Res.drawable.btn_logout),
-                                        contentDescription = null,
-                                        modifier = Modifier.size(40.dp),
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
-                                }
-                            )
-                            Row(
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(0.dp)
-                            ) {
-                                val painter = if (userModel.value.profileImage.isNotEmpty()) rememberImagePainter(userModel.value.profileImage) else painterResource(Res.drawable.avatar_default)
-                                Image(
-                                    painter = painter,
-                                    contentDescription = "avatar",
-                                    contentScale = ContentScale.Crop,            // crop the image if it's not a square
-                                    modifier = Modifier
-                                        .size(84.dp)
-                                        .clip(CircleShape)                       // clip to the circle shape
-                                        .border(2.dp, Color.Gray, CircleShape)   // add a border (optional)
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column (modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top) {
+                    // User info
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth().padding(16.dp).clickable(enabled = true) {
+                                val userInformationScreen = UserInformationScreen(userModel.value)
+                                navigator.push(userInformationScreen)
+                            }
+                        ,
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation =  10.dp,
+                        ),
+                        shape = RoundedCornerShape(
+                            topEnd = 5.dp,
+                            topStart = 5.dp,
+                            bottomEnd = 5.dp,
+                            bottomStart = 5.dp
+                        ),
+                        colors = CardDefaults.cardColors(
+                            containerColor = colorAccountCard
+                        ),
+                        content = {
+                            Box(modifier = Modifier.padding(16.dp)) {
+                                IconButton(
+                                    onClick = {
+                                        isLogout.value = true
+                                    },
+                                    modifier = Modifier.size(width = 45.dp, height = 45.dp).align(Alignment.TopEnd),
+                                    content = {
+                                        // Specify the icon using the icon parameter
+                                        Icon(painter = painterResource(Res.drawable.btn_logout),
+                                            contentDescription = null,
+                                            modifier = Modifier.size(40.dp),
+                                        )
+                                        Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
+                                    }
                                 )
-                                // Add another single item
-                                Column(modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
-                                    Text(text = userModel.value.userName, style = textContentPrimary(), modifier = Modifier.padding(bottom = 8.dp))
-                                    Text(text = "Coin : " + DecimalFormat().format(userModel.value.coin), style = textContentSecond(), modifier = Modifier.padding(top = 8.dp))
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(0.dp)
+                                ) {
+                                    val painter = if (userModel.value.profileImage.isNotEmpty()) rememberImagePainter(userModel.value.profileImage) else painterResource(Res.drawable.avatar_default)
+                                    Image(
+                                        painter = painter,
+                                        contentDescription = "avatar",
+                                        contentScale = ContentScale.Crop,            // crop the image if it's not a square
+                                        modifier = Modifier
+                                            .size(84.dp)
+                                            .clip(CircleShape)                       // clip to the circle shape
+                                            .border(2.dp, Color.Gray, CircleShape)   // add a border (optional)
+                                    )
+                                    // Add another single item
+                                    Column(modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
+                                        Text(text = userModel.value.userName, style = textContentPrimary(), modifier = Modifier.padding(bottom = 8.dp))
+                                        Text(text = "Coin : " + DecimalFormat().format(userModel.value.coin), style = textContentSecond(), modifier = Modifier.padding(top = 8.dp))
+                                    }
                                 }
                             }
                         }
+                    )
+
+                    // Login with account/Type
+                    Row (modifier = Modifier.fillMaxWidth().paddingTop8StartEnd16()) {
+                        // Login account
+                        Row(horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(0.dp)){
+
+                            Text(text = stringResource(Res.string.user_information_login_with), style = textButton(), modifier = Modifier.padding(start = 8.dp).weight(1f))
+
+                            val icon = when (userModel.value.loginType) {
+                                LOGIN_BY_GOOGLE -> {
+                                    painterResource(Res.drawable.btn_google)
+                                }
+                                LOGIN_BY_FACEBOOK -> {
+                                    painterResource(Res.drawable.btn_facebook)
+                                }
+                                else -> {
+                                    painterResource(Res.drawable.btn_email)
+                                }
+                            }
+                            Icon(
+                                painter = icon,
+                                modifier = iconSize30dp(),
+                                contentDescription = stringResource(Res.string.user_information_login_with),
+                                tint = Color.Unspecified
+                            )
+                        }
+                        Text(text = "/", style = textButton(), modifier = Modifier.padding(start = 8.dp))
+
+                        // Login type
+                        Row(horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(0.dp)){
+
+                            Text(text = stringResource(Res.string.user_information_account_type), style = textButton(), modifier = Modifier.padding(start = 8.dp).weight(1f))
+                            val icon = when (userModel.value.accountType) {
+                                ACCOUNT_TYPE_FREE -> {
+                                    painterResource(Res.drawable.icon_coin)
+                                }
+                                ACCOUNT_TYPE_VIP -> {
+                                    painterResource(Res.drawable.icon_coin_vip)
+                                }
+                                else -> {
+                                    painterResource(Res.drawable.icon_coin_supper_vip)
+                                }
+                            }
+                            Icon(
+                                painter = icon,
+                                modifier = iconSize30dp(),
+                                contentDescription = stringResource(Res.string.user_information_account_type),
+                                tint = Color.Unspecified
+                            )
+                        }
                     }
-                )
+
+                    // Button play history
+                    androidx.compose.material3.Button(modifier = Modifier.paddingTop16StartEnd16(),
+                        border = BorderStroke(1.dp, colorPrimaryApp),
+                        shape = RoundedCornerShape(5),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 1.dp,
+                            pressedElevation = 2.dp,
+                            disabledElevation = 2.dp,
+                        ),
+                        colors = buttonColorAccount(),
+                        onClick = {
+                        }) {
+                        Row(horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp)){
+                            Icon(
+                                painter = painterResource(Res.drawable.btn_play_history),
+                                modifier = iconSize30dp(),
+                                contentDescription = stringResource(Res.string.account_play_history),
+                                tint = Color.Unspecified
+                            )
+
+                            Text(text = stringResource(Res.string.account_play_history), style = textButton(), modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+
+                    // Button play list
+                    androidx.compose.material3.Button(modifier = Modifier.paddingTop8StartEnd16(),
+                        border = BorderStroke(1.dp, colorPrimaryApp),
+                        shape = RoundedCornerShape(5),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 1.dp,
+                            pressedElevation = 2.dp,
+                            disabledElevation = 2.dp,
+                        ),
+                        colors = buttonColorAccount(),
+                        onClick = {
+
+                        }) {
+                        Row(horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp)){
+                            Icon(
+                                painter = painterResource(Res.drawable.btn_playlist),
+                                modifier = iconSize30dp(),
+                                contentDescription = stringResource(Res.string.account_play_list),
+                                tint = Color.Unspecified
+                            )
+
+                            Text(text = stringResource(Res.string.account_play_list), style = textButton(), modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+
+                    // Button Album
+                    androidx.compose.material3.Button(modifier = Modifier.paddingTop8StartEnd16(),
+                        border = BorderStroke(1.dp, colorPrimaryApp),
+                        shape = RoundedCornerShape(5),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 1.dp,
+                            pressedElevation = 2.dp,
+                            disabledElevation = 2.dp,
+                        ),
+                        colors = buttonColorAccount(),
+                        onClick = {
+
+                        }) {
+                        Row(horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp)){
+                            Icon(
+                                painter = painterResource(Res.drawable.btn_album),
+                                modifier = iconSize30dp(),
+                                contentDescription = stringResource(Res.string.account_albums),
+                                tint = Color.Unspecified
+                            )
+
+                            Text(text = stringResource(Res.string.account_albums), style = textButton(), modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+
+                    // Button Fav
+                    androidx.compose.material3.Button(modifier = Modifier.paddingTop8StartEnd16(),
+                        border = BorderStroke(1.dp, colorPrimaryApp),
+                        shape = RoundedCornerShape(5),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 1.dp,
+                            pressedElevation = 2.dp,
+                            disabledElevation = 2.dp,
+                        ),
+                        colors = buttonColorAccount(),
+                        onClick = {
+
+                        }) {
+                        Row(horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp)){
+                            Icon(
+                                painter = painterResource(Res.drawable.btn_fav_active),
+                                modifier = iconSize30dp(),
+                                contentDescription = stringResource(Res.string.account_my_favourite),
+                                tint = Color.Unspecified
+                            )
+
+                            Text(text = stringResource(Res.string.account_my_favourite), style = textButton(), modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+
+                    // Button Coin
+                    androidx.compose.material3.Button(modifier = Modifier.paddingTop8StartEnd16(),
+                        border = BorderStroke(1.dp, colorPrimaryApp),
+                        shape = RoundedCornerShape(5),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 1.dp,
+                            pressedElevation = 2.dp,
+                            disabledElevation = 2.dp,
+                        ),
+                        colors = buttonColorAccount(),
+                        onClick = {
+
+                        }) {
+                        Row(horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp)){
+                            Icon(
+                                painter = painterResource(Res.drawable.btn_my_coin),
+                                modifier = iconSize30dp(),
+                                contentDescription = stringResource(Res.string.account_coin_history),
+                                tint = Color.Unspecified
+                            )
+
+                            Text(text = stringResource(Res.string.account_coin_history), style = textButton(), modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+
+                    // Button Setting
+                    androidx.compose.material3.Button(modifier = Modifier.paddingTop8StartEnd16(),
+                        border = BorderStroke(1.dp, colorPrimaryApp),
+                        shape = RoundedCornerShape(5),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 1.dp,
+                            pressedElevation = 2.dp,
+                            disabledElevation = 2.dp,
+                        ),
+                        colors = buttonColorAccount(),
+                        onClick = {
+
+                        }) {
+                        Row(horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp)){
+                            Icon(
+                                painter = painterResource(Res.drawable.btn_setting),
+                                modifier = iconSize30dp(),
+                                contentDescription = stringResource(Res.string.account_settings),
+                                tint = Color.Unspecified
+                            )
+
+                            Text(text = stringResource(Res.string.account_settings), style = textButton(), modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+
+
+                    // Button Setting
+                    androidx.compose.material3.Button(modifier = Modifier.paddingTop8StartEnd16(),
+                        border = BorderStroke(1.dp, colorPrimaryApp),
+                        shape = RoundedCornerShape(5),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 1.dp,
+                            pressedElevation = 2.dp,
+                            disabledElevation = 2.dp,
+                        ),
+                        colors = buttonColorAccount(),
+                        onClick = {
+
+                        }) {
+                        Row(horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp)){
+                            Icon(
+                                painter = painterResource(Res.drawable.btn_about),
+                                modifier = iconSize30dp(),
+                                contentDescription = stringResource(Res.string.account_about),
+                                tint = Color.Unspecified
+                            )
+
+                            Text(text = stringResource(Res.string.account_about), style = textButton(), modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+
+                }
+                // Version
+                Row(horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp).align(Alignment.BottomCenter)){
+                    Icon(
+                        painter = painterResource(Res.drawable.btn_version),
+                        modifier = iconSize30dp(),
+                        contentDescription = stringResource(Res.string.account_version),
+                        tint = Color.Unspecified,
+                    )
+
+                    Text(text = stringResource(Res.string.account_version) + " ${getPlatform().versionApp}", style = textButton(), modifier = Modifier.padding(start = 8.dp))
+                }
             }
+
+            //Row(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.Top) {}
         }
     }
 

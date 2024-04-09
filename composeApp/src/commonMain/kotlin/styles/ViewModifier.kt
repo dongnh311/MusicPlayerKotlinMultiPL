@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 
@@ -22,13 +21,19 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun Modifier.paddingStartEnd() = this.padding(start = 16.dp, end = 16.dp)
+fun Modifier.paddingStartEnd16() = this.padding(start = 16.dp, end = 16.dp)
 
 @Composable
-fun Modifier.paddingTopStartEnd() = this.padding(start = 16.dp, end = 16.dp, top = 8.dp)
+fun Modifier.paddingTop8StartEnd16() = this.padding(start = 16.dp, end = 16.dp, top = 8.dp)
 
 @Composable
-fun Modifier.paddingTopBottom() = this.padding(top = 8.dp, bottom = 8.dp)
+fun Modifier.paddingTop16StartEnd16() = this.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+
+@Composable
+fun Modifier.paddingBottomStartEnd16() = this.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+
+@Composable
+fun Modifier.paddingTopBottom8() = this.padding(top = 8.dp, bottom = 8.dp)
 
 @Composable
 fun Modifier.paddingTop() = this.padding(top = 8.dp)

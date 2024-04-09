@@ -38,3 +38,11 @@ fun buttonColorsCancel() = ButtonDefaults.buttonColors(
     disabledBackgroundColor = colorDisable,
 )
 
+@Composable
+fun buttonColorAccount() = androidx.compose.material3.ButtonDefaults.buttonColors(
+    containerColor = colorPrimaryBackground,
+    contentColor = colorPrimaryText,
+    disabledContainerColor = colorDisable,
+    disabledContentColor = colorDisable
+)
+

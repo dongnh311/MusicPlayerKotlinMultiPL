@@ -3,7 +3,14 @@ package viewModel
 import androidx.compose.runtime.Composable
 import base.BaseViewModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import co.touchlab.kermit.Logger
+import commonShare.loadFireBaseStorage
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+import model.ImagePickerModel
 import model.UserModel
 import utils.helper.FirebaseUserHelper
 
@@ -17,6 +24,9 @@ class UserInformationViewModel: BaseViewModel() {
 
     // Firebase data base
     private val firebaseUser = FirebaseUserHelper()
+
+    // Load firebase storage
+    private val firebaseStore = loadFireBaseStorage()
 
     /**
      * Logout
@@ -66,5 +76,34 @@ class UserInformationViewModel: BaseViewModel() {
             },
             onErrorThrowable = {}
         )
+    }
+
+    /**
+     * Update avatar for user
+     *
+     * @param userModel
+     * @param imagePickerModel
+     */
+    fun uploadAvatar(userModel: UserModel, imagePickerModel: ImagePickerModel, callback: () -> Unit) {
+        workingWithApiHaveDialog(
+            service = {
+                val task = firebaseStore.uploadAvatar(userModel, imagePickerModel).shareIn(
+                    scope = this@UserInformationViewModel.coroutineScope,
+                    replay = 1,
+                    started = SharingStarted.WhileSubscribed()
+                )
+                task.first()
+            },
+            progressInBackground = {},
+            progressInLayout = {
+                callback.invoke()
+            },
+            onErrorThrowable = { e ->
+                e.printStackTrace()
+                Logger.e("Fail to upload avatar", e)
+                stopWorking()
+            }
+        )
+
     }
 }
