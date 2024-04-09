@@ -124,7 +124,8 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
 
     private val isShowButtonBack = mutableStateOf(false)
 
-    private val isLogin = mutableStateOf(viewModel.firebaseUser.checkUserLogin())
+    private val isLogin = mutableStateOf(viewModel.requestCheckUserLogin())
+    private val isOpenDialogMakeUpdate = mutableStateOf(viewModel.isUserNeedUpdateInformation)
     private val isLogout =  mutableStateOf(false)
 
     private val emailLogin = mutableStateOf("")
@@ -551,7 +552,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun showViewAccount(userModel: MutableState<UserModel>) {
-        if (userModel.value.userName.isEmpty()) {
+        if (isOpenDialogMakeUpdate.value) {
             showDialogMessage(
                 title = "",
                 content = stringResource(Res.string.user_information_error_information),

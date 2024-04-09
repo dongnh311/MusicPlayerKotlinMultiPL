@@ -31,6 +31,18 @@ class AccountViewModel: BaseViewModel() {
     // Token FCM
     var tokenFCM = ""
 
+    // Check user need to update
+    var isUserNeedUpdateInformation = false
+
+    /**
+     * Check user is login or not
+     *
+     * @return
+     */
+    fun requestCheckUserLogin() : Boolean {
+        return firebaseUser.checkUserLogin()
+    }
+
     /**
      * Check and handle user
      *
@@ -71,6 +83,7 @@ class AccountViewModel: BaseViewModel() {
                 Logger.e("Load user fail", it)
             }.collect {user ->
                 userDataModel.value = user
+                this@AccountViewModel.isUserNeedUpdateInformation = user.userName.isEmpty()
                 stopWorking()
             }
         }

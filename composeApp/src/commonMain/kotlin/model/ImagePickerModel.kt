@@ -1,5 +1,8 @@
 package model
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+
 /**
  * Project : MusicPlayerKotlinMultiPL
  * Created by DongNH on 02/04/2024.
@@ -16,5 +19,5 @@ class ImagePickerModel {
 
     var mediaType: String = ""
 
-    var isChoose: Boolean = false
+    var isChoose: MutableState<Boolean> = mutableStateOf(false)
 }

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -63,6 +64,7 @@ import const.ACCOUNT_TYPE_FREE
 import const.ACCOUNT_TYPE_VIP
 import const.PERMISSION_GRAND
 import const.PLATFORM_ANDROID
+import model.ImagePickerModel
 import model.UserModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
@@ -97,8 +99,12 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import singleton.ViewManager
 import styles.buttonCommonModifier
+import styles.buttonSize32dp
 import styles.colorPrimaryText
+import styles.iconSize24dp
+import styles.paddingTopBottom
 import styles.primaryDark
 import styles.textContentPrimary
 import styles.textContentSecond
@@ -143,15 +149,18 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
         userAvatar.value = userModel.profileImage
 
         Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-            Icon(
-                painter = painterResource(Res.drawable.btn_back),
-                contentDescription = "Back",
-                modifier = Modifier
-                    .padding(16.dp).size(40.dp)
-                    .clickable {
-                        navigator.pop()
-                    }
-            )
+            Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+                Icon(
+                    painter = painterResource(Res.drawable.btn_back),
+                    contentDescription = "Back",
+                    modifier = Modifier
+                        .buttonSize32dp()
+                        .clickable {
+                            navigator.pop()
+                        }.align(Alignment.CenterStart)
+                )
+                Spacer(modifier = Modifier.height(45.dp))
+            }
         }, content = {
             Box(
                 modifier = Modifier
@@ -512,7 +521,7 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                     val listImages = permissionControl.loadAllImageMedia()
                     Logger.e("Load image on device : ${listImages.size}")
                 } else {
-
+                    Logger.e("Fail to request permission")
                 }
             }
         }
@@ -520,6 +529,13 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
         if (permissionControl.checkPermissionStorage()) {
             val listImages = permissionControl.loadAllImageMedia()
             Logger.e("Load image on device : ${listImages.size}")
+            val pickImageScreen = PickImageScreen(listImages)
+            navigator.push(pickImageScreen)
+            pickImageScreen.onSelectedImageAvatar = object : PickImageScreen.OnSelectedImageAvatar {
+                override fun onSelectedImage(imagePickerModel: ImagePickerModel) {
+
+                }
+            }
         } else {
             permissionControl.requestPermissionStorage()
             Logger.e("Request permission")
