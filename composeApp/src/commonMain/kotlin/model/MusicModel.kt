@@ -20,6 +20,7 @@ class MusicModel {
     var singerId = ""
     var lyrics: String = ""
     var countPlayed = 0
+    var topicId = ""
 
     @Transient
     var singerModel: SingerModel? = SingerModel()

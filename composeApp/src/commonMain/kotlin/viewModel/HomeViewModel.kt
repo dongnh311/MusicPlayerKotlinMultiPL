@@ -12,6 +12,7 @@ import kotlinx.coroutines.withContext
 import model.EventModel
 import model.MusicModel
 import model.SingerModel
+import model.TopicModel
 import network.response.NotifyResponse
 import network.services.EventServices
 import singleton.NetworkManager
@@ -31,11 +32,17 @@ class HomeViewModel: BaseViewModel() {
     // Handle music
     private val firebaseMusicsHelper = FirebaseMusicsHelper()
 
-    // Save list music
+    // Save list new music
     val listNewMusics = mutableStateListOf<MusicModel>()
 
     // Save list singers
-    val listSingers = mutableStateListOf<SingerModel>()
+    private val listSingers = mutableStateListOf<SingerModel>()
+
+    // Save list singers
+    private val listMusics = mutableStateListOf<MusicModel>()
+
+    // Save list topic
+    val listTopic = mutableStateListOf<TopicModel>()
 
     /**
      * Load list event
@@ -75,28 +82,53 @@ class HomeViewModel: BaseViewModel() {
      */
     fun loadListMusicAndSinger() {
         coroutineScope.launch {
+            val taskTopic = firebaseMusicsHelper.loadListTopicOnFB()
+            var topics = taskTopic.first()
+
             val taskSingers = firebaseMusicsHelper.loadListSingerOnFB()
             var singers = taskSingers.first()
 
             val taskMusics = firebaseMusicsHelper.loadListMusicsOnFB()
             val musics = taskMusics.first()
 
+            val taskMusicsNew = firebaseMusicsHelper.loadListNewMusicsOnFB()
+            val musicsNew = taskMusics.first()
+
+            // Save list singer
             if (singers.isEmpty()) {
                 singers = firebaseMusicsHelper.writeDataSingerToFB()
             }
 
-            // Save list singer
             listSingers.addAll(singers.toMutableStateList())
 
+            // Sav topic
+            if (topics.isEmpty()) {
+                topics = firebaseMusicsHelper.writeTopicToFB()
+            }
+
+            listTopic.addAll(topics.toMutableStateList())
+
+            // Music
             if (musics.isEmpty()) {
                 firebaseMusicsHelper.writeDataMusicToFB()
             }
 
             // Load new image path
-            val listUpdate = loadImageStorageFirebase(musics).first()
+            val listMusicUpdate = loadImageStorageFirebase(musics).first()
+
+            listMusics.clear()
+            listMusics.addAll(listMusicUpdate)
+
+            // Music New
+            if (musicsNew.isEmpty()) {
+                firebaseMusicsHelper.writeDataMusicNewToFB()
+            }
+
+            // Load new image path
+            val listMusicNewUpdate = loadImageStorageFirebase(musics).first()
 
             listNewMusics.clear()
-            listNewMusics.addAll(listUpdate)
+            listNewMusics.addAll(listMusicNewUpdate)
         }
     }
 

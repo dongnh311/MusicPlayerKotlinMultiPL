@@ -9,8 +9,10 @@ package const
 const val FB_DATABASE_USER = "users"
 const val FB_DATABASE_RANKINGS = "rankings"
 const val FB_DATABASE_NEW = "newMusics"
+const val FB_DATABASE_MUSICS = "musics"
 const val FB_DATABASE_FOR_YOU = "forYou"
 const val FB_DATABASE_SINGER = "singers"
+const val FB_DATABASE_TOPIC = "topics"
 
 // Upload storage
 const val FIREBASE_STORAGE_AVATAR = "avatar"
