@@ -3,6 +3,7 @@ package styles
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,14 @@ fun buttonColorsCancel() = ButtonDefaults.buttonColors(
 @Composable
 fun buttonColorAccount() = androidx.compose.material3.ButtonDefaults.buttonColors(
     containerColor = colorPrimaryBackground,
+    contentColor = colorPrimaryText,
+    disabledContainerColor = colorDisable,
+    disabledContentColor = colorDisable
+)
+
+@Composable
+fun buttonCircleAvatarColor() = IconButtonColors(
+    containerColor = colorGreen,
     contentColor = colorPrimaryText,
     disabledContainerColor = colorDisable,
     disabledContentColor = colorDisable

@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -99,7 +100,10 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import styles.buttonCircleAvatarColor
+import styles.buttonColorAccount
 import styles.buttonCommonModifier
+import styles.buttonDialog
 import styles.buttonSize32dp
 import styles.primaryDark
 import styles.textContentPrimary
@@ -167,316 +171,323 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                         bottom = it.calculateBottomPadding()
                     )
             ) {
-                Column(modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(all = 16.dp).verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                    val painter = if (userAvatar.value.isNotEmpty()) rememberImagePainter(userAvatar.value) else painterResource(Res.drawable.avatar_default)
-                    Box(modifier = Modifier) {
-                        Image(
-                            painter = painter,
-                            contentDescription = "avatar",
-                            contentScale = ContentScale.Crop,            // crop the image if it's not a square
-                            modifier = Modifier
-                                .size(104.dp)
-                                .clip(CircleShape)                       // clip to the circle shape
-                                .border(2.dp, Color.Gray, CircleShape)   // add a border (optional)
-                        )
+                Column(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight().weight(1f).padding(all = 16.dp).verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                        val painter = if (userAvatar.value.isNotEmpty()) rememberImagePainter(userAvatar.value) else painterResource(Res.drawable.avatar_default)
+                        Box(modifier = Modifier) {
+                            Image(
+                                painter = painter,
+                                contentDescription = "avatar",
+                                contentScale = ContentScale.Crop,            // crop the image if it's not a square
+                                modifier = Modifier
+                                    .size(104.dp)
+                                    .clip(CircleShape)                       // clip to the circle shape
+                                    .border(2.dp, Color.Gray, CircleShape)   // add a border (optional)
+                            )
 
-                        // Edit avatar
-                        IconButton(
-                            onClick = {
-                                Logger.e("Click update avatar")
-                                handleUpdateAvatar()
+                            // Edit avatar
+                            IconButton(
+                                onClick = {
+                                    Logger.e("Click update avatar")
+                                    handleUpdateAvatar()
+                                },
+                                modifier = Modifier.size(width = 30.dp, height = 30.dp).padding().align(
+                                    Alignment.BottomEnd
+                                ),
+                                content = {
+                                    // Specify the icon using the icon parameter
+                                    Icon(painter = painterResource(Res.drawable.btn_edit),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(24.dp),
+                                        tint = Color.Unspecified,
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
+                                },
+                                colors = buttonCircleAvatarColor()
+                            )
+                        }
+
+                        // Name
+                        InputTextField(
+                            value = userName.value,
+                            onChange = {newName ->
+                                userName.value = newName
+                                isEnableButtonSave.value = checkToEnableButtonSave()
                             },
-                            modifier = Modifier.size(width = 40.dp, height = 40.dp).padding().align(
-                                Alignment.BottomEnd
+                            modifier = Modifier.fillMaxWidth(),
+                            label = stringResource(Res.string.user_information_name),
+                            placeholder = stringResource(Res.string.user_information_name_pl),
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.Person,
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }, keyboardActions = KeyboardActions(
+                                onDone = {
+                                    keyboardController?.hide()
+                                }
                             ),
-                            content = {
-                                // Specify the icon using the icon parameter
-                                Icon(painter = painterResource(Res.drawable.btn_edit),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(30.dp),
-                                    tint = Color.Unspecified,
-                                )
-                                Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
-                            }
-                        )
-                    }
-
-                    // Name
-                    InputTextField(
-                        value = userName.value,
-                        onChange = {newName ->
-                            userName.value = newName
-                            isEnableButtonSave.value = checkToEnableButtonSave()
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(Res.string.user_information_name),
-                        placeholder = stringResource(Res.string.user_information_name_pl),
-                        leadingIcon = {
-                            Icon(
-                                Icons.Default.Person,
-                                contentDescription = "",
-                                tint = MaterialTheme.colorScheme.primary
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done,
+                                keyboardType = KeyboardType.Password
                             )
-                        }, keyboardActions = KeyboardActions(
-                            onDone = {
-                                keyboardController?.hide()
-                            }
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Password
                         )
-                    )
 
-                    // Brith day
-                    InputTextField(
-                        value = brithDay.value,
-                        onChange = {newDay ->
-                            brithDay.value = newDay
-                            isEnableButtonSave.value = checkToEnableButtonSave()
-                        },
-                        modifier = Modifier.fillMaxWidth().padding(top= 8.dp),
-                        label = stringResource(Res.string.user_information_brith_day),
-                        placeholder = stringResource(Res.string.user_information_brith_day_pl),
-                        leadingIcon = {
-                            Icon(
-                                Icons.Default.DateRange,
-                                contentDescription = "",
-                                tint = MaterialTheme.colorScheme.primary
+                        // Brith day
+                        InputTextField(
+                            value = brithDay.value,
+                            onChange = {newDay ->
+                                brithDay.value = newDay
+                                isEnableButtonSave.value = checkToEnableButtonSave()
+                            },
+                            modifier = Modifier.fillMaxWidth().padding(top= 8.dp),
+                            label = stringResource(Res.string.user_information_brith_day),
+                            placeholder = stringResource(Res.string.user_information_brith_day_pl),
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.DateRange,
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }, keyboardActions = KeyboardActions(
+                                onDone = {
+                                    keyboardController?.hide()
+                                }
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done,
+                                keyboardType = KeyboardType.Password
+                            ),
+                            readOnly = true
+                        )
+
+                        // Coin
+                        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
+                            border = BorderStroke(1.dp, color = primaryDark),
+                            shape = RoundedCornerShape(4.dp)
+                        ),
+                            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+                            Text(text = stringResource(Res.string.user_information_coin),
+                                style = textContentPrimary(), modifier = Modifier.weight(1f).padding(start = 16.dp, top= 16.dp, bottom = 16.dp))
+
+                            Text(text = DecimalFormat().format(userModel.coin),
+                                style = textContentPrimary(), modifier = Modifier.padding(end = 8.dp))
+
+                            // Buy coin
+                            IconButton(
+                                onClick = {
+
+                                },
+                                modifier = Modifier.size(width = 40.dp, height = 40.dp).padding(end= 16.dp),
+                                content = {
+                                    // Specify the icon using the icon parameter
+                                    Icon(painter = painterResource(Res.drawable.btn_buy_coin),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(30.dp),
+                                        tint = Color.Unspecified,
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
+                                }
                             )
-                        }, keyboardActions = KeyboardActions(
-                            onDone = {
-                                keyboardController?.hide()
-                            }
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Password
-                        ),
-                        readOnly = true
-                    )
-
-                    // Coin
-                    Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
-                        border = BorderStroke(1.dp, color = primaryDark),
-                        shape = RoundedCornerShape(4.dp)
-                    ),
-                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
-                        Text(text = stringResource(Res.string.user_information_coin),
-                            style = textContentPrimary(), modifier = Modifier.weight(1f).padding(start = 16.dp, top= 16.dp, bottom = 16.dp))
-
-                        Text(text = DecimalFormat().format(userModel.coin),
-                            style = textContentPrimary(), modifier = Modifier.padding(end = 8.dp))
-
-                        // Buy coin
-                        IconButton(
-                            onClick = {
-
-                            },
-                            modifier = Modifier.size(width = 40.dp, height = 40.dp).padding(end= 16.dp),
-                            content = {
-                                // Specify the icon using the icon parameter
-                                Icon(painter = painterResource(Res.drawable.btn_buy_coin),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(30.dp),
-                                    tint = Color.Unspecified,
-                                )
-                                Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
-                            }
-                        )
-                    }
-
-                    // Platform
-                    Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
-                        border = BorderStroke(1.dp, color = primaryDark),
-                        shape = RoundedCornerShape(4.dp)
-                    ),
-                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
-                        Text(text = stringResource(Res.string.user_information_platform) ,
-                            style = textContentPrimary(), modifier = Modifier.weight(1f).padding(start = 16.dp, top= 16.dp, bottom = 16.dp))
-
-                        Text(text = userModel.platform,
-                            style = textContentPrimary(), modifier = Modifier.padding(end = 8.dp))
-
-                        val icon = if (userModel.platform == PLATFORM_ANDROID) {
-                            painterResource(Res.drawable.icon_android)
-                        } else {
-                            painterResource(Res.drawable.icon_ios)
                         }
-                        IconButton(
-                            onClick = {
 
-                            },
-                            modifier = Modifier.size(width = 40.dp, height = 40.dp).padding(end = 16.dp),
-                            content = {
-                                // Specify the icon using the icon parameter
-                                Icon(painter = icon,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(30.dp),
-                                    tint = Color.Unspecified,
+                        // Platform
+                        if (false) {
+                            Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
+                                border = BorderStroke(1.dp, color = primaryDark),
+                                shape = RoundedCornerShape(4.dp)
+                            ),
+                                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+                                Text(text = stringResource(Res.string.user_information_platform) ,
+                                    style = textContentPrimary(), modifier = Modifier.weight(1f).padding(start = 16.dp, top= 16.dp, bottom = 16.dp))
+
+                                Text(text = userModel.platform,
+                                    style = textContentPrimary(), modifier = Modifier.padding(end = 8.dp))
+
+                                val icon = if (userModel.platform == PLATFORM_ANDROID) {
+                                    painterResource(Res.drawable.icon_android)
+                                } else {
+                                    painterResource(Res.drawable.icon_ios)
+                                }
+                                IconButton(
+                                    onClick = {
+
+                                    },
+                                    modifier = Modifier.size(width = 40.dp, height = 40.dp).padding(end = 16.dp),
+                                    content = {
+                                        // Specify the icon using the icon parameter
+                                        Icon(painter = icon,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(30.dp),
+                                            tint = Color.Unspecified,
+                                        )
+                                        Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
+                                    }
                                 )
-                                Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
-                            }
-                        )
-                    }
-
-                    // Type
-                    Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
-                        border = BorderStroke(1.dp, color = primaryDark),
-                        shape = RoundedCornerShape(4.dp)
-                    ),
-                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
-                        Text(text = stringResource(Res.string.user_information_account_type),
-                            style = textContentPrimary(), modifier = Modifier.weight(1f).padding(start = 16.dp, top= 16.dp, bottom = 16.dp))
-
-                        Text(text = findAccountType(),
-                            style = textContentPrimary(), modifier = Modifier.padding(end = 8.dp))
-
-                        val icon = when (userModel.accountType) {
-                            ACCOUNT_TYPE_FREE -> {
-                                painterResource(Res.drawable.icon_coin)
-                            }
-                            ACCOUNT_TYPE_VIP -> {
-                                painterResource(Res.drawable.icon_coin_vip)
-                            }
-                            else -> {
-                                painterResource(Res.drawable.icon_coin_supper_vip)
-                            }
-                        }
-                        IconButton(
-                            onClick = {
-
-                            },
-                            modifier = Modifier.size(width = 40.dp, height = 40.dp).padding(end = 16.dp),
-                            content = {
-                                // Specify the icon using the icon parameter
-                                Icon(painter = icon,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(30.dp),
-                                    tint = Color.Unspecified,
-                                )
-                                Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
-                            }
-                        )
-                    }
-
-                    // Account
-                    Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
-                        border = BorderStroke(1.dp, color = primaryDark),
-                        shape = RoundedCornerShape(4.dp)
-                    ),
-                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
-                        Text(text = stringResource(Res.string.user_information_login_with),
-                            style = textContentPrimary(), modifier = Modifier.weight(1f).padding(start = 16.dp, top= 16.dp, bottom = 16.dp))
-
-                        val icon = when (userModel.loginType) {
-                            LOGIN_BY_GOOGLE -> {
-                                painterResource(Res.drawable.btn_google)
-                            }
-                            LOGIN_BY_FACEBOOK -> {
-                                painterResource(Res.drawable.btn_facebook)
-                            }
-                            else -> {
-                                painterResource(Res.drawable.btn_email)
                             }
                         }
 
-                        val typeAccount  = when (userModel.loginType) {
-                            LOGIN_BY_GOOGLE -> {
-                                stringResource(Res.string.user_information_login_with_google)
+                        // Type
+                        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
+                            border = BorderStroke(1.dp, color = primaryDark),
+                            shape = RoundedCornerShape(4.dp)
+                        ),
+                            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+                            Text(text = stringResource(Res.string.user_information_account_type),
+                                style = textContentPrimary(), modifier = Modifier.weight(1f).padding(start = 16.dp, top= 16.dp, bottom = 16.dp))
+
+                            Text(text = findAccountType(),
+                                style = textContentPrimary(), modifier = Modifier.padding(end = 8.dp))
+
+                            val icon = when (userModel.accountType) {
+                                ACCOUNT_TYPE_FREE -> {
+                                    painterResource(Res.drawable.icon_coin)
+                                }
+                                ACCOUNT_TYPE_VIP -> {
+                                    painterResource(Res.drawable.icon_coin_vip)
+                                }
+                                else -> {
+                                    painterResource(Res.drawable.icon_coin_supper_vip)
+                                }
                             }
-                            LOGIN_BY_FACEBOOK -> {
-                                stringResource(Res.string.user_information_login_with_facebook)
-                            }
-                            else -> {
-                                stringResource(Res.string.user_information_login_with_email)
-                            }
+                            IconButton(
+                                onClick = {
+
+                                },
+                                modifier = Modifier.size(width = 40.dp, height = 40.dp).padding(end = 16.dp),
+                                content = {
+                                    // Specify the icon using the icon parameter
+                                    Icon(painter = icon,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(30.dp),
+                                        tint = Color.Unspecified,
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
+                                }
+                            )
                         }
 
-                        Text(text = typeAccount,
-                            style = textContentPrimary(), modifier = Modifier.padding(end = 8.dp))
-                        IconButton(
-                            onClick = {
+                        // Account
+                        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
+                            border = BorderStroke(1.dp, color = primaryDark),
+                            shape = RoundedCornerShape(4.dp)
+                        ),
+                            verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+                            Text(text = stringResource(Res.string.user_information_login_with),
+                                style = textContentPrimary(), modifier = Modifier.weight(1f).padding(start = 16.dp, top= 16.dp, bottom = 16.dp))
 
+                            val icon = when (userModel.loginType) {
+                                LOGIN_BY_GOOGLE -> {
+                                    painterResource(Res.drawable.btn_google)
+                                }
+                                LOGIN_BY_FACEBOOK -> {
+                                    painterResource(Res.drawable.btn_facebook)
+                                }
+                                else -> {
+                                    painterResource(Res.drawable.btn_email)
+                                }
+                            }
+
+                            val typeAccount  = when (userModel.loginType) {
+                                LOGIN_BY_GOOGLE -> {
+                                    stringResource(Res.string.user_information_login_with_google)
+                                }
+                                LOGIN_BY_FACEBOOK -> {
+                                    stringResource(Res.string.user_information_login_with_facebook)
+                                }
+                                else -> {
+                                    stringResource(Res.string.user_information_login_with_email)
+                                }
+                            }
+
+                            Text(text = typeAccount,
+                                style = textContentPrimary(), modifier = Modifier.padding(end = 8.dp))
+                            IconButton(
+                                onClick = {
+
+                                },
+                                modifier = Modifier.size(width = 40.dp, height = 40.dp).padding(end = 16.dp),
+                                content = {
+                                    // Specify the icon using the icon parameter
+                                    Icon(painter = icon,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(30.dp),
+                                        tint = Color.Unspecified,
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
+                                }
+                            )
+                        }
+
+                        // Old Password
+                        InputPasswordField(
+                            value = currentPassword.value,
+                            onChange = {newValue ->
+                                currentPassword.value = newValue
+                                isEnableButtonSave.value = checkToEnableButtonSave()
                             },
-                            modifier = Modifier.size(width = 40.dp, height = 40.dp).padding(end = 16.dp),
-                            content = {
-                                // Specify the icon using the icon parameter
-                                Icon(painter = icon,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(30.dp),
-                                    tint = Color.Unspecified,
-                                )
-                                Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
-                            }
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    focusManager.moveFocus(FocusDirection.Down)
+                                }
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Next,
+                                keyboardType = KeyboardType.Password
+                            ),
+                            label = stringResource(Res.string.user_information_old_password),
+                            placeholder = stringResource(Res.string.user_information_old_password_pl),
                         )
+
+                        // Password
+                        InputPasswordField(
+                            value = newPassword.value,
+                            onChange = {newValue ->
+                                newPassword.value = newValue
+                                isEnableButtonSave.value = checkToEnableButtonSave()
+                            },
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    focusManager.moveFocus(FocusDirection.Down)
+                                }
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Next,
+                                keyboardType = KeyboardType.Password
+                            ),
+                            label = stringResource(Res.string.user_information_password),
+                            placeholder = stringResource(Res.string.user_information_old_password_pl),
+                        )
+
+                        // Re-password
+                        InputPasswordField(
+                            value = newRePassword.value,
+                            onChange = {newValue ->
+                                newRePassword.value = newValue
+                                isEnableButtonSave.value = checkToEnableButtonSave()
+                            },
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    keyboardController?.hide()
+                                }
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done,
+                                keyboardType = KeyboardType.Password
+                            ),
+                            label = stringResource(Res.string.user_information_re_password),
+                            placeholder = stringResource(Res.string.user_information_old_password_pl),
+                        )
+
+                        Spacer(modifier = Modifier.heightIn(min = 50.dp).weight(1f).padding(bottom = 16.dp))
+
+
                     }
-
-                    // Old Password
-                    InputPasswordField(
-                        value = currentPassword.value,
-                        onChange = {newValue ->
-                            currentPassword.value = newValue
-                            isEnableButtonSave.value = checkToEnableButtonSave()
-                        },
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                focusManager.moveFocus(FocusDirection.Down)
-                            }
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next,
-                            keyboardType = KeyboardType.Password
-                        ),
-                        label = stringResource(Res.string.user_information_old_password),
-                        placeholder = stringResource(Res.string.user_information_old_password_pl),
-                    )
-
-                    // Password
-                    InputPasswordField(
-                        value = newPassword.value,
-                        onChange = {newValue ->
-                            newPassword.value = newValue
-                            isEnableButtonSave.value = checkToEnableButtonSave()
-                        },
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                focusManager.moveFocus(FocusDirection.Down)
-                            }
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next,
-                            keyboardType = KeyboardType.Password
-                        ),
-                        label = stringResource(Res.string.user_information_password),
-                        placeholder = stringResource(Res.string.user_information_old_password_pl),
-                    )
-
-                    // Re-password
-                    InputPasswordField(
-                        value = newRePassword.value,
-                        onChange = {newValue ->
-                            newRePassword.value = newValue
-                            isEnableButtonSave.value = checkToEnableButtonSave()
-                        },
-                        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                keyboardController?.hide()
-                            }
-                        ),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Done,
-                            keyboardType = KeyboardType.Password
-                        ),
-                        label = stringResource(Res.string.user_information_re_password),
-                        placeholder = stringResource(Res.string.user_information_old_password_pl),
-                    )
-
-                    Spacer(modifier = Modifier.heightIn(min = 50.dp).weight(1f).padding(bottom = 16.dp))
 
                     // Button Save
                     Button(onClick = {
@@ -485,7 +496,7 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                         Text(stringResource(Res.string.reset_password_btn_save))
                     }
 
-                    Spacer(modifier = Modifier.height(10.dp).weight(1f).padding(bottom = 16.dp))
+                    Spacer(modifier = Modifier.height(20.dp).padding(bottom = 16.dp))
                 }
             }
         })

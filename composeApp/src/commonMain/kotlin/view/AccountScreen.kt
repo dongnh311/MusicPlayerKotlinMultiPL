@@ -131,7 +131,9 @@ import styles.buttonColorsGoogle
 import styles.colorAccountCard
 import styles.colorPrimaryApp
 import styles.iconSize30dp
+import styles.paddingTop16
 import styles.paddingTop16StartEnd16
+import styles.paddingTop8
 import styles.paddingTop8StartEnd16
 import styles.textButton
 import styles.textContentPrimary
@@ -654,70 +656,51 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                     Column(modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
                                         Text(text = userModel.value.userName, style = textContentPrimary(), modifier = Modifier.padding(bottom = 8.dp))
                                         Text(text = "Coin : " + DecimalFormat().format(userModel.value.coin), style = textContentSecond(), modifier = Modifier.padding(top = 8.dp))
+                                        Row(modifier = Modifier.fillMaxWidth().paddingTop16()) {
+                                            val icon = when (userModel.value.loginType) {
+                                                LOGIN_BY_GOOGLE -> {
+                                                    painterResource(Res.drawable.btn_google)
+                                                }
+                                                LOGIN_BY_FACEBOOK -> {
+                                                    painterResource(Res.drawable.btn_facebook)
+                                                }
+                                                else -> {
+                                                    painterResource(Res.drawable.btn_email)
+                                                }
+                                            }
+                                            Icon(
+                                                painter = icon,
+                                                modifier = iconSize30dp(),
+                                                contentDescription = stringResource(Res.string.user_information_login_with),
+                                                tint = Color.Unspecified
+                                            )
+
+                                            Spacer(modifier = Modifier.width(8.dp))
+
+                                            val iconAccount = when (userModel.value.accountType) {
+                                                ACCOUNT_TYPE_FREE -> {
+                                                    painterResource(Res.drawable.icon_coin)
+                                                }
+                                                ACCOUNT_TYPE_VIP -> {
+                                                    painterResource(Res.drawable.icon_coin_vip)
+                                                }
+                                                else -> {
+                                                    painterResource(Res.drawable.icon_coin_supper_vip)
+                                                }
+                                            }
+                                            Icon(
+                                                painter = iconAccount,
+                                                modifier = iconSize30dp(),
+                                                contentDescription = stringResource(Res.string.user_information_account_type),
+                                                tint = Color.Unspecified
+                                            )
+                                        }
                                     }
                                 }
+
                             }
                         }
                     )
-
-                    // Login with account/Type
-                    Row (modifier = Modifier.fillMaxWidth().paddingTop8StartEnd16()) {
-                        // Login account
-                        Row(horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(0.dp)){
-
-                            Text(text = stringResource(Res.string.user_information_login_with), style = textButton(), modifier = Modifier.padding(start = 8.dp).weight(1f))
-
-                            val icon = when (userModel.value.loginType) {
-                                LOGIN_BY_GOOGLE -> {
-                                    painterResource(Res.drawable.btn_google)
-                                }
-                                LOGIN_BY_FACEBOOK -> {
-                                    painterResource(Res.drawable.btn_facebook)
-                                }
-                                else -> {
-                                    painterResource(Res.drawable.btn_email)
-                                }
-                            }
-                            Icon(
-                                painter = icon,
-                                modifier = iconSize30dp(),
-                                contentDescription = stringResource(Res.string.user_information_login_with),
-                                tint = Color.Unspecified
-                            )
-                        }
-                        Text(text = "/", style = textButton(), modifier = Modifier.padding(start = 8.dp))
-
-                        // Login type
-                        Row(horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(0.dp)){
-
-                            Text(text = stringResource(Res.string.user_information_account_type), style = textButton(), modifier = Modifier.padding(start = 8.dp).weight(1f))
-                            val icon = when (userModel.value.accountType) {
-                                ACCOUNT_TYPE_FREE -> {
-                                    painterResource(Res.drawable.icon_coin)
-                                }
-                                ACCOUNT_TYPE_VIP -> {
-                                    painterResource(Res.drawable.icon_coin_vip)
-                                }
-                                else -> {
-                                    painterResource(Res.drawable.icon_coin_supper_vip)
-                                }
-                            }
-                            Icon(
-                                painter = icon,
-                                modifier = iconSize30dp(),
-                                contentDescription = stringResource(Res.string.user_information_account_type),
-                                tint = Color.Unspecified
-                            )
-                        }
-                    }
 
                     // Button play history
                     androidx.compose.material3.Button(modifier = Modifier.paddingTop16StartEnd16(),

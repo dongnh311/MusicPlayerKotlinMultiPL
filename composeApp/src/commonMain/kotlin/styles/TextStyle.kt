@@ -64,6 +64,17 @@ fun textContentPrimary() : TextStyle {
 }
 
 @Composable
+fun textRankingPrimary() : TextStyle {
+    return TextStyle(
+        fontSize = 18.sp,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Normal,
+        color = colorPrimaryText,
+        textAlign = TextAlign.Start
+    )
+}
+
+@Composable
 fun textContentSecond() : TextStyle {
     return TextStyle(
         fontSize = 14.sp,

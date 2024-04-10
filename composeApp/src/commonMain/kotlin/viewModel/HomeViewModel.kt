@@ -28,6 +28,7 @@ import utils.helper.FirebaseMusicsHelper
  */
 class HomeViewModel: BaseViewModel() {
 
+    // Api
     private val eventServices: EventServices = NetworkManager.apiNetRest.ktorfit.create()
 
     // Handle music

@@ -78,4 +78,14 @@
     <string name="home_topics">Topic</string>
     <string name="home_mores">More ></string>
 
+    <string name="home_ranking_trending">Trending</string>
+    <string name="home_ranking_vn">V-Pop</string>
+    <string name="home_ranking_us">US-UK</string>
+    <string name="home_ranking_billboard_global">Billboard Global</string>
+    <string name="home_ranking_kr">K-Pop</string>
+    <string name="home_ranking_cn">C-Pop</string>
+    <string name="home_ranking_rap">Rap</string>
+
+    <string name="home_ranking_empty">No Data.</string>
+
 </resources>

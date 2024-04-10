@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -376,7 +377,8 @@ class HomeScreen: BaseScreen<HomeViewModel>() {
 
             // Add another single item
             item {
-                Text(text = "Last item")
+                Spacer(modifier = Modifier.height(20.dp))
+                //Text(text = "Last item")
             }
         }
     }

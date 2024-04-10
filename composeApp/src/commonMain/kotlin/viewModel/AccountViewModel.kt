@@ -80,7 +80,7 @@ class AccountViewModel: BaseViewModel() {
             startWorking()
             firebaseUser.loadUserDetailInformation(userId).catch {
                 stopWorking()
-                Logger.e("Load user fail", it)
+                Logger.e("Load user fail : $userId", it)
             }.collect {user ->
                 userDataModel.value = user
                 this@AccountViewModel.isUserNeedUpdateInformation = user.userName.isEmpty()
@@ -99,7 +99,7 @@ class AccountViewModel: BaseViewModel() {
             startWorking()
             firebaseUser.loadUserDetailInformation(userId).catch {
                 stopWorking()
-                Logger.e("Load user fail", it)
+                Logger.e("loadUserInformationAndCheck user fail", it)
             }.collect {user ->
                 userDataModel.value = user
                 callBack.invoke(user)
