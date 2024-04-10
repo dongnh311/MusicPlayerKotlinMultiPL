@@ -16,8 +16,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material.Text
@@ -48,6 +51,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_event
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_mores
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_news
+import musicplayerkotlinmultipl.composeapp.generated.resources.home_singer
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_topics
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -86,6 +90,7 @@ class HomeScreen: BaseScreen<HomeViewModel>() {
 
         val listMusicNew = remember { viewModel.listNewMusics }
         val listTopic = remember { viewModel.listTopic }
+        val listSingers = remember { viewModel.listSingers }
 
         LazyColumn(modifier = Modifier.fillMaxWidth().fillMaxHeight().background(
             colorPrimaryBackground
@@ -230,6 +235,83 @@ class HomeScreen: BaseScreen<HomeViewModel>() {
                 })
             }
 
+            // Title Singer
+            item {
+                Row(modifier = Modifier.fillParentMaxWidth().paddingTop16StartEnd16(),
+                    horizontalArrangement =  Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Text(stringResource(Res.string.home_singer), style = textTittleContent(), modifier = Modifier.fillMaxWidth().paddingTop8().weight(1f))
+                    Text(
+                        modifier = Modifier.drawBehind {
+                            val strokeWidthPx = 1.dp.toPx()
+                            val verticalOffset = size.height - 2.sp.toPx()
+                            drawLine(
+                                color = Color.Blue,
+                                strokeWidth = strokeWidthPx,
+                                start = Offset(0f, verticalOffset),
+                                end = Offset(size.width, verticalOffset)
+                            )
+                        }.clickable(true) {
+
+                        }, color = Color.Blue, textAlign = TextAlign.End,
+                        text = stringResource(Res.string.home_mores),
+                    )
+                }
+            }
+
+            // Add singers
+            item {
+                LazyRow(state = rememberLazyListState()) {
+                    val numItemShow = if (listSingers.isNotEmpty() && listSingers.size > 5) 5 else listSingers.size
+                    items(numItemShow) {index ->
+                        Card(modifier = Modifier
+                            .paddingTop16StartEnd16().clickable(enabled = true) {
+
+                            },
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation =  10.dp,
+                            ),
+                            shape = RoundedCornerShape(
+                                topEnd = 5.dp,
+                                topStart = 5.dp,
+                                bottomEnd = 5.dp,
+                                bottomStart = 5.dp
+                            ),
+                            colors = CardDefaults.cardColors(
+                                containerColor = colorAccountCard
+                            ),
+                            content = {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center,
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                ) {
+                                    val itemSinger = listSingers[index]
+                                    val painter = if (itemSinger.avatar.isNotEmpty()) {
+                                        rememberImagePainter(itemSinger.avatar)
+                                    } else painterResource(Res.drawable.avatar_default)
+                                    Image(
+                                        painter = painter,
+                                        contentDescription = "avatar",
+                                        contentScale = ContentScale.Crop,            // crop the image if it's not a square
+                                        modifier = Modifier
+                                            .size(100.dp)
+                                            .aspectRatio(1f)
+                                            .clip(CircleShape)                       // clip to the circle shape
+                                            .border(2.dp, Color.Gray, CircleShape)   // add a border (optional)
+                                    )
+
+                                    // Add another single item
+                                    Column(modifier = Modifier.fillMaxWidth().paddingTop8StartEnd16()) {
+                                        Text(text = itemSinger.name, style = textContentPrimary(), modifier = Modifier.padding(bottom = 8.dp))
+                                    }
+                                }
+                            })
+                    }
+                }
+            }
+
             // Title Topic
             item {
                 Row(modifier = Modifier.fillParentMaxWidth().paddingTop16StartEnd16(),
@@ -255,22 +337,41 @@ class HomeScreen: BaseScreen<HomeViewModel>() {
             }
 
             // Add topic
-            items(listTopic.size) { index ->
-                Box(modifier = Modifier.paddingTop8StartEnd16()) {
-                    val itemTopic = listTopic[index]
-                    val painter = if (itemTopic.urlImage.isNotEmpty()) {
-                        rememberImagePainter(itemTopic.urlImage)
-                    } else painterResource(Res.drawable.avatar_default)
-                    Image(
-                        painter = painter,
-                        contentDescription = "avatar",
-                        contentScale = ContentScale.FillWidth,            // crop the image if it's not a square
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RectangleShape)                       // clip to the circle shape
-                            .border(0.dp, Color.Gray, RectangleShape)   // add a border (optional)
-                    )
-                }
+            val numItemShow = if (listTopic.isNotEmpty() && listTopic.size > 5) 5 else listTopic.size
+            items(numItemShow) { index ->
+                Card(modifier = Modifier
+                    .paddingTop16StartEnd16().clickable(enabled = true) {
+
+                    },
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation =  10.dp,
+                    ),
+                    shape = RoundedCornerShape(
+                        topEnd = 5.dp,
+                        topStart = 5.dp,
+                        bottomEnd = 5.dp,
+                        bottomStart = 5.dp
+                    ),
+                    colors = CardDefaults.cardColors(
+                        containerColor = colorAccountCard
+                    ),
+                    content = {
+                        Box(modifier = Modifier.fillParentMaxWidth()) {
+                            val itemTopic = listTopic[index]
+                            val painter = if (itemTopic.urlImage.isNotEmpty()) {
+                                rememberImagePainter(itemTopic.urlImage)
+                            } else painterResource(Res.drawable.avatar_default)
+                            Image(
+                                painter = painter,
+                                contentDescription = "avatar",
+                                contentScale = ContentScale.FillWidth,            // crop the image if it's not a square
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RectangleShape)                       // clip to the circle shape
+                                    .border(0.dp, Color.Gray, RectangleShape)   // add a border (optional)
+                            )
+                        }
+                    })
             }
 
             // Add another single item

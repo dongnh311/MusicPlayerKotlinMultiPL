@@ -37,7 +37,7 @@ class HomeViewModel: BaseViewModel() {
     val listNewMusics = mutableStateListOf<MusicModel>()
 
     // Save list singers
-    private val listSingers = mutableStateListOf<SingerModel>()
+    val listSingers = mutableStateListOf<SingerModel>()
 
     // Save list singers
     private val listMusics = mutableStateListOf<MusicModel>()
