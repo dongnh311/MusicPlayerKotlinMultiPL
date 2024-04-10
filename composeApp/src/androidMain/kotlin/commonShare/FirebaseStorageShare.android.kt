@@ -8,10 +8,12 @@ import com.google.firebase.storage.storage
 import const.FIREBASE_STORAGE_AVATAR
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
 import model.ImagePickerModel
 import model.UserModel
+import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 
@@ -73,6 +75,23 @@ class AndroidFirebaseStorageShare : FirebaseStorageShare {
         introRefer.downloadUrl.addOnCompleteListener {
             callBack.invoke(it.result)
         }
+    }
+
+    /**
+     * Load firebase url image
+     *
+     * @param firebaseUrl
+     */
+    override fun loadUrlFileStorage(firebaseUrl: String) = callbackFlow {
+        val introRefer = storage.getReferenceFromUrl(firebaseUrl)
+        introRefer.downloadUrl.addOnCompleteListener {
+            trySend(it.result.toString())
+        }.addOnFailureListener {
+            it.printStackTrace()
+            Timber.e("Fail load url file in storage firebase")
+        }
+
+        awaitClose { close() }
     }
 }
 

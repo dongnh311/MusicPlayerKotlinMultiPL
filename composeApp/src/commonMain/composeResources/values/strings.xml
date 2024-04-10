@@ -68,4 +68,13 @@
     <string name="account_logout">Logout</string>
     <string name="account_version">Version :</string>
 
+    <string name="home_title">Home</string>
+    <string name="home_event">Events</string>
+    <string name="home_news">News</string>
+    <string name="home_singer">Singer :</string>
+    <string name="home_topics">Topic</string>
+    <string name="home_feature">Featured</string>
+    <string name="home_topics">Topic</string>
+    <string name="home_mores">More ></string>
+
 </resources>

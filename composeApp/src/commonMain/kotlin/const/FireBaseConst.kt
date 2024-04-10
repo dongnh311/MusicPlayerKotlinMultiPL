@@ -9,7 +9,16 @@ package const
 const val FB_DATABASE_USER = "users"
 const val FB_DATABASE_RANKINGS = "rankings"
 const val FB_DATABASE_NEW = "newMusics"
-const val FB_DATABASE_FORYOU = "forYou"
+const val FB_DATABASE_FOR_YOU = "forYou"
+const val FB_DATABASE_SINGER = "singers"
 
 // Upload storage
 const val FIREBASE_STORAGE_AVATAR = "avatar"
+const val FIREBASE_STORAGE_ALBUM = "albums"
+const val FIREBASE_STORAGE_MUSICS = "musics"
+const val FIREBASE_STORAGE_SINGER = "singers"
+const val FIREBASE_STORAGE_THUMBNAIL = "thumbnails"
+
+// Firebase gender
+const val GENDER_MALE = 0
+const val GENDER_FEMALE = 1

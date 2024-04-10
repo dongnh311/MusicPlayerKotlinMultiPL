@@ -12,6 +12,8 @@ import model.UserModel
  */
 interface FirebaseStorageShare {
     fun uploadAvatar(userModel: UserModel, imagePickerModel: ImagePickerModel) : Flow<*>
+
+    fun loadUrlFileStorage(firebaseUrl: String) : Flow<String>
 }
 
 expect fun loadFireBaseStorage() : FirebaseStorageShare

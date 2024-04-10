@@ -18,6 +18,15 @@ class IOsFirebaseStorageShare : FirebaseStorageShare {
             }
         }
     }
+
+    override fun loadUrlFileStorage(firebaseUrl: String): Flow<String> {
+        return callbackFlow {
+            trySend("")
+            awaitClose {
+                close()
+            }
+        }
+    }
 }
 
 actual fun loadFireBaseStorage(): FirebaseStorageShare {
