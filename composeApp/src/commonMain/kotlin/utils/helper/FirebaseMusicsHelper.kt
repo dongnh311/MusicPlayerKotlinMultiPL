@@ -5,6 +5,7 @@ import const.FB_DATABASE_MUSICS
 import const.FB_DATABASE_NEW
 import const.FB_DATABASE_SINGER
 import const.FB_DATABASE_TOPIC
+import const.FB_DATABASE_USER
 import const.FIREBASE_STORAGE_MUSICS
 import const.FIREBASE_STORAGE_SINGER
 import dev.gitlive.firebase.Firebase
@@ -12,11 +13,14 @@ import dev.gitlive.firebase.firestore.firestore
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.serialization.builtins.serializer
 import model.MusicModel
+import model.MusicNewModel
 import model.SingerModel
 import model.TopicModel
 import model.UserModel
 import model.createListDummyMusics
+import model.createListDummyNewMusic
 import model.createListDummySinger
 import model.createListDummyTopicModel
 
@@ -45,11 +49,13 @@ class FirebaseMusicsHelper {
     /**
      * Write data musics to firebase
      */
-    suspend fun writeDataMusicNewToFB() {
-        val listMusic = createListDummyMusics()
-        listMusic.forEach {
-            firebaseStore.collection(FB_DATABASE_NEW).document(it.id).set(MusicModel.serializer(), it)
+    suspend fun writeDataMusicNewToFB() : MutableList<MusicNewModel> {
+        val listMusic = createListDummyNewMusic()
+        listMusic.forEach { music ->
+            firebaseStore.collection(FB_DATABASE_NEW).document(music.id).set(MusicNewModel.serializer(), music)
         }
+
+        return listMusic
     }
 
     /**
@@ -98,11 +104,11 @@ class FirebaseMusicsHelper {
      */
     fun loadListNewMusicsOnFB() = callbackFlow {
         val documents = firebaseStore.collection(FB_DATABASE_NEW).get()
-        val listMusics = mutableListOf<MusicModel>()
+        val listMusics = mutableListOf<MusicNewModel>()
         documents.documents.forEach {documentSnapshot ->
-            val musicModel = documentSnapshot.data<MusicModel>()
-            musicModel.id = documentSnapshot.id
-            listMusics.add(musicModel)
+            val musicNewModel = MusicNewModel()
+            musicNewModel.id = documentSnapshot.id
+            listMusics.add(musicNewModel)
         }
         trySend(listMusics)
         awaitClose {
@@ -153,5 +159,17 @@ class FirebaseMusicsHelper {
     suspend fun findUrlLoadImage(path: String): String {
         val taskRunning = firebaseNative.loadUrlFileStorage(path)
         return taskRunning.first()
+    }
+
+    /**
+     * Update new value for field
+     *
+     * @param collectionPath
+     * @param itemId
+     * @param key
+     * @param value
+     */
+    suspend fun updateNewValueForMusic(collectionPath: String, itemId: String, key: String, value: String ) {
+        firebaseStore.collection(collectionPath).document(itemId).update(Pair(key, value))
     }
 }

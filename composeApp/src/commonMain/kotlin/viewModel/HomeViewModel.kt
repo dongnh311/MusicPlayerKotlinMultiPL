@@ -4,11 +4,12 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.toMutableStateList
 import base.BaseViewModel
 import co.touchlab.kermit.Logger
+import const.FB_DATABASE_MUSICS
+import const.FB_DATABASE_SINGER
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import model.EventModel
 import model.MusicModel
 import model.SingerModel
@@ -82,22 +83,21 @@ class HomeViewModel: BaseViewModel() {
      */
     fun loadListMusicAndSinger() {
         coroutineScope.launch {
-            val taskTopic = firebaseMusicsHelper.loadListTopicOnFB()
-            var topics = taskTopic.first()
+            var topics = firebaseMusicsHelper.loadListTopicOnFB().first()
 
-            val taskSingers = firebaseMusicsHelper.loadListSingerOnFB()
-            var singers = taskSingers.first()
+            var singers = firebaseMusicsHelper.loadListSingerOnFB().first()
 
-            val taskMusics = firebaseMusicsHelper.loadListMusicsOnFB()
-            val musics = taskMusics.first()
+            val musics = firebaseMusicsHelper.loadListMusicsOnFB().first()
 
-            val taskMusicsNew = firebaseMusicsHelper.loadListNewMusicsOnFB()
-            val musicsNew = taskMusics.first()
+            var musicsNew = firebaseMusicsHelper.loadListNewMusicsOnFB().first()
 
             // Save list singer
             if (singers.isEmpty()) {
                 singers = firebaseMusicsHelper.writeDataSingerToFB()
             }
+
+            // Convert image url
+            loadImageSingerFirebase(singers).first()
 
             listSingers.addAll(singers.toMutableStateList())
 
@@ -114,21 +114,26 @@ class HomeViewModel: BaseViewModel() {
             }
 
             // Load new image path
-            val listMusicUpdate = loadImageStorageFirebase(musics).first()
+            val listMusicUpdate = loadImageMusicFirebase(musics).first()
 
             listMusics.clear()
             listMusics.addAll(listMusicUpdate)
 
             // Music New
             if (musicsNew.isEmpty()) {
-                firebaseMusicsHelper.writeDataMusicNewToFB()
+                musicsNew = firebaseMusicsHelper.writeDataMusicNewToFB()
             }
 
-            // Load new image path
-            val listMusicNewUpdate = loadImageStorageFirebase(musics).first()
+            val listMusicNewLocal = mutableListOf<MusicModel>()
+            for (musicId in musicsNew) {
+                val find = listMusicUpdate.find { item -> musicId.id == item.id }
+                find?.let {
+                    listMusicNewLocal.add(find)
+                }
+            }
 
             listNewMusics.clear()
-            listNewMusics.addAll(listMusicNewUpdate)
+            listNewMusics.addAll(listMusicNewLocal)
         }
     }
 
@@ -137,21 +142,50 @@ class HomeViewModel: BaseViewModel() {
      *
      * @param musics
      */
-    private fun loadImageStorageFirebase(musics : MutableList<MusicModel>) = callbackFlow{
+    private fun loadImageMusicFirebase(musics : MutableList<MusicModel>) = callbackFlow {
         coroutineScope.launch {
             for (item in musics) {
-                // Thumb
-                val newUrlImage =  firebaseMusicsHelper.findUrlLoadImage(item.imageUrl)
-                item.imageUrl = newUrlImage
+                if (item.imageUrl.startsWith("gs://")) {
+                    // Thumb
+                    val newUrlImage =  firebaseMusicsHelper.findUrlLoadImage(item.imageUrl)
+                    item.imageUrl = newUrlImage
+                    firebaseMusicsHelper.updateNewValueForMusic(FB_DATABASE_MUSICS, item.id, "imageUrl", newUrlImage)
+                }
 
-                // File to play
-                val newUrlFile = firebaseMusicsHelper.findUrlLoadImage(item.url)
-                item.url = newUrlFile
+                if (item.url.startsWith("gs://")) {
+                    // File to play
+                    val newUrlFile = firebaseMusicsHelper.findUrlLoadImage(item.url)
+                    item.url = newUrlFile
+                    firebaseMusicsHelper.updateNewValueForMusic(FB_DATABASE_MUSICS, item.id, "url", newUrlFile)
+                }
 
                 // Find singer
                 item.singerModel = listSingers.find { singer -> singer.id == item.singerId }
             }
             trySend(musics)
+        }
+
+        awaitClose {
+            close()
+        }
+    }
+
+    /**
+     * Load avatar for singer
+     *
+     * @param singers
+     */
+    private fun loadImageSingerFirebase(singers: MutableList<SingerModel>) = callbackFlow {
+        coroutineScope.launch {
+            for (item in singers) {
+                if (item.avatar.startsWith("gs://")) {
+                    // Thumb
+                    val newAvatar =  firebaseMusicsHelper.findUrlLoadImage(item.avatar)
+                    item.avatar = newAvatar
+                    firebaseMusicsHelper.updateNewValueForMusic(FB_DATABASE_SINGER, item.id, "avatar", newAvatar)
+                }
+            }
+            trySend(singers)
         }
 
         awaitClose {

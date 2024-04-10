@@ -24,3 +24,9 @@ const val FIREBASE_STORAGE_THUMBNAIL = "thumbnails"
 // Firebase gender
 const val GENDER_MALE = 0
 const val GENDER_FEMALE = 1
+
+// Firebase Country
+const val COUNTRY_VN = "VN"
+const val COUNTRY_US = "US"
+const val COUNTRY_KR = "KR"
+const val COUNTRY_CN = "CN"
