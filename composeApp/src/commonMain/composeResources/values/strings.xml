@@ -105,4 +105,9 @@
     <string name="singers_gender_female">Female</string>
     <string name="singers_year_of_birth">Year Of Birth :</string>
 
+    <string name="singer_title">Singer</string>
+    <string name="singer_musics">Musics</string>
+
+    <string name="music_detail_title">Music</string>
+
 </resources>

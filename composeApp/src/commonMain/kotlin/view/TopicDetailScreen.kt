@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
@@ -33,17 +33,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import base.BaseScreen
 import com.seiko.imageloader.rememberImagePainter
-import const.GENDER_MALE
+import model.TopicModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
-import musicplayerkotlinmultipl.composeapp.generated.resources.events_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_empty
-import musicplayerkotlinmultipl.composeapp.generated.resources.singers_gender
-import musicplayerkotlinmultipl.composeapp.generated.resources.singers_gender_female
-import musicplayerkotlinmultipl.composeapp.generated.resources.singers_gender_male
-import musicplayerkotlinmultipl.composeapp.generated.resources.singers_title
-import musicplayerkotlinmultipl.composeapp.generated.resources.singers_year_of_birth
+import musicplayerkotlinmultipl.composeapp.generated.resources.topic_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -55,7 +50,7 @@ import styles.paddingTop16StartEnd16
 import styles.textContentPrimary
 import styles.textContentSecond
 import styles.textTittleHome
-import viewModel.SingersViewModel
+import viewModel.TopicDetailViewModel
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -63,13 +58,15 @@ import viewModel.SingersViewModel
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class SingersScreen : BaseScreen<SingersViewModel> () {
-    override var viewModel: SingersViewModel = SingersViewModel()
+class TopicDetailScreen: BaseScreen<TopicDetailViewModel>() {
+    override var viewModel: TopicDetailViewModel = TopicDetailViewModel()
+
+    // Save topic
+    var topicModel = TopicModel()
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
-        val singerDetailScreen by lazy { SingerDetailScreen() }
         Scaffold(modifier = Modifier.background(Color.Red).fillMaxSize(), backgroundColor = colorPrimaryBackground,
             topBar = {
                 Row(horizontalArrangement = Arrangement.Start,
@@ -84,26 +81,26 @@ class SingersScreen : BaseScreen<SingersViewModel> () {
                                 navigator.pop()
                             }
                     )
-                    Text(text = stringResource(Res.string.singers_title), style = textTittleHome(), modifier = Modifier.padding(start = 8.dp))
+                    Text(text = stringResource(Res.string.topic_title), style = textTittleHome(), modifier = Modifier.padding(start = 8.dp))
                     Spacer(modifier = Modifier.height(45.dp))
                 }
             }) {
+
             LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = it.calculateBottomPadding(), top = it.calculateTopPadding()),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
+                verticalArrangement = Arrangement.Top) {
 
                 // Add item
-                if (viewModel.listSingers.isEmpty()) {
+                if (viewModel.listMusicFollowTopic.isEmpty()) {
                     item{
                         Text(text = stringResource(Res.string.home_ranking_empty), modifier = Modifier.fillMaxSize()
                             .paddingTop16(), textAlign = TextAlign.Center)
                     }
                 } else {
-                    items(viewModel.listSingers.size) { index ->
+                    items(viewModel.listMusicFollowTopic.size) { index ->
                         Card(modifier = Modifier
                             .paddingTop16StartEnd16().clickable(enabled = true) {
-                                singerDetailScreen.singerModel = viewModel.listSingers[index]
-                                navigator.push(singerDetailScreen)
+
                             },
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation =  10.dp,
@@ -118,36 +115,33 @@ class SingersScreen : BaseScreen<SingersViewModel> () {
                                 containerColor = colorAccountCard
                             ),
                             content = {
-                                val itemSinger = viewModel.listSingers[index]
-                                Column(modifier = Modifier.fillMaxWidth()) {
-                                    val painter = if (itemSinger.avatar.isNotEmpty()) {
-                                        rememberImagePainter(itemSinger.avatar)
+                                Row(
+                                    horizontalArrangement = Arrangement.Start,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                ) {
+                                    val itemMusic = viewModel.listMusicFollowTopic[index]
+                                    val painter = if (itemMusic.imageUrl.isNotEmpty()) {
+                                        rememberImagePainter(itemMusic.imageUrl)
                                     } else painterResource(Res.drawable.avatar_default)
                                     Image(
                                         painter = painter,
                                         contentDescription = "avatar",
                                         contentScale = ContentScale.Crop,            // crop the image if it's not a square
                                         modifier = Modifier
-                                            .fillMaxWidth().aspectRatio(1f)
+                                            .size(100.dp)
+                                            .aspectRatio(1f)
                                             .clip(RectangleShape)                       // clip to the circle shape
-                                            .border(0.dp, Color.Gray, RectangleShape)   // add a border (optional)
+                                            .border(2.dp, Color.Gray, RectangleShape)   // add a border (optional)
                                     )
 
-                                    // Name
-                                    Text(text = itemSinger.name, modifier = Modifier.fillParentMaxWidth().padding(top = 16.dp),
-                                        textAlign = TextAlign.Center, style = textContentPrimary())
-
-                                    // Gender
-                                    Text(text = stringResource(Res.string.singers_gender) + " " + findGenderForSinger(itemSinger.gender)
-                                        , modifier = Modifier.fillParentMaxWidth(), textAlign = TextAlign.Center,
-                                        style = textContentSecond()
-                                    )
-
-                                    // Year
-                                    Text(text = stringResource(Res.string.singers_year_of_birth) + " " + itemSinger.yearOfBirth
-                                        , modifier = Modifier.fillParentMaxWidth().padding(bottom = 16.dp), textAlign = TextAlign.Center,
-                                        style = textContentSecond()
-                                    )
+                                    // Add another single item
+                                    Column(modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
+                                        Text(text = itemMusic.name, style = textContentPrimary(), modifier = Modifier.padding(bottom = 8.dp))
+                                        Text(text = itemMusic.singerModel?.name.toString(), style = textContentSecond(), modifier = Modifier.padding(top = 8.dp))
+                                    }
                                 }
                             })
                     }
@@ -161,27 +155,12 @@ class SingersScreen : BaseScreen<SingersViewModel> () {
     }
 
     override fun onStartedScreen() {
-        if (viewModel.listSingers.isEmpty()) {
-            viewModel.loadSingers()
+        if (viewModel.lastTopicFind != topicModel.id) {
+            viewModel.findListMusicByTopic(topicModel.id)
         }
     }
 
     override fun onDisposedScreen() {
-    }
 
-    /**
-     * Find gender for singer
-     *
-     * @param genderType
-     * @return
-     */
-    @OptIn(ExperimentalResourceApi::class)
-    @Composable
-    private fun findGenderForSinger(genderType: Int) : String {
-        return if (genderType == GENDER_MALE) {
-            stringResource(Res.string.singers_gender_male)
-        } else {
-            stringResource(Res.string.singers_gender_female)
-        }
     }
 }

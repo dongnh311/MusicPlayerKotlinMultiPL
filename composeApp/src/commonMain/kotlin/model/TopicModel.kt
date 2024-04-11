@@ -46,8 +46,8 @@ fun createListDummyTopicModel() : MutableList<TopicModel> {
 
     val topic4 = TopicModel()
     topic4.id = "5"
-    topic4.name = "Special"
-    topic4.urlImage = "https://avatar-ex-swe.nixcdn.com/topic/thumb/2020/09/10/6/a/9/b/1599734115030_org.jpgg"
+    topic4.name = "Classic"
+    topic4.urlImage = "https://avatar-ex-swe.nixcdn.com/topic/thumb/2020/09/11/4/f/0/7/1599819318161_org.jpg"
     listTopics.add(topic4)
 
     val topic5 = TopicModel()

@@ -46,6 +46,7 @@ import base.BaseScreen
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.core.model.screenModelScope
 import cafe.adriel.voyager.core.screen.Screen
+import childView.EmptyDataView
 import co.touchlab.kermit.Logger
 import com.seiko.imageloader.rememberImagePainter
 import kotlinx.coroutines.launch
@@ -154,9 +155,7 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
                             showUSUKTab()
                         }
                         3 -> {
-                            Text(text = stringResource(Res.string.home_ranking_empty), modifier = Modifier.fillMaxSize()
-                                .align(Alignment.Center)
-                                .paddingTop16(), textAlign = TextAlign.Center)
+                            EmptyDataView()
                         }
                         4 -> {
                             showKpopTab()
@@ -165,14 +164,10 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
                             showCpopTab()
                         }
                         6 -> {
-                            Text(text = stringResource(Res.string.home_ranking_empty), modifier = Modifier.fillMaxSize()
-                                .align(Alignment.Center)
-                                .paddingTop16(), textAlign = TextAlign.Center)
+                            EmptyDataView()
                         }
                         else -> {
-                            Text(text = stringResource(Res.string.home_ranking_empty), modifier = Modifier.fillMaxSize()
-                                .align(Alignment.Center)
-                                .paddingTop16(), textAlign = TextAlign.Center)
+                            EmptyDataView()
                         }
                     }
 

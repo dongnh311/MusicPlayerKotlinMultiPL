@@ -57,6 +57,9 @@ import viewModel.TopicsViewModel
 class TopicsScreen: BaseScreen<TopicsViewModel>() {
     override var viewModel: TopicsViewModel = TopicsViewModel()
 
+    // Screen detail
+    val topicDetailScreen by lazy { TopicDetailScreen() }
+
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
@@ -80,7 +83,7 @@ class TopicsScreen: BaseScreen<TopicsViewModel>() {
             }) {
             LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = it.calculateBottomPadding(), top = it.calculateTopPadding()),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center) {
+                verticalArrangement = Arrangement.Top) {
 
                 // Add item
                 if (viewModel.listTopic.isEmpty()) {
@@ -92,7 +95,8 @@ class TopicsScreen: BaseScreen<TopicsViewModel>() {
                     items(viewModel.listTopic.size) { index ->
                         Card(modifier = Modifier
                             .paddingTop16StartEnd16().clickable(enabled = true) {
-
+                                topicDetailScreen.topicModel = viewModel.listTopic[index]
+                                navigator.push(topicDetailScreen)
                             },
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation =  10.dp,
