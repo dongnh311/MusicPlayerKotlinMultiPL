@@ -30,7 +30,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -54,7 +53,7 @@ import childView.InputTextField
 import co.touchlab.kermit.Logger
 import com.seiko.imageloader.rememberImagePainter
 import commonShare.CallBackResultPermission
-import commonShare.DecimalFormat
+import commonShare.formatNumberToMoney
 import commonShare.loadPermissionControl
 import const.ACCOUNT_TYPE_FREE
 import const.ACCOUNT_TYPE_VIP
@@ -82,8 +81,8 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.reset_password_bt
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_account_type
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_account_type_free
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_account_type_vip
-import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_brith_day
-import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_brith_day_pl
+import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_birth_day
+import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_birth_day_pl
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_coin
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_login_with
 import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_login_with_email
@@ -101,9 +100,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import styles.buttonCircleAvatarColor
-import styles.buttonColorAccount
 import styles.buttonCommonModifier
-import styles.buttonDialog
 import styles.buttonSize32dp
 import styles.primaryDark
 import styles.textContentPrimary
@@ -122,7 +119,7 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
     private var keyboardController : SoftwareKeyboardController? = null
 
     private val userName = mutableStateOf("")
-    private val brithDay = mutableStateOf("")
+    private val birthDay = mutableStateOf("")
     private val userAvatar = mutableStateOf("")
 
     private val currentPassword = mutableStateOf("")
@@ -146,7 +143,7 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
 
         // Save old data
         userName.value = userModel.userName
-        brithDay.value = userModel.dayOfBrith
+        birthDay.value = userModel.dayOfBirth
         userAvatar.value = userModel.profileImage
 
         Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
@@ -235,16 +232,16 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                             )
                         )
 
-                        // Brith day
+                        // Birth day
                         InputTextField(
-                            value = brithDay.value,
+                            value = birthDay.value,
                             onChange = {newDay ->
-                                brithDay.value = newDay
+                                birthDay.value = newDay
                                 isEnableButtonSave.value = checkToEnableButtonSave()
                             },
                             modifier = Modifier.fillMaxWidth().padding(top= 8.dp),
-                            label = stringResource(Res.string.user_information_brith_day),
-                            placeholder = stringResource(Res.string.user_information_brith_day_pl),
+                            label = stringResource(Res.string.user_information_birth_day),
+                            placeholder = stringResource(Res.string.user_information_birth_day_pl),
                             leadingIcon = {
                                 Icon(
                                     Icons.Default.DateRange,
@@ -272,7 +269,7 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                             Text(text = stringResource(Res.string.user_information_coin),
                                 style = textContentPrimary(), modifier = Modifier.weight(1f).padding(start = 16.dp, top= 16.dp, bottom = 16.dp))
 
-                            Text(text = DecimalFormat().format(userModel.coin),
+                            Text(text = formatNumberToMoney(userModel.coin),
                                 style = textContentPrimary(), modifier = Modifier.padding(end = 8.dp))
 
                             // Buy coin
@@ -552,14 +549,14 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
      * @return
      */
     private fun checkToEnableButtonSave() : Boolean {
-        val checkNameAndBrith = userName.value.isNotEmpty() && userName.value != userModel.userName ||
-                brithDay.value.isNotEmpty() && brithDay.value != userModel.dayOfBrith || userAvatar.value.isNotEmpty() && userAvatar.value != userModel.profileImage
+        val checkNameAndBirth = userName.value.isNotEmpty() && userName.value != userModel.userName ||
+                birthDay.value.isNotEmpty() && birthDay.value != userModel.dayOfBirth || userAvatar.value.isNotEmpty() && userAvatar.value != userModel.profileImage
         return if (currentPassword.value.isEmpty() && newPassword.value.isEmpty() && newRePassword.value.isEmpty()) {
-            checkNameAndBrith
+            checkNameAndBirth
         } else {
             currentPassword.value.length >= 6 &&
                     newPassword.value.length >=6 && newRePassword.value.length >= 6 &&
-                    newPassword.value == newRePassword.value && checkNameAndBrith
+                    newPassword.value == newRePassword.value && checkNameAndBirth
         }
     }
 
@@ -568,7 +565,7 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
      */
     private fun controlToSaveUserInformation() {
         userModel.userName = userName.value
-        userModel.dayOfBrith = brithDay.value
+        userModel.dayOfBirth = birthDay.value
         userModel.profileImage = userAvatar.value
         viewModel.updateInformationOfUser(userModel) {
             Logger.e("Update account information complete")

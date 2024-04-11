@@ -2,71 +2,60 @@ package view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import base.BaseScreen
 import com.seiko.imageloader.rememberImagePainter
-import commonShare.viewTimeByTimestamp
-import model.EventModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
+import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
-import musicplayerkotlinmultipl.composeapp.generated.resources.event_detail_createAt
-import musicplayerkotlinmultipl.composeapp.generated.resources.event_detail_expireAt
-import musicplayerkotlinmultipl.composeapp.generated.resources.event_detail_title
+import musicplayerkotlinmultipl.composeapp.generated.resources.events_title
+import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_empty
+import musicplayerkotlinmultipl.composeapp.generated.resources.topic_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import styles.buttonSize32dp
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
+import styles.paddingTop16
 import styles.paddingTop16StartEnd16
-import styles.paddingTop8StartEnd16
-import styles.textContentPrimary
-import styles.textContentSecond
-import styles.textTittleContent
 import styles.textTittleHome
-import viewModel.AccountViewModel
-import viewModel.EventDetailViewModel
+import viewModel.TopicsViewModel
 
 /**
  * Project : MusicPlayerKotlinMultiPL
- * Created by DongNH on 12/03/2024.
+ * Created by DongNH on 11/4/24.
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class EventDetailScreen: BaseScreen<EventDetailViewModel>() {
-
-    override var viewModel: EventDetailViewModel = EventDetailViewModel()
-
-    // Save event
-    var eventModel = EventModel()
+class TopicsScreen: BaseScreen<TopicsViewModel>() {
+    override var viewModel: TopicsViewModel = TopicsViewModel()
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
@@ -85,15 +74,24 @@ class EventDetailScreen: BaseScreen<EventDetailViewModel>() {
                                 navigator.pop()
                             }
                     )
-                    Text(text = stringResource(Res.string.event_detail_title), style = textTittleHome(), modifier = Modifier.padding(start = 8.dp))
+                    Text(text = stringResource(Res.string.topic_title), style = textTittleHome(), modifier = Modifier.padding(start = 8.dp))
                     Spacer(modifier = Modifier.height(45.dp))
                 }
             }) {
-                Column(modifier = Modifier.fillMaxSize().padding(bottom = it.calculateBottomPadding())) {
-                    if (eventModel.image != null) {
-                        val painter =  rememberImagePainter(eventModel.image!!)
+            LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = it.calculateBottomPadding(), top = it.calculateTopPadding()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center) {
+
+                // Add item
+                if (viewModel.listTopic.isEmpty()) {
+                    item{
+                        Text(text = stringResource(Res.string.home_ranking_empty), modifier = Modifier.fillMaxSize()
+                            .paddingTop16(), textAlign = TextAlign.Center)
+                    }
+                } else {
+                    items(viewModel.listTopic.size) { index ->
                         Card(modifier = Modifier
-                            .fillMaxWidth().paddingTop8StartEnd16().clickable(enabled = true) {
+                            .paddingTop16StartEnd16().clickable(enabled = true) {
 
                             },
                             elevation = CardDefaults.cardElevation(
@@ -109,39 +107,36 @@ class EventDetailScreen: BaseScreen<EventDetailViewModel>() {
                                 containerColor = colorAccountCard
                             ),
                             content = {
-                                Image(
-                                    painter = painter,
-                                    contentDescription = "image",
-                                    modifier = Modifier.fillMaxWidth().heightIn(max = 200.dp),
-                                    contentScale = ContentScale.FillWidth,
-                                )
+                                Box(modifier = Modifier.fillParentMaxWidth()) {
+                                    val itemTopic = viewModel.listTopic[index]
+                                    val painter = if (itemTopic.urlImage.isNotEmpty()) {
+                                        rememberImagePainter(itemTopic.urlImage)
+                                    } else painterResource(Res.drawable.avatar_default)
+                                    Image(
+                                        painter = painter,
+                                        contentDescription = "avatar",
+                                        contentScale = ContentScale.FillWidth,            // crop the image if it's not a square
+                                        modifier = Modifier
+                                            .fillMaxWidth().height(154.dp).aspectRatio(1f)
+                                            .clip(RectangleShape)                       // clip to the circle shape
+                                            .border(0.dp, Color.Gray, RectangleShape)   // add a border (optional)
+                                    )
+                                }
                             })
                     }
 
-                    // Title
-                    Text(text = eventModel.title, style = textTittleContent(), modifier = Modifier.fillMaxWidth().paddingTop16StartEnd16())
-
-                    // Date time
-                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = stringResource(Res.string.event_detail_createAt) + viewTimeByTimestamp(eventModel.createAt),
-                            style = textContentSecond(), textAlign = TextAlign.Start,
-                            modifier = Modifier.fillMaxWidth().paddingTop8StartEnd16().weight(1f))
-
-                        var textExpire = "N/A"
-                        if (eventModel.expireAt != null) {
-                            textExpire = viewTimeByTimestamp(eventModel.expireAt!!)
-                        }
-                        Text(text = stringResource(Res.string.event_detail_expireAt) + textExpire,
-                            style = textContentSecond(), textAlign = TextAlign.End,
-                            modifier = Modifier.fillMaxWidth().paddingTop8StartEnd16().weight(1f))
+                    item {
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
-
-                    Text(text = eventModel.content, style = textContentPrimary(), modifier = Modifier.fillMaxWidth().paddingTop8StartEnd16())
                 }
+            }
         }
     }
 
     override fun onStartedScreen() {
+        if (viewModel.listTopic.isEmpty()) {
+            viewModel.loadListTopics()
+        }
     }
 
     override fun onDisposedScreen() {

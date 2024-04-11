@@ -57,15 +57,11 @@ class MainScreen : BaseScreen<MainViewModel>() {
                     tabs = listOf(TabHomeScreen, TabRankingScreen, TabAccountScreen)
                 )
             },
-        ) { tabNavigator ->
+        ) { _ ->
             Scaffold(
                 modifier = Modifier.fillMaxSize().background(colorPrimaryBackground),
                 topBar = {
-                    if (tabNavigator.current.options.title != "Account") {
-                        TopAppBar(
-                            title = { Text(text = tabNavigator.current.options.title, style = textTittleHome()) }
-                        )
-                    }
+
                 },
                 content = {
                     Box(

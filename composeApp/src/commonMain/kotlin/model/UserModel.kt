@@ -17,7 +17,7 @@ class UserModel: BaseModel() {
     var userName: String = ""
     var profileImage: String = ""
     var email: String = ""
-    var dayOfBrith: String = ""
+    var dayOfBirth: String = ""
     var platform: String = PLATFORM_ANDROID
     var fcmToken: String = ""
     var coin: Double = 0.0

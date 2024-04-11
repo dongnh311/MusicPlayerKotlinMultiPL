@@ -60,6 +60,8 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_rap
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_trending
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_us
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_vn
+import musicplayerkotlinmultipl.composeapp.generated.resources.home_title
+import musicplayerkotlinmultipl.composeapp.generated.resources.ranking_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -71,6 +73,7 @@ import styles.textContentPrimary
 import styles.textContentSecond
 import styles.textRankingPrimary
 import styles.textTittleContent
+import styles.textTittleHome
 import viewModel.HomeViewModel
 import viewModel.RankingViewModel
 
@@ -99,6 +102,11 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
             stringResource(Res.string.home_ranking_rap))
 
         Column (modifier = Modifier.fillMaxSize()) {
+
+            Box(modifier = Modifier.fillMaxWidth().height(45.dp), contentAlignment = Alignment.CenterStart) {
+                Text(text = stringResource(Res.string.ranking_title), style = textTittleHome(), modifier = Modifier.fillMaxWidth().padding(start = 16.dp))
+            }
+
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
                 contentColor = Color.White,

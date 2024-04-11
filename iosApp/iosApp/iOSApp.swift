@@ -7,7 +7,7 @@ import ComposeApp
 struct iOSApp: App {
     init() {
         FirebaseApp.configure()
-        IOsMusicPlayerSingleTon.shared
+        //IOsMusicPlayerSingleTon.shared
         IOsMusicPlayerSingleTon.shared.initObjectSendBack()
     }
     

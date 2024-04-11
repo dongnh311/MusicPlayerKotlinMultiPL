@@ -40,8 +40,8 @@
     <string name="user_information_name">Name</string>
     <string name="user_information_name_pl">Enter Your Name</string>
     <string name="user_information_coin">Coin :</string>
-    <string name="user_information_brith_day">Brith Day</string>
-    <string name="user_information_brith_day_pl">Enter Your Brith Day</string>
+    <string name="user_information_birth_day">Birth Day</string>
+    <string name="user_information_birth_day_pl">Enter Your Birth Day</string>
     <string name="user_information_platform">Platform :</string>
     <string name="user_information_account_type">Type :</string>
     <string name="user_information_account_type_free">Free</string>
@@ -78,6 +78,7 @@
     <string name="home_topics">Topic</string>
     <string name="home_mores">More ></string>
 
+    <string name="ranking_title">Rankings</string>
     <string name="home_ranking_trending">Trending</string>
     <string name="home_ranking_vn">V-Pop</string>
     <string name="home_ranking_us">US-UK</string>
@@ -87,5 +88,21 @@
     <string name="home_ranking_rap">Rap</string>
 
     <string name="home_ranking_empty">No Data.</string>
+
+    <string name="event_detail_title">Event Detail</string>
+    <string name="event_detail_createAt">Created :</string>
+    <string name="event_detail_expireAt">Expire :</string>
+
+    <string name="events_title">Events</string>
+
+    <string name="new_music_title">New Musics</string>
+
+    <string name="topic_title">Topics</string>
+
+    <string name="singers_title">Singers</string>
+    <string name="singers_gender">Gender :</string>
+    <string name="singers_gender_male">Male</string>
+    <string name="singers_gender_female">Female</string>
+    <string name="singers_year_of_birth">Year Of Birth :</string>
 
 </resources>

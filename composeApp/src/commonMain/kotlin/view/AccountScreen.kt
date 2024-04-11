@@ -58,8 +58,8 @@ import childView.LoginField
 import childView.PasswordField
 import co.touchlab.kermit.Logger
 import com.seiko.imageloader.rememberImagePainter
-import commonShare.DecimalFormat
 import commonShare.OnLoginGoogleCallBack
+import commonShare.formatNumberToMoney
 import commonShare.getPlatform
 import commonShare.loadFireBaseAuthControl
 import const.ACCOUNT_TYPE_FREE
@@ -655,7 +655,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                     // Add another single item
                                     Column(modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
                                         Text(text = userModel.value.userName, style = textContentPrimary(), modifier = Modifier.padding(bottom = 8.dp))
-                                        Text(text = "Coin : " + DecimalFormat().format(userModel.value.coin), style = textContentSecond(), modifier = Modifier.padding(top = 8.dp))
+                                        Text(text = "Coin : " + formatNumberToMoney(userModel.value.coin), style = textContentSecond(), modifier = Modifier.padding(top = 8.dp))
                                         Row(modifier = Modifier.fillMaxWidth().paddingTop16()) {
                                             val icon = when (userModel.value.loginType) {
                                                 LOGIN_BY_GOOGLE -> {

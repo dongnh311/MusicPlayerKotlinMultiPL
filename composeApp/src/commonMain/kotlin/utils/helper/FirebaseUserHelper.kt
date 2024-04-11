@@ -144,7 +144,7 @@ class FirebaseUserHelper {
         firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("profileImage", userModel.profileImage))
         firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("fcmToken", userModel.fcmToken))
         firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("platform", userModel.platform))
-        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("dayOfBrith", userModel.dayOfBrith))
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("dayOfBirth", userModel.dayOfBirth))
         firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("accountType", userModel.accountType))
     }
 
