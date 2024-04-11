@@ -42,6 +42,28 @@ fun textTittleContent() : TextStyle {
 }
 
 @Composable
+fun textNameMusicWhite() : TextStyle {
+    return TextStyle(
+        fontSize = 20.sp,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Normal,
+        color = colorWhite,
+        textAlign = TextAlign.Start
+    )
+}
+
+@Composable
+fun textSingerWhite() : TextStyle {
+    return TextStyle(
+        fontSize = 16.sp,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Normal,
+        color = colorDisable,
+        textAlign = TextAlign.Start
+    )
+}
+
+@Composable
 fun textButton() : TextStyle {
     return TextStyle(
         fontSize = 16.sp,

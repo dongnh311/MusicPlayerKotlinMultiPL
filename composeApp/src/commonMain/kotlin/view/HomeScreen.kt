@@ -97,6 +97,7 @@ class HomeScreen: BaseScreen<HomeViewModel>() {
         // Screen detail
         val topicDetailScreen by lazy { TopicDetailScreen() }
         val singerDetailScreen by lazy { SingerDetailScreen() }
+        val musicDetailScreen by lazy { MusicDetailScreen() }
 
         val pagerState = rememberPagerState(initialPage = 0, pageCount = {return@rememberPagerState listEvents.size})
         val coroutineScope = rememberCoroutineScope()
@@ -214,7 +215,8 @@ class HomeScreen: BaseScreen<HomeViewModel>() {
                     items(listMusicNew.size) { index ->
                         Card(modifier = Modifier
                             .fillMaxWidth().paddingTop16StartEnd16().clickable(enabled = true) {
-
+                                musicDetailScreen.musicModel.value = listMusicNew[index]
+                                navigator.push(musicDetailScreen)
                             },
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation =  10.dp,

@@ -109,5 +109,9 @@
     <string name="singer_musics">Musics</string>
 
     <string name="music_detail_title">Music</string>
+    <string name="music_detail_lyrics">Lyrics</string>
+
+    <string name="music_detail_same_singer">The same singer</string>
+    <string name="music_detail_topic">Topics</string>
 
 </resources>

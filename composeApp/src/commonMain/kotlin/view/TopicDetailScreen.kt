@@ -38,6 +38,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_empty
+import musicplayerkotlinmultipl.composeapp.generated.resources.music_detail_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.topic_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -67,6 +68,7 @@ class TopicDetailScreen: BaseScreen<TopicDetailViewModel>() {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
+        val title = topicModel.name.ifEmpty { stringResource(Res.string.topic_title) }
         Scaffold(modifier = Modifier.background(Color.Red).fillMaxSize(), backgroundColor = colorPrimaryBackground,
             topBar = {
                 Row(horizontalArrangement = Arrangement.Start,
@@ -81,7 +83,7 @@ class TopicDetailScreen: BaseScreen<TopicDetailViewModel>() {
                                 navigator.pop()
                             }
                     )
-                    Text(text = stringResource(Res.string.topic_title), style = textTittleHome(), modifier = Modifier.padding(start = 8.dp))
+                    Text(text = title, style = textTittleHome(), modifier = Modifier.padding(start = 8.dp))
                     Spacer(modifier = Modifier.height(45.dp))
                 }
             }) {

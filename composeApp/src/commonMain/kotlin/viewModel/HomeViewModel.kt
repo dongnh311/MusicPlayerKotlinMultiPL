@@ -27,7 +27,6 @@ import utils.helper.FirebaseMusicsHelper
  * Phone : +84397199197.
  */
 class HomeViewModel: BaseViewModel() {
-
     // Api
     private val eventServices: EventServices = NetworkManager.apiNetRest.ktorfit.create()
 
