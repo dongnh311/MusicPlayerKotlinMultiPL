@@ -85,6 +85,7 @@ import styles.textNameMusicWhite
 import styles.textSingerWhite
 import styles.textTittleContent
 import styles.textTittleHome
+import utils.dialogs.DialogAddToPlaylist
 import utils.exts.toStringRemoveNull
 import viewModel.MusicDetailViewModel
 
@@ -99,6 +100,9 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
 
     // Save current object
     var musicModel = mutableStateOf(MusicModel())
+
+    // To open dialog add
+    private val isOpenDialogAddToPlaylist = mutableStateOf(false)
 
     @OptIn(ExperimentalResourceApi::class, ExperimentalLayoutApi::class)
     @Composable
@@ -178,7 +182,7 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                              // Add play list
                                              IconButton(
                                                  onClick = {
-
+                                                    isOpenDialogAddToPlaylist.value = true
                                                  },
                                                  modifier = Modifier.size(45.dp).padding(start = 16.dp),
                                                  content = {
@@ -246,7 +250,7 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                          // Play
                                          IconButton(
                                              onClick = {
-
+                                                 startPlayMusic()
                                              },
                                              modifier = Modifier.size(45.dp),
                                              content = {
@@ -402,6 +406,21 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
 
                 }
             }
+
+        // Open dialog add
+        if (isOpenDialogAddToPlaylist.value) {
+            DialogAddToPlaylist(
+                isOpenDialogAddToPlaylist,
+                playlists = viewModel.listPlaylist,
+                callbackCreate = {
+                },
+                callBackAdd = {
+                    it.forEach {playlist ->
+                        viewModel.addMusicToPlaylist(playlist.id, musicModel.value.id)
+                    }
+                }
+            )
+        }
     }
 
     override fun onStartedScreen() {

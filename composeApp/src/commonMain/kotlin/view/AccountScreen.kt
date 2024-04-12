@@ -86,6 +86,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_email
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_facebook
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_fav_active
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_fav_unactive
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_google
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_logout
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_my_coin
@@ -769,32 +770,34 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         }
                     }
 
-                    // Button Album
-                    androidx.compose.material3.Button(modifier = Modifier.paddingTop8StartEnd16(),
-                        border = BorderStroke(1.dp, colorPrimaryApp),
-                        shape = RoundedCornerShape(5),
-                        elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = 1.dp,
-                            pressedElevation = 2.dp,
-                            disabledElevation = 2.dp,
-                        ),
-                        colors = buttonColorAccount(),
-                        onClick = {
+                    if (false) {
+                        // Button Album
+                        androidx.compose.material3.Button(modifier = Modifier.paddingTop8StartEnd16(),
+                            border = BorderStroke(1.dp, colorPrimaryApp),
+                            shape = RoundedCornerShape(5),
+                            elevation = ButtonDefaults.buttonElevation(
+                                defaultElevation = 1.dp,
+                                pressedElevation = 2.dp,
+                                disabledElevation = 2.dp,
+                            ),
+                            colors = buttonColorAccount(),
+                            onClick = {
 
-                        }) {
-                        Row(horizontalArrangement = Arrangement.Start,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(0.dp)){
-                            Icon(
-                                painter = painterResource(Res.drawable.btn_album),
-                                modifier = iconSize30dp(),
-                                contentDescription = stringResource(Res.string.account_albums),
-                                tint = Color.Unspecified
-                            )
+                            }) {
+                            Row(horizontalArrangement = Arrangement.Start,
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(0.dp)){
+                                Icon(
+                                    painter = painterResource(Res.drawable.btn_album),
+                                    modifier = iconSize30dp(),
+                                    contentDescription = stringResource(Res.string.account_albums),
+                                    tint = Color.Unspecified
+                                )
 
-                            Text(text = stringResource(Res.string.account_albums), style = textButton(), modifier = Modifier.padding(start = 8.dp))
+                                Text(text = stringResource(Res.string.account_albums), style = textButton(), modifier = Modifier.padding(start = 8.dp))
+                            }
                         }
                     }
 
@@ -817,7 +820,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                 .fillMaxWidth()
                                 .padding(0.dp)){
                             Icon(
-                                painter = painterResource(Res.drawable.btn_fav_active),
+                                painter = painterResource(Res.drawable.btn_fav_unactive),
                                 modifier = iconSize30dp(),
                                 contentDescription = stringResource(Res.string.account_my_favourite),
                                 tint = Color.Unspecified

@@ -54,6 +54,9 @@ fun Modifier.paddingStart16() = this.padding(start = 16.dp)
 fun Modifier.paddingAll16() = this.padding(all = 16.dp)
 
 @Composable
+fun Modifier.paddingAll8() = this.padding(all = 8.dp)
+
+@Composable
 fun iconSize24dp() = Modifier.size(24.dp)
 
 @Composable

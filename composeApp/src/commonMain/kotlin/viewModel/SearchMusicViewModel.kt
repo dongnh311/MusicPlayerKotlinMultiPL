@@ -9,6 +9,7 @@ import model.MusicModel
 import model.PlayListModel
 import utils.helper.FirebaseMusicsHelper
 import utils.helper.FirebasePlayHelper
+import utils.helper.FirebaseUserHelper
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -30,8 +31,11 @@ class SearchMusicViewModel: BaseViewModel() {
     // Load play
     private val firebasePlayHelper = FirebasePlayHelper()
 
-    // Save playlist
-    var playlistModel = PlayListModel()
+    // User helper
+    private val firebaseUserHelper = FirebaseUserHelper()
+
+    // Save playlists
+    val listPlaylist = mutableStateListOf<PlayListModel>()
 
     /**
      * Load all music
@@ -44,6 +48,10 @@ class SearchMusicViewModel: BaseViewModel() {
                 val musics = firebaseMusicsHelper.loadListMusicsOnFB().first()
                 musics.forEach { music ->
                     music.singerModel = singers.find { singer -> singer.id == music.singerId }
+                }
+
+                if (listPlaylist.isEmpty()) {
+                    loadListPlaylist()
                 }
 
                 musics
@@ -81,18 +89,55 @@ class SearchMusicViewModel: BaseViewModel() {
     fun addMusicToPlaylist(playlistId: String, musicId: String) {
         workingWithApiHaveDialog(
             service = {
-                if (playlistModel.id != playlistId) {
-                    playlistModel = firebasePlayHelper.findPlaylistWithId(playlistId).first()
+                listPlaylist.forEach {playList ->
+                    if (playList.id == playlistId) {
+                        playList.listMusicsId.add(musicId)
+                        playList.updateAt = loadTimestamp().toLong()
+                        // Update
+                        firebasePlayHelper.updateMusicToPlaylist(playList)
+                    }
                 }
-
-                // Update
-                playlistModel.listMusicsId.add(musicId)
-                playlistModel.updateAt = loadTimestamp().toLong()
-                firebasePlayHelper.updateMusicToPlaylist(playlistModel)
             },
             doOnBeforeService = {},
             doOnAfterService = {},
             onErrorThrowable = {}
+        )
+    }
+
+    /**
+     * Create new playlist
+     *
+     * @param playListName
+     */
+    fun createNewPlayList(playListName: String) {
+        workingWithApiHaveDialog(
+            service = {
+                val playListModel = PlayListModel()
+                playListModel.name = playListName
+                playListModel.userId = firebaseUserHelper.loadUserId()
+                playListModel.createAt = loadTimestamp().toLong()
+                firebasePlayHelper.writeNewPlaylistToFB(playListModel)
+            },
+            doOnBeforeService = {},
+            doOnAfterService = {
+                // Reload list
+                loadListPlaylist()
+            },
+            onErrorThrowable = {}
+        )
+    }
+
+    /**
+     * Reload play list
+     */
+    private fun loadListPlaylist() {
+        workingWithApiNonDialog(
+            service = {
+                val playlist = firebasePlayHelper.loadPlayListOfUser(firebaseUserHelper.loadUserId()).first()
+                listPlaylist.clear()
+                listPlaylist.addAll(playlist)
+            },
+            nextProgressStep = {}
         )
     }
 }

@@ -143,4 +143,8 @@
 
     <string name="search_singers_title">Search Music</string>
 
+    <string name="dialog_add_playlist_title">Add To Playlist</string>
+    <string name="dialog_add_create">Create Playlist</string>
+    <string name="dialog_add_btn_add">Add</string>
+
 </resources>

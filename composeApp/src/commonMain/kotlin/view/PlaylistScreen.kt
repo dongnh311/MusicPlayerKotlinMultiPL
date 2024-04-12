@@ -276,7 +276,7 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
                         Button(onClick = {
                             selectedIndex.value = -1
                             isOpenDialogInputName.value = true
-                        }, modifier = Modifier, shape = RoundedCornerShape(35.dp), colors = buttonColorsGoogle()) {
+                        }, modifier = Modifier, shape = RoundedCornerShape(35.dp), colors = buttonColorsGoogle(), enabled = viewModel.listPlayList.size <= LIMIT_PLAY_LIST) {
                             androidx.compose.material.Icon(
                                 painter = painterResource(Res.drawable.btn_add),
                                 modifier = Modifier.size(20.dp),

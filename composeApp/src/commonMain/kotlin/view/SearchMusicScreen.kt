@@ -46,6 +46,7 @@ import base.BaseScreen
 import childView.EmptyDataView
 import childView.InputTextField
 import com.seiko.imageloader.rememberImagePainter
+import commonShare.loadTimestamp
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_add
@@ -68,6 +69,8 @@ import styles.textContentPrimary
 import styles.textContentSecond
 import styles.textContentThree
 import styles.textTittleHome
+import utils.dialogs.DialogAddToPlaylist
+import utils.dialogs.DialogCreatePlaylist
 import viewModel.SearchMusicViewModel
 
 /**
@@ -83,8 +86,20 @@ class SearchMusicScreen : BaseScreen<SearchMusicViewModel>() {
     // Save playlist for add
     var playListId: String = ""
 
+    // Save music id
+    private var musicId = ""
+
     // Save input search
     private var inputSearch = mutableStateOf("")
+
+    // To open dialog add
+    private val isOpenDialogAddToPlaylist = mutableStateOf(false)
+
+    // Save input name
+    private val inputName = mutableStateOf("")
+
+    // Check to open dialog
+    private val isOpenDialogInputName = mutableStateOf(false)
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
@@ -198,7 +213,8 @@ class SearchMusicScreen : BaseScreen<SearchMusicViewModel>() {
                                             // Add
                                             IconButton(
                                                 onClick = {
-                                                    handleAddPlaylist(itemMusic.id)
+                                                    this@SearchMusicScreen.musicId = itemMusic.id
+                                                    handleAddPlaylist()
                                                 },
                                                 modifier = Modifier.size(45.dp).padding(start = 16.dp),
                                                 content = {
@@ -235,6 +251,33 @@ class SearchMusicScreen : BaseScreen<SearchMusicViewModel>() {
                     }
                 }
         }
+
+        // Open dialog add
+        if (isOpenDialogAddToPlaylist.value) {
+            DialogAddToPlaylist(
+                isOpenDialogAddToPlaylist,
+                playlists = viewModel.listPlaylist,
+                callbackCreate = {
+                },
+                callBackAdd = {
+                    it.forEach {playlist ->
+                        viewModel.addMusicToPlaylist(playlist.id, musicId)
+                    }
+                }
+            )
+        }
+
+        // Check to create new playlist
+        if (isOpenDialogInputName.value) {
+            DialogCreatePlaylist(
+                isOpenDialogInputName,
+                inputName
+            ) { _ ->
+                isOpenDialogInputName.value = false
+                viewModel.createNewPlayList(inputName.value)
+                inputName.value = ""
+            }
+        }
     }
 
     override fun onStartedScreen() {
@@ -255,14 +298,12 @@ class SearchMusicScreen : BaseScreen<SearchMusicViewModel>() {
 
     /**
      * Handle case add playlist
-     *
-     * @param musicId
      */
-    private fun handleAddPlaylist(musicId: String) {
+    private fun handleAddPlaylist() {
         if (playListId.isNotEmpty()) {
-            viewModel.addMusicToPlaylist(playListId, musicId)
+            viewModel.addMusicToPlaylist(playListId, this@SearchMusicScreen.musicId)
         } else {
-            // TODO open dialog create playlist
+            viewModel
         }
     }
 }

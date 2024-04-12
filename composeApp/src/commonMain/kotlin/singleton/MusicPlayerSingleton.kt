@@ -38,4 +38,22 @@ object MusicPlayerSingleton {
 
         return newWidth.pxToDp()
     }
+
+    /**
+     * Load max height to dialog
+     *
+     * @return
+     */
+    @Composable
+    fun loadMaxHeightDialog() : Dp {
+        var newHeight = screenSize.value.second * 0.5F
+        val maxHeight = 570.dp.dpToPx()
+        println("ScreenHeight: ${screenSize.value.second}, 0.5% ScreenHeight: $newHeight ,limit width: $maxHeight")
+
+        if (newHeight > maxHeight || newHeight < 0) {
+            newHeight = maxHeight
+        }
+
+        return newHeight.pxToDp()
+    }
 }

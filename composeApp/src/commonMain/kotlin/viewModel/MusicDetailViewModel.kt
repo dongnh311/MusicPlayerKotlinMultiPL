@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import model.MusicModel
 import model.PlayHistoryModel
+import model.PlayListModel
 import model.TopicModel
 import utils.helper.FirebaseMusicsHelper
 import utils.helper.FirebasePlayHelper
@@ -37,6 +38,9 @@ class MusicDetailViewModel: BaseViewModel() {
     // User helper
     private val firebaseUserHelper = FirebaseUserHelper()
 
+    // Save playlists
+    val listPlaylist = mutableStateListOf<PlayListModel>()
+
     /**
      * Load more information for show music detail
      */
@@ -60,7 +64,11 @@ class MusicDetailViewModel: BaseViewModel() {
                 newList.forEach { item -> item.singerModel = musicModel.singerModel }
                 newList
             },
-            doOnBeforeService = {},
+            doOnBeforeService = {
+                if (listPlaylist.isEmpty()) {
+                    loadListPlaylist()
+                }
+            },
             doOnAfterService = {
                 listMusicsSameSinger.clear()
                 listMusicsSameSinger.addAll(it)
@@ -82,5 +90,42 @@ class MusicDetailViewModel: BaseViewModel() {
                 firebasePlayHelper.writePlayHistoryToFB(playHistoryModel)
             }
         }
+    }
+
+    /**
+     * Reload play list
+     */
+    private fun loadListPlaylist() {
+        workingWithApiNonDialog(
+            service = {
+                val playlist = firebasePlayHelper.loadPlayListOfUser(firebaseUserHelper.loadUserId()).first()
+                listPlaylist.clear()
+                listPlaylist.addAll(playlist)
+            },
+            nextProgressStep = {}
+        )
+    }
+
+    /**
+     * Add music to playlist
+     *
+     * @param playlistId
+     * @param musicId
+     */
+    fun addMusicToPlaylist(playlistId: String, musicId: String) {
+        workingWithApiHaveDialog(
+            service = {
+                listPlaylist.forEach { playlist ->
+                    if (playlist.id == playlistId) {
+                        // Update
+                        playlist.listMusicsId.add(musicId)
+                        playlist.updateAt = loadTimestamp().toLong()
+                        firebasePlayHelper.updateMusicToPlaylist(playlist)
+                    }
+                }
+            },
+            doOnBeforeService = {},
+            doOnAfterService = {},
+        )
     }
 }

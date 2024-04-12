@@ -15,6 +15,7 @@ const val FB_DATABASE_SINGER = "singers"
 const val FB_DATABASE_TOPIC = "topics"
 const val FB_DATABASE_HISTORY = "playHistory"
 const val FB_DATABASE_PLAY_LIST = "playlists"
+const val FB_DATABASE_FAVOURITE = "favourites"
 const val FB_DATABASE_COINS = "coins"
 const val FB_DATABASE_PAYMENT_HISTORY = "buyCoinHistory"
 const val FB_DATABASE_VIP = "vips"
@@ -37,3 +38,7 @@ const val COUNTRY_VN = "VN"
 const val COUNTRY_US = "US"
 const val COUNTRY_KR = "KR"
 const val COUNTRY_CN = "CN"
+
+// Firebase Favourite
+const val FAVOURITE_MUSIC = 0
+const val FAVOURITE_SINGER = 1
