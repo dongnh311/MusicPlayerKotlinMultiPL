@@ -55,6 +55,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import childView.InputPasswordField
 import childView.InputTextField
 import childView.LoginField
+import childView.LoginLogoApp
 import childView.PasswordField
 import co.touchlab.kermit.Logger
 import com.seiko.imageloader.rememberImagePainter
@@ -403,7 +404,10 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         .fillMaxWidth()
                         .padding(horizontal = 30.dp)
                 ) {
-                    // Add another single item
+                    // Logo
+                    LoginLogoApp()
+
+                    // Content
                     Text(text = stringResource(Res.string.login_with_email), style = textTittleContent(), modifier = Modifier.padding(top = 16.dp))
                     LoginField(
                         value = emailLogin.value,
@@ -442,7 +446,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                 }
                             }
                         }
-                    }, modifier = Modifier.width(150.dp).padding(bottom = 0.dp), enabled = isEnableButtonLogin.value) {
+                    }, modifier = Modifier.width(200.dp).padding(bottom = 0.dp), enabled = isEnableButtonLogin.value) {
                         Text("Login")
                     }
 
@@ -512,6 +516,9 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         .fillMaxWidth()
                         .padding(horizontal = 30.dp)
                 ) {
+                    // Logo
+                    LoginLogoApp()
+
                     // Add another single item
                     Text(text = stringResource(Res.string.create_new_account_title), style = textTittleContent(), modifier = Modifier.padding(top = 16.dp))
                     LoginField(
@@ -572,7 +579,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         viewModel.createNewAccountEmail(newAccountEmail.value, newAccountPassword.value) {
                             handleUpdateUserInformation(it)
                         }
-                    }, modifier = Modifier.width(150.dp).padding(bottom = 0.dp), enabled = isEnableButtonCreate.value) {
+                    }, modifier = Modifier.width(200.dp).padding(bottom = 0.dp), enabled = isEnableButtonCreate.value) {
                         Text(stringResource(Res.string.create_new_account_btn))
                     }
 
@@ -949,6 +956,9 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         .fillMaxWidth()
                         .padding(horizontal = 30.dp)
                 ) {
+                    // Logo
+                    LoginLogoApp()
+
                     // Add another single item
                     Text(text = stringResource(Res.string.reset_password_title), style = textTittleContent(), modifier = Modifier.padding(top = 16.dp))
                     LoginField(
@@ -1009,7 +1019,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         viewModel.resetPasswordWithCode(resetCodeEmail.value, resetPassword.value) {
                             isSavePasswordDone.value = true
                         }
-                    }, modifier = Modifier.width(150.dp).padding(bottom = 0.dp), enabled = isEnableButtonCreate.value) {
+                    }, modifier = Modifier.width(200.dp).padding(bottom = 0.dp), enabled = isEnableButtonCreate.value) {
                         Text(stringResource(Res.string.reset_password_btn_save))
                     }
 
@@ -1037,6 +1047,9 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         .fillMaxWidth()
                         .padding(horizontal = 30.dp)
                 ) {
+                    // Logo
+                    LoginLogoApp()
+
                     // Add another single item
                     Text(text = stringResource(Res.string.forgot_password), style = textTittleContent(), modifier = Modifier.padding(top = 16.dp))
                     InputTextField(
@@ -1069,7 +1082,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                     Button(onClick = {
                         Logger.e("Reset password")
                         isResetEmailDone.value = true
-                    }, modifier = Modifier.width(150.dp).padding(bottom = 0.dp),
+                    }, modifier = Modifier.width(200.dp).padding(bottom = 0.dp),
                         enabled = isEnableButtonReset.value) {
                         Text(stringResource(Res.string.forgot_password_btn))
                     }

@@ -23,6 +23,7 @@ class UserModel: BaseModel() {
     var coin: Double = 0.0
     var accountType: Int = ACCOUNT_TYPE_FREE
     var loginType: String = LOGIN_BY_GOOGLE
+    var expireVip: Long? = 0
 
     /**
      * Clone data
@@ -34,5 +35,6 @@ class UserModel: BaseModel() {
         this.profileImage = userModel.profileImage
         this.coin = userModel.coin
         this.accountType = userModel.accountType
+        this.expireVip = userModel.expireVip
     }
 }

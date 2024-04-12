@@ -1025,7 +1025,93 @@ fun createListDummyMusics() : MutableList<MusicModel> {
     musicModel15.duration = 188.0
     musicModel15.url = "gs://musicplayer-c39cb.appspot.com/musics/FlowerShower-HyunA-6133649.mp3"
     musicModel15.imageUrl = "gs://musicplayer-c39cb.appspot.com/thumbnails/80057265.jpeg"
-    musicModel15.lyrics = ""
+    musicModel15.lyrics = "[Intro]\n" +
+            "Doo doo doo doo\n" +
+            "Doo doo doo doo\n" +
+            "Doo doo doo doo\n" +
+            "Doo doo doo doo\n" +
+            "\n" +
+            "[Verse 1]\n" +
+            "I just wanna be your flower\n" +
+            "Saeppalgaeyo nan (Doo doo doo, doo doo doop)\n" +
+            "Hyang-giloun hyang-gilo beolttedeul-i kkoyeo (Hey!)\n" +
+            "Hog sideul-eodo don’t you worry\n" +
+            "Dasi pijanh-a (Doo doo doo, doo doo doop)\n" +
+            "Pieonaneun nae color siseondeul-i moyeo (Hey!)\n" +
+            "\n" +
+            "[Post-Verse]\n" +
+            "Ppanhi naleul balabwa geuleon gwansim-i nan\n" +
+            "Silhji anh-a silhji anh-a eh eh\n" +
+            "Dasi pieonaneun kkoch\n" +
+            "Just gotta let it go, okay\n" +
+            "Can you hear me now?\n" +
+            "\n" +
+            "[Pre-Chorus]\n" +
+            "Ije kkochgillo na geol-eogal geoya\n" +
+            "Geulae kkochdeullo syawohal geoya\n" +
+            "\n" +
+            "[Chorus]\n" +
+            "Take a flower shower\n" +
+            "Woo hoo, woo hoo\n" +
+            "Woo hoo, woo hoo\n" +
+            "Ssod-ajineun flower\n" +
+            "Sing it, sing it babe\n" +
+            "Wing it, wing it babe\n" +
+            "Bring it, bring it babe\n" +
+            "Kkochhyang-giga nane eh eh\n" +
+            "\n" +
+            "[Refrain]\n" +
+            "Like doom-da, doom-da\n" +
+            "Like doom-da, doom-da\n" +
+            "\n" +
+            "[Verse 2]\n" +
+            "I'ma be forever young\n" +
+            "Saepalaeyo nan (Doo doo doo, doo doo doop)\n" +
+            "Bom-i omyeon get, set, go saelo pieonayo (Hey)\n" +
+            "Seoduleuji ma gyejeolcheoleom\n" +
+            "Dol-aojanh-a (Doo doo doo, doo doo doop)\n" +
+            "Meolibuteo balkkeutkkaji hyeon-aneun ppalgaeyo (Hey!)\n" +
+            "\n" +
+            "[Post-Verse]\n" +
+            "Nal jom naebeolyeo dwobwa ma-eum-e eobsneun mal\n" +
+            "Give me your like, give me your like, eh eh\n" +
+            "Jangmikkoch-ijanh-a feel-i kkojhijanh-a okay\n" +
+            "Let’s sing this song\n" +
+            "\n" +
+            "[Pre-Chorus]\n" +
+            "Ije kkochgillo na geol-eogal geoya\n" +
+            "Geulae kkochdeullo syawohal geoya\n" +
+            "\n" +
+            "[Chorus]\n" +
+            "Take a flower shower\n" +
+            "Woo hoo, woo hoo\n" +
+            "Woo hoo, woo hoo\n" +
+            "Ssod-ajineun flower\n" +
+            "Sing it, sing it babe\n" +
+            "Wing it, wing it babe\n" +
+            "Bring it, bring it babe\n" +
+            "Kkochhyang-giga nane eh eh\n" +
+            "\n" +
+            "[Bridge]\n" +
+            "Doo doo doo doo\n" +
+            "Doo doo doo doo\n" +
+            "Yeong-wonhal geola mid-eo\n" +
+            "Eoneu nal-ui kkochcheoleom\n" +
+            "Ulineun wae moleuneun geolkka\n" +
+            "Anim moleun chehaneun geolkka eh eh\n" +
+            "Jil ttae jideolado hwaljjag pillae\n" +
+            "Haneul haneul haneul-e nalline\n" +
+            "Never give up\n" +
+            "And I say never say never\n" +
+            "Ooh!\n" +
+            "\n" +
+            "[Chorus]\n" +
+            "Take a flower shower\n" +
+            "Ssod-ajineun flower\n" +
+            "Sing it, sing it babe\n" +
+            "Wing it, wing it babe\n" +
+            "Bring it, bring it babe\n" +
+            "Kkochhyang-giga nane eh eh"
     musicModel15.singerId = "16"
     musicModel15.country = COUNTRY_KR
     musicModel15.topicId = arrayListOf("1", "2", "3")

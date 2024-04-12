@@ -80,6 +80,7 @@ class SingerDetailScreen: BaseScreen<SingerDetailViewModel>() {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
+        val musicDetailScreen by lazy { MusicDetailScreen() }
         Scaffold(modifier = Modifier.background(Color.Red).fillMaxSize(), backgroundColor = colorPrimaryBackground,
             topBar = {
                 Row(horizontalArrangement = Arrangement.Start,
@@ -161,7 +162,8 @@ class SingerDetailScreen: BaseScreen<SingerDetailViewModel>() {
                         items(viewModel.listMusicOfSinger.size) { index ->
                             Card(modifier = Modifier
                                 .paddingTop16StartEnd16().clickable(enabled = true) {
-
+                                    musicDetailScreen.musicModel.value = viewModel.listMusicOfSinger[index]
+                                    navigator.push(musicDetailScreen)
                                 },
                                 elevation = CardDefaults.cardElevation(
                                     defaultElevation =  10.dp,

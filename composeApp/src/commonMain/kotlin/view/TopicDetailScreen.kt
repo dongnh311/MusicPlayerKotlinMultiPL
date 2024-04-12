@@ -68,6 +68,7 @@ class TopicDetailScreen: BaseScreen<TopicDetailViewModel>() {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
+        val musicDetailScreen by lazy { MusicDetailScreen() }
         val title = topicModel.name.ifEmpty { stringResource(Res.string.topic_title) }
         Scaffold(modifier = Modifier.background(Color.Red).fillMaxSize(), backgroundColor = colorPrimaryBackground,
             topBar = {
@@ -102,7 +103,8 @@ class TopicDetailScreen: BaseScreen<TopicDetailViewModel>() {
                     items(viewModel.listMusicFollowTopic.size) { index ->
                         Card(modifier = Modifier
                             .paddingTop16StartEnd16().clickable(enabled = true) {
-
+                                musicDetailScreen.musicModel.value = viewModel.listMusicFollowTopic[index]
+                                navigator.push(musicDetailScreen)
                             },
                             elevation = CardDefaults.cardElevation(
                                 defaultElevation =  10.dp,

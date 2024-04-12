@@ -13,6 +13,12 @@ const val FB_DATABASE_MUSICS = "musics"
 const val FB_DATABASE_FOR_YOU = "forYou"
 const val FB_DATABASE_SINGER = "singers"
 const val FB_DATABASE_TOPIC = "topics"
+const val FB_DATABASE_HISTORY = "playHistory"
+const val FB_DATABASE_PLAY_LIST = "playlists"
+const val FB_DATABASE_COINS = "coins"
+const val FB_DATABASE_PAYMENT_HISTORY = "buyCoinHistory"
+const val FB_DATABASE_VIP = "vips"
+const val FB_DATABASE_PAYMENT_VIP = "buyVipHistory"
 
 // Upload storage
 const val FIREBASE_STORAGE_AVATAR = "avatar"
