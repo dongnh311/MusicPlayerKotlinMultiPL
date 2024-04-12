@@ -55,4 +55,20 @@ class PlayHistoryViewModel: BaseViewModel() {
             onErrorThrowable = {}
         )
     }
+
+    /**
+     * Delete all history
+     *
+     */
+    fun deleteAllHistory() {
+        workingWithApiHaveDialog(
+            service = {
+                firebasePlayHelper.deleteAllPlayHistory(firebaseUserHelper.loadUserId())
+            },
+            doOnBeforeService = {},
+            doOnAfterService = {
+                listPlayHistory.clear()
+            }
+        )
+    }
 }

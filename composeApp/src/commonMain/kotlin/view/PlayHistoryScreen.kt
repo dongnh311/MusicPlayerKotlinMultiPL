@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
@@ -23,6 +24,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +39,9 @@ import com.seiko.imageloader.rememberImagePainter
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_delete
 import musicplayerkotlinmultipl.composeapp.generated.resources.new_music_title
+import musicplayerkotlinmultipl.composeapp.generated.resources.play_history_confirm_delete
 import musicplayerkotlinmultipl.composeapp.generated.resources.play_history_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -49,6 +53,7 @@ import styles.paddingTop16StartEnd16
 import styles.textContentPrimary
 import styles.textContentSecond
 import styles.textTittleHome
+import utils.dialogs.ShowDialogConfirm
 import viewModel.PlayHistoryViewModel
 
 /**
@@ -60,6 +65,9 @@ import viewModel.PlayHistoryViewModel
 class PlayHistoryScreen: BaseScreen<PlayHistoryViewModel>() {
 
     override var viewModel: PlayHistoryViewModel = PlayHistoryViewModel()
+
+    // Open dialog confirm
+    private val isOpenDialogCheckDeleteAll = mutableStateOf(false)
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
@@ -80,7 +88,18 @@ class PlayHistoryScreen: BaseScreen<PlayHistoryViewModel>() {
                             }
                     )
                     Text(text = stringResource(Res.string.play_history_title), style = textTittleHome(), modifier = Modifier.padding(start = 8.dp))
-                    Spacer(modifier = Modifier.height(45.dp))
+                    Spacer(modifier = Modifier.fillMaxWidth().weight(1f).height(45.dp))
+
+                    Icon(
+                        painter = painterResource(Res.drawable.btn_delete),
+                        contentDescription = "Back",
+                        modifier = Modifier
+                            .buttonSize32dp()
+                            .clickable {
+                                isOpenDialogCheckDeleteAll.value = true
+                            },
+                        tint = Color.Unspecified
+                    )
                 }
             }) {
             Box(modifier = Modifier.fillMaxSize().padding(bottom = it.calculateBottomPadding()), contentAlignment = Alignment.Center) {
@@ -148,7 +167,23 @@ class PlayHistoryScreen: BaseScreen<PlayHistoryViewModel>() {
                     }
                 }
             }
+        }
 
+        // Confirm delete
+        if (isOpenDialogCheckDeleteAll.value) {
+            ShowDialogConfirm(
+                isOpenDialogCheckDeleteAll,
+                title = "",
+                content = stringResource(Res.string.play_history_confirm_delete),
+                textButtonRight = stringResource(Res.string.btn_delete),
+                callBackLeft = {
+                    isOpenDialogCheckDeleteAll.value = false
+                },
+                callBackRight = {
+                    isOpenDialogCheckDeleteAll.value = false
+                    viewModel.deleteAllHistory()
+                }
+            )
         }
     }
 

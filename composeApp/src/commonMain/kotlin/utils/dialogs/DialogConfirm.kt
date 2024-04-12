@@ -29,6 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import musicplayerkotlinmultipl.composeapp.generated.resources.Res
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_cancel
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_ok
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import singleton.MusicPlayerSingleton.loadMaxWidthDialog
 import singleton.MusicPlayerSingleton.screenSize
 import styles.buttonColorsCancel
@@ -44,14 +49,14 @@ import utils.exts.pxToDp
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun ShowDialogConfirm(
     isShowDialog: MutableState<Boolean>,
     title: String = "",
     content: String,
-    textButtonLeft: String = "Cancel",
-    textButtonRight: String = "OK",
+    textButtonLeft: String = stringResource(Res.string.btn_cancel),
+    textButtonRight: String = stringResource(Res.string.btn_ok),
     callBackLeft: ()-> Unit,
     callBackRight: ()-> Unit
 ) {
