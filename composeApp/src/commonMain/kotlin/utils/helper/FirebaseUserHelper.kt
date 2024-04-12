@@ -9,6 +9,7 @@ import dev.gitlive.firebase.firestore.firestore
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import model.UserModel
+import utils.exts.toStringRemoveNull
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -48,7 +49,7 @@ class FirebaseUserHelper {
      * @return user id
      */
     fun loadUserId(): String {
-        return auth.currentUser?.uid.toString()
+        return auth.currentUser?.uid.toStringRemoveNull()
     }
 
     /**

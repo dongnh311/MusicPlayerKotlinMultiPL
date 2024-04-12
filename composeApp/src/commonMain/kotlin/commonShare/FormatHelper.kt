@@ -31,4 +31,4 @@ expect fun loadTimestamp(): Number
  *
  * @return String
  */
-expect fun viewTimeByTimestamp(timestamp: Number, pattern: String = DATE_LOCAL_FORMAT_TYPE_COMMON_0): String
+expect fun viewTimeByTimestamp(timestamp: Number?, pattern: String = DATE_LOCAL_FORMAT_TYPE_COMMON_0): String

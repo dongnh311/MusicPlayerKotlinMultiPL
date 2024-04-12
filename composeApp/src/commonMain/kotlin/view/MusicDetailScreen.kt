@@ -412,4 +412,11 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
 
     override fun onDisposedScreen() {
     }
+
+    /**
+     * Make music play
+     */
+    private fun startPlayMusic() {
+        viewModel.writePlayMusicToHistory()
+    }
 }

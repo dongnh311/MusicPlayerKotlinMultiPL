@@ -489,7 +489,7 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                     // Button Save
                     Button(onClick = {
                         controlToSaveUserInformation()
-                    }, modifier = Modifier.width(150.dp).padding(top = 16.dp, bottom = 16.dp).buttonCommonModifier(), enabled = isEnableButtonSave.value) {
+                    }, modifier = Modifier.width(200.dp).padding(top = 16.dp, bottom = 16.dp).buttonCommonModifier(), enabled = isEnableButtonSave.value) {
                         Text(stringResource(Res.string.reset_password_btn_save))
                     }
 

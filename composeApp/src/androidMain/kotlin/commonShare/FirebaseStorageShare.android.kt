@@ -43,7 +43,7 @@ class AndroidFirebaseStorageShare : FirebaseStorageShare {
             initReferUpload(userModel)
             val avatarRefer =
                 storageUpload.child("/avatar.jpg")
-            val stream = FileInputStream(File(imagePickerModel.mediaPath))
+            val stream = FileInputStream(file)
 
             val uploadTask = avatarRefer.putStream(stream)
             uploadTask.addOnFailureListener {
@@ -93,6 +93,40 @@ class AndroidFirebaseStorageShare : FirebaseStorageShare {
 
         awaitClose { close() }
     }
+
+    /**
+     * Upload image to path
+     *
+     * @param imagePath
+     * @param storageReference
+     */
+    override fun uploadImageFileToStorage(imagePath: String, storageReference: String) = callbackFlow {
+        val storageReferenceUpload = storage.reference.child(storageReference)
+        val file = File(imagePath)
+        if (file.exists()) {
+            val avatarRefer =
+                storageReferenceUpload.child("/thumbnail.jpg")
+            val stream = FileInputStream(file)
+
+            val uploadTask = avatarRefer.putStream(stream)
+            uploadTask.addOnFailureListener {
+                Logger.e("Upload avatar not complete")
+            }.addOnSuccessListener { taskSnapshot ->
+                if (taskSnapshot.task.isSuccessful) {
+                    loadUrlDownLoadOfRefer(avatarRefer) { uri ->
+                        val thumbnailUrl = uri.toString()
+                        trySend(thumbnailUrl)
+                    }
+                } else {
+                    Logger.e("Can't find path for file")
+                    trySend("")
+                }
+            }
+        } else {
+            trySend("")
+        }
+        awaitClose { close() }
+    }.flowOn(Dispatchers.IO)
 }
 
 actual fun loadFireBaseStorage(): FirebaseStorageShare {

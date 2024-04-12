@@ -132,6 +132,7 @@ class FirebasePlayHelper {
      */
     suspend fun updateInformationPlaylist(playListModel: PlayListModel)  {
         firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playListModel.id).update(Pair("updateAt", playListModel.updateAt))
+        firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playListModel.id).update(Pair("thumbnail", playListModel.thumbnail))
         firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playListModel.id).update(Pair("listMusicsId", playListModel.listMusicsId))
         firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playListModel.id).update(Pair("name", playListModel.name))
     }

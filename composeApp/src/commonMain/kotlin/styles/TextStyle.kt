@@ -106,3 +106,14 @@ fun textContentSecond() : TextStyle {
         textAlign = TextAlign.Start
     )
 }
+
+@Composable
+fun textContentThree() : TextStyle {
+    return TextStyle(
+        fontSize = 12.sp,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Normal,
+        color = colorThreeText,
+        textAlign = TextAlign.Start
+    )
+}

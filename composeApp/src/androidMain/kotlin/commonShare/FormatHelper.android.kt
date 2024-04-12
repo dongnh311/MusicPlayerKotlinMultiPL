@@ -37,7 +37,7 @@ actual fun formatNumberToMoney(number: Number?, pattern: String): String {
 actual fun loadTimestamp(): Number {
     val calendar = Calendar.getInstance()
     calendar.time = Date()
-    return calendar.timeInMillis
+    return calendar.timeInMillis / 1000
 }
 
 
@@ -47,14 +47,17 @@ actual fun loadTimestamp(): Number {
  *
  * @return String
  */
-actual fun viewTimeByTimestamp(timestamp: Number, pattern: String): String {
+actual fun viewTimeByTimestamp(timestamp: Number?, pattern: String): String {
     var dateReturn: String = ""
     var isNeedStop = false
     var patternInput = pattern
+    if (timestamp == null || timestamp == 0L) {
+        return "N/A"
+    }
     do {
         try {
             val sdf = SimpleDateFormat(patternInput, Locale.US)
-            val date = Date(timestamp as Long)
+            val date = Date(timestamp as Long * 1000)
             dateReturn = sdf.format(date)
             isNeedStop = true
         } catch (e: Exception) {

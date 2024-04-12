@@ -720,6 +720,8 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         ),
                         colors = buttonColorAccount(),
                         onClick = {
+                            val playHistoryScreen = PlayHistoryScreen()
+                            navigator.push(playHistoryScreen)
                         }) {
                         Row(horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,
@@ -748,7 +750,8 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         ),
                         colors = buttonColorAccount(),
                         onClick = {
-
+                            val playlistScreen = PlaylistScreen()
+                            navigator.push(playlistScreen)
                         }) {
                         Row(horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,

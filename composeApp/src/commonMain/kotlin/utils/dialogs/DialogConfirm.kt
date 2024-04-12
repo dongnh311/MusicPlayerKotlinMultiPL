@@ -2,29 +2,41 @@ package utils.dialogs
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import singleton.MusicPlayerSingleton.loadMaxWidthDialog
+import singleton.MusicPlayerSingleton.screenSize
 import styles.buttonColorsCancel
 import styles.buttonDialog
 import styles.textContentPrimary
 import styles.textTittleContent
+import utils.exts.dpToPx
+import utils.exts.pxToDp
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -44,13 +56,14 @@ fun ShowDialogConfirm(
     callBackRight: ()-> Unit
 ) {
     if (isShowDialog.value) {
+
         BasicAlertDialog(onDismissRequest = {
             isShowDialog.value = false
             callBackLeft.invoke()
-        }, properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)) {
+        }, properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false, usePlatformDefaultWidth = false)) {
             Surface(
                 modifier = Modifier
-                    .wrapContentWidth()
+                    .width(loadMaxWidthDialog())
                     .wrapContentHeight(),
                 shape = MaterialTheme.shapes.large
             ) {
@@ -95,5 +108,6 @@ fun ShowDialogConfirm(
                 }
             }
         }
+
     }
 }

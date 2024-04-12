@@ -26,6 +26,7 @@ const val FIREBASE_STORAGE_ALBUM = "albums"
 const val FIREBASE_STORAGE_MUSICS = "musics"
 const val FIREBASE_STORAGE_SINGER = "singers"
 const val FIREBASE_STORAGE_THUMBNAIL = "thumbnails"
+const val FIREBASE_STORAGE_PLAYLIST_THUMB = "playlistThumbnails"
 
 // Firebase gender
 const val GENDER_MALE = 0

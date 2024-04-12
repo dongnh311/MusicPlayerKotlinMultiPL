@@ -41,6 +41,6 @@ actual fun loadTimestamp(): Number {
  *
  * @return String
  */
-actual fun viewTimeByTimestamp(timestamp: Number, pattern: String): String {
+actual fun viewTimeByTimestamp(timestamp: Number?, pattern: String): String {
     return ""
 }

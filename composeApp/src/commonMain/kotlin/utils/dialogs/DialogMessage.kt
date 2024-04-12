@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,18 +18,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_ok
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
+import singleton.MusicPlayerSingleton.loadMaxWidthDialog
+import singleton.MusicPlayerSingleton.screenSize
 import styles.buttonColorsCancel
 import styles.buttonDialog
 import styles.textContentPrimary
 import styles.textTittleContent
+import utils.exts.dpToPx
+import utils.exts.pxToDp
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -49,14 +57,15 @@ fun ShowDialogMessage (
         BasicAlertDialog(onDismissRequest = {
             isShowDialog.value = false
             callBackOk.invoke()
-        }, properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)) {
+        }, properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false, usePlatformDefaultWidth = false)) {
+
             Surface(
                 modifier = Modifier
-                    .wrapContentWidth()
+                    .width(loadMaxWidthDialog())
                     .wrapContentHeight(),
                 shape = MaterialTheme.shapes.large
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(16.dp).fillMaxWidth()) {
                     // Title
                     if (title.isNotEmpty()) {
                         Text(text = title, style = textTittleContent(), modifier = Modifier.padding(start = 8.dp, end = 8.dp))

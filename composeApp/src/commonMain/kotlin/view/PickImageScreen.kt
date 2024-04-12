@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -45,6 +46,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_checked
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import singleton.MusicPlayerSingleton.screenSize
 import singleton.ViewManager
 import styles.backgroundColor
 import styles.buttonSize32dp
@@ -53,7 +55,9 @@ import styles.iconSize24dp
 import styles.iconSize28dp
 import styles.iconSize30dp
 import styles.iconSize32dp
+import utils.exts.pxToDp
 import viewModel.PickImageViewModel
+import kotlin.math.roundToInt
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -77,6 +81,9 @@ class PickImageScreen(private val listImage : MutableList<ImagePickerModel>) : B
         val indexSelectedItem = remember { mutableStateOf<Int>(-1) }
 
         val isHaveItemSelect = remember { mutableStateOf(false) }
+
+        var widthImage = screenSize.value.first / 3.5
+        if (widthImage < 0) widthImage = 150.dp.value.toDouble()
 
         Scaffold(modifier = Modifier.fillMaxSize().background(Color.Red), topBar = {
             Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
@@ -154,7 +161,7 @@ class PickImageScreen(private val listImage : MutableList<ImagePickerModel>) : B
                             contentScale = ContentScale.Crop,            // crop the image if it's not a square
                             modifier = Modifier
                                 .aspectRatio(1f)
-                                .size(84.dp)
+                                .size(widthImage.pxToDp())
                                 .clip(RoundedCornerShape(4.dp))          // clip to the circle shape
 
                         )

@@ -2,10 +2,16 @@ package viewModel
 
 import androidx.compose.runtime.mutableStateListOf
 import base.BaseViewModel
+import commonShare.loadTimestamp
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import model.MusicModel
+import model.PlayHistoryModel
 import model.TopicModel
+import singleton.MusicPlayerSingleton
 import utils.helper.FirebaseMusicsHelper
+import utils.helper.FirebasePlayHelper
+import utils.helper.FirebaseUserHelper
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -26,6 +32,12 @@ class MusicDetailViewModel: BaseViewModel() {
     // Save for check
     var saveMusic = MusicModel()
 
+    // Player helper
+    private val firebasePlayHelper = FirebasePlayHelper()
+
+    // User helper
+    private val firebaseUserHelper = FirebaseUserHelper()
+
     /**
      * Load more information for show music detail
      */
@@ -44,7 +56,7 @@ class MusicDetailViewModel: BaseViewModel() {
                     }
                 }
                 val newList = musics.filter { item->
-                    item.singerId == musicModel.singerId && item.id  != musicModel.id
+                    item.singerId == musicModel.singerId && item.id != musicModel.id
                 }
                 newList.forEach { item -> item.singerModel = musicModel.singerModel }
                 newList
@@ -58,4 +70,18 @@ class MusicDetailViewModel: BaseViewModel() {
         )
     }
 
+    /**
+     * Write data to firebase
+     */
+    fun writePlayMusicToHistory() {
+        coroutineScope.launch {
+            if (firebaseUserHelper.loadUserId().isNotEmpty()) {
+                val playHistoryModel = PlayHistoryModel()
+                playHistoryModel.musicId = saveMusic.id
+                playHistoryModel.userId = firebaseUserHelper.loadUserId()
+                playHistoryModel.timePlayed = loadTimestamp().toLong()
+                firebasePlayHelper.writePlayHistoryToFB(playHistoryModel)
+            }
+        }
+    }
 }

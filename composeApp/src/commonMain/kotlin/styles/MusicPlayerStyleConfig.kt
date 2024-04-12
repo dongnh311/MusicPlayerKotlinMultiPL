@@ -43,6 +43,8 @@ val colorAccountDark = Color(0xFFBF45EA)
 
 val colorPrimaryApp = Color(0xFF9400C8)
 
+val colorThreeText = Color(0xFFA6ACAF)
+
 val colorGreen = Color(0x7061FF7E)
 
 // Text

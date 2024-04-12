@@ -1,6 +1,7 @@
 package model
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -14,4 +15,7 @@ class PlayHistoryModel {
     var userId: String = ""
     var musicId: String = ""
     var timePlayed: Long = 0
+
+    @Transient
+    var musicModel: MusicModel? = null
 }
