@@ -138,4 +138,9 @@
 
     <string name="play_history_title">Played History</string>
 
+    <string name="search_musics_title">Search Music</string>
+    <string name="search_musics_hint">Enter Music Name To Search</string>
+
+    <string name="search_singers_title">Search Music</string>
+
 </resources>

@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import model.MusicModel
 import model.PlayHistoryModel
 import model.TopicModel
-import singleton.MusicPlayerSingleton
 import utils.helper.FirebaseMusicsHelper
 import utils.helper.FirebasePlayHelper
 import utils.helper.FirebaseUserHelper
@@ -61,8 +60,8 @@ class MusicDetailViewModel: BaseViewModel() {
                 newList.forEach { item -> item.singerModel = musicModel.singerModel }
                 newList
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 listMusicsSameSinger.clear()
                 listMusicsSameSinger.addAll(it)
             },

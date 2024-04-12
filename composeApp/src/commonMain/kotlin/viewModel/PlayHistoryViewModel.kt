@@ -47,8 +47,8 @@ class PlayHistoryViewModel: BaseViewModel() {
                 }
                 playHistory
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 listPlayHistory.clear()
                 listPlayHistory.addAll(it)
             },

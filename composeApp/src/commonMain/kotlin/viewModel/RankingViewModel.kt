@@ -76,8 +76,8 @@ class RankingViewModel: BaseViewModel() {
                 listMusics.clear()
                 listMusics.addAll(listMusicUpdate)
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 listTrending.clear()
                 listTrending.addAll(listMusics)
 

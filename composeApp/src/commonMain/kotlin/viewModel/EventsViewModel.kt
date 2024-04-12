@@ -31,8 +31,8 @@ class EventsViewModel: BaseViewModel() {
             service = {
                 eventServices.loadListNotify("https://raw.githubusercontent.com/dongnh311/mockup-api/main/notify.json")
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 Logger.e("Data : ${it.body()}")
                 if (it.isSuccessful) {
                     try {

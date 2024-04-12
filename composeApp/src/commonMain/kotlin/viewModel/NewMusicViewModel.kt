@@ -1,6 +1,5 @@
 package viewModel
 
-import androidx.collection.mutableFloatListOf
 import androidx.compose.runtime.mutableStateListOf
 import base.BaseViewModel
 import kotlinx.coroutines.flow.first
@@ -46,11 +45,11 @@ class NewMusicViewModel: BaseViewModel() {
 
                 listMusicNewLocal
             },
-            progressInLayout = {
+            doOnAfterService = {
                 listNewMusic.clear()
                 listNewMusic.addAll(it)
             },
-            progressInBackground = {},
+            doOnBeforeService = {},
             onErrorThrowable = {}
         )
     }

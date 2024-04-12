@@ -50,8 +50,8 @@ class TopicDetailViewModel: BaseViewModel() {
 
                 listMusicByTopic
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 listMusicFollowTopic.clear()
                 listMusicFollowTopic.addAll(it)
             },

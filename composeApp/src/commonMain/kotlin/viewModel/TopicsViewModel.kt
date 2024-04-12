@@ -27,8 +27,8 @@ class TopicsViewModel: BaseViewModel() {
             service = {
                 firebaseMusicsHelper.loadListTopicOnFB().first()
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 listTopic.addAll(it)
             },
             onErrorThrowable = {}

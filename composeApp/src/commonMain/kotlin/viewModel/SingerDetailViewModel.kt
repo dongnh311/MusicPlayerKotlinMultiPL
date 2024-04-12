@@ -47,8 +47,8 @@ class SingerDetailViewModel: BaseViewModel() {
                 }
                 listMusic
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 listMusicOfSinger.clear()
                 listMusicOfSinger.addAll(it)
             },

@@ -28,8 +28,8 @@ class SingersViewModel: BaseViewModel() {
             service = {
                 firebaseMusicsHelper.loadListSingerOnFB().first()
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 listSingers.addAll(it)
             },
             onErrorThrowable = {}

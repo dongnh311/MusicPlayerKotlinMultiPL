@@ -1,6 +1,5 @@
 package base
 
-import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
@@ -81,7 +80,7 @@ abstract class BaseViewModel: ScreenModel {
     fun workingTaskWithIO(
         service: () -> Unit
     ) {
-        this@BaseViewModel.screenModelScope.launch(dispatchersIO + coroutineExceptionHandler) {
+        this@BaseViewModel.coroutineScope.launch(dispatchersIO + coroutineExceptionHandler) {
             try {
                 service.invoke()
             } catch (e: Exception) {
@@ -100,7 +99,35 @@ abstract class BaseViewModel: ScreenModel {
         crossinline service: () -> T,
         crossinline nextProgressStep: (T) -> Unit
     ) {
-        this@BaseViewModel.screenModelScope.launch(dispatchersIO + coroutineExceptionHandler) {
+        this@BaseViewModel.coroutineScope.launch(dispatchersIO + coroutineExceptionHandler) {
+            try {
+                val result = service.invoke()
+                if (result != null) {
+                    screenModelScope.launch {
+                        nextProgressStep.invoke(result)
+                    }
+                } else {
+                    screenModelScope.launch {
+                        Throwable("Wrong type or null is return.")
+                    }
+                }
+            } catch (e: Exception) {
+                Logger.e("workingTaskIOReturn ", e)
+            }
+        }
+    }
+
+    /**
+     * Make function call start with Coroutine
+     *
+     * @param service : Block code
+     * @param nextProgressStep : Block code callback
+     */
+    inline fun <reified T> workingWithApiNonDialog(
+        crossinline service: suspend () -> T,
+        crossinline nextProgressStep: (T) -> Unit
+    ) {
+        this@BaseViewModel.coroutineScope.launch {
             try {
                 val result = service.invoke()
                 if (result != null) {
@@ -122,15 +149,16 @@ abstract class BaseViewModel: ScreenModel {
      * Base method call Api with dialog
      *
      * @param service : API service call
-     * @param progressInBackground : Task doing on background
-     * @param progressInLayout : task doing on UI thread
+     * @param doOnBeforeService : Task doing on background
+     * @param doOnAfterService : task doing on UI thread
      * @param onErrorThrowable : send back error
      */
     inline fun <reified T> workingWithApiHaveDialog(
         noinline service: suspend () -> T,
-        crossinline progressInBackground: () -> Unit,
-        crossinline progressInLayout: (T) -> Unit,
-        crossinline onErrorThrowable: (Throwable) -> Unit
+        crossinline doOnBeforeService: () -> Unit,
+        crossinline doBeforeCloseDialog: (T) -> Unit = {},
+        crossinline doOnAfterService: (T) -> Unit,
+        crossinline onErrorThrowable: (Throwable) -> Unit = {}
     ) {
         coroutineScope.launch {
             try {
@@ -140,7 +168,7 @@ abstract class BaseViewModel: ScreenModel {
                 }
 
                 // Do some thing on background
-                progressInBackground.invoke()
+                doOnBeforeService.invoke()
 
                 // Wait response of all task
                 val responses = withContext(dispatchersIO) {
@@ -148,10 +176,14 @@ abstract class BaseViewModel: ScreenModel {
                 }
 
                 if (responses != null) {
+                    // Do any thing before close dialog
+                    coroutineScope.launch {
+                        doBeforeCloseDialog.invoke(responses)
+                    }
                     // Disable dialog and call update on UI
                     this@BaseViewModel.screenModelScope.launch {
                         stopWorking()
-                        progressInLayout.invoke(responses)
+                        doOnAfterService.invoke(responses)
                     }
                 } else {
                     // Disable dialog and call update on UI

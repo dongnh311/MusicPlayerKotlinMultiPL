@@ -6,6 +6,7 @@ import commonShare.loadFireBaseStorage
 import commonShare.loadTimestamp
 import const.FIREBASE_STORAGE_PLAYLIST_THUMB
 import kotlinx.coroutines.flow.first
+import model.MusicModel
 import model.PlayListModel
 import utils.helper.FirebaseMusicsHelper
 import utils.helper.FirebasePlayHelper
@@ -34,6 +35,12 @@ class PlaylistViewModel: BaseViewModel() {
     // List playlist
     val listPlayList = mutableStateListOf<PlayListModel>()
 
+    // Save all music
+    private val listAllMusic = mutableListOf<MusicModel>()
+
+    // Save music on playlist
+    val listMusicOnPlaylist = mutableStateListOf<MusicModel>()
+
     /**
      * Load list playlist
      */
@@ -42,23 +49,85 @@ class PlaylistViewModel: BaseViewModel() {
             service = {
                 firebasePlayHelper.loadPlayListOfUser(firebaseUserHelper.loadUserId()).first()
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {
+
+            },
+            doOnAfterService = {
                 listPlayList.clear()
                 listPlayList.addAll(it)
+                if (listPlayList.isNotEmpty()) {
+                    loadListMusicOnPlayListNoneDialog(listPlayList.first())
+                }
             },
             onErrorThrowable = {}
         )
     }
 
+    /**
+     * Load all music on playlist
+     *
+     * @param playListModel
+     */
     fun loadListMusicOnPlayList(playListModel: PlayListModel) {
         workingWithApiHaveDialog(
             service = {
+                if (listAllMusic.isEmpty()) {
+                    val singers = firebaseMusicsHelper.loadListSingerOnFB().first()
+
+                    val musics = firebaseMusicsHelper.loadListMusicsOnFB().first()
+
+                    // Make list music
+                    musics.forEach {music ->
+                        music.singerModel = singers.find { singer -> singer.id == music.singerId }
+                    }
+
+                    listAllMusic.clear()
+                    listAllMusic.addAll(musics)
+                }
+                listAllMusic.filter { music ->
+                    playListModel.listMusicsId.contains(music.id)
+                }
 
             },
-            progressInBackground = {},
-            progressInLayout = {},
+            doOnBeforeService = {},
+            doOnAfterService = {
+                listMusicOnPlaylist.clear()
+                listMusicOnPlaylist.addAll(it)
+            },
             onErrorThrowable = {}
+        )
+    }
+
+    /**
+     * Load all music on playlist without dialog
+     *
+     * @param playListModel
+     */
+    private fun loadListMusicOnPlayListNoneDialog(playListModel: PlayListModel) {
+        workingWithApiNonDialog(
+            service = {
+                if (listAllMusic.isEmpty()) {
+                    val singers = firebaseMusicsHelper.loadListSingerOnFB().first()
+
+                    val musics = firebaseMusicsHelper.loadListMusicsOnFB().first()
+
+                    // Make list music
+                    musics.forEach {music ->
+                        music.singerModel = singers.find { singer -> singer.id == music.singerId }
+                    }
+
+                    listAllMusic.clear()
+                    listAllMusic.addAll(musics)
+                }
+                listAllMusic.filter { music ->
+                    playListModel.listMusicsId.contains(music.id)
+                }
+
+            },
+            nextProgressStep = {
+                listMusicOnPlaylist.clear()
+                listMusicOnPlaylist.addAll(it)
+            }
         )
     }
 
@@ -76,8 +145,8 @@ class PlaylistViewModel: BaseViewModel() {
                 playListModel.createAt = loadTimestamp().toLong()
                 firebasePlayHelper.writeNewPlaylistToFB(playListModel)
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 // Reload list
                 loadListPlaylist()
             },
@@ -95,8 +164,8 @@ class PlaylistViewModel: BaseViewModel() {
             service = {
                 firebasePlayHelper.updateInformationPlaylist(playListModel)
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 loadListPlaylist()
             },
             onErrorThrowable = {}
@@ -113,8 +182,8 @@ class PlaylistViewModel: BaseViewModel() {
             service = {
                 firebasePlayHelper.deletePlayList(playListModel.id)
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 loadListPlaylist()
             },
             onErrorThrowable = {}
@@ -135,9 +204,29 @@ class PlaylistViewModel: BaseViewModel() {
                 playListModel.updateAt = loadTimestamp().toLong()
                 firebasePlayHelper.updateInformationPlaylist(playListModel)
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 loadListPlaylist()
+            },
+            onErrorThrowable = {}
+        )
+    }
+
+    /**
+     * Delete music on playlist
+     *
+     * @param playListModel
+     * @param musicId
+     */
+    fun deleteMusicOnPlayList(playListModel: PlayListModel, musicId: String) {
+        workingWithApiHaveDialog(
+            service = {
+                playListModel.listMusicsId.remove(musicId)
+                playListModel.updateAt = loadTimestamp().toLong()
+                firebasePlayHelper.updateMusicToPlaylist(playListModel)
+            },
+            doOnBeforeService = { loadListMusicOnPlayListNoneDialog(playListModel)},
+            doOnAfterService = {
             },
             onErrorThrowable = {}
         )

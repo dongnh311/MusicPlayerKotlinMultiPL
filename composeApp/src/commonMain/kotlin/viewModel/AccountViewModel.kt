@@ -1,15 +1,12 @@
 package viewModel
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import base.BaseViewModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
-import commonShare.OnLoginGoogleCallBack
 import commonShare.getPlatform
 import dev.gitlive.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import model.UserModel
 import utils.exts.toStringRemoveNull
@@ -119,8 +116,8 @@ class AccountViewModel: BaseViewModel() {
             service = {
                 firebaseUser.createNewAccountWithEmail(email, password)
             },
-            progressInBackground = {},
-            progressInLayout = {user ->
+            doOnBeforeService = {},
+            doOnAfterService = { user ->
                 if (user != null) {
                     val userModel = UserModel()
                     userModel.id = user.uid
@@ -156,8 +153,8 @@ class AccountViewModel: BaseViewModel() {
             service = {
                 firebaseUser.loginWithEmailPassword(email, password)
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 callBack.invoke(it)
             },
             onErrorThrowable = {
@@ -178,8 +175,8 @@ class AccountViewModel: BaseViewModel() {
             service = {
                 firebaseUser.resetPasswordForEmail(code, password)
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 callBack.invoke()
             },
             onErrorThrowable = {}

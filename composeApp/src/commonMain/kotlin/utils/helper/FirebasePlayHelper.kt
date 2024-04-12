@@ -136,4 +136,32 @@ class FirebasePlayHelper {
         firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playListModel.id).update(Pair("listMusicsId", playListModel.listMusicsId))
         firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playListModel.id).update(Pair("name", playListModel.name))
     }
+
+    /**
+     * Update list music for playlist
+     *
+     * @param playListModel
+     */
+    suspend fun updateMusicToPlaylist(playListModel: PlayListModel)  {
+        firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playListModel.id).update(Pair("updateAt", playListModel.updateAt))
+        firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playListModel.id).update(Pair("listMusicsId", playListModel.listMusicsId))
+    }
+
+    /**
+     * Find playlist by id
+     *
+     * @param playlistId
+     */
+    fun findPlaylistWithId(playlistId: String) = callbackFlow {
+        val documents = firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playlistId).get()
+        val listPlaylist = mutableListOf<PlayListModel>()
+
+        val playHistoryModel = documents.data<PlayListModel>()
+        playHistoryModel.id = documents.id
+
+        trySend(playHistoryModel)
+        awaitClose {
+            close()
+        }
+    }
 }

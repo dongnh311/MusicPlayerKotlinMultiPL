@@ -1,12 +1,10 @@
 package viewModel
 
-import androidx.compose.runtime.Composable
 import base.BaseViewModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
 import commonShare.loadFireBaseStorage
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
@@ -50,8 +48,8 @@ class UserInformationViewModel: BaseViewModel() {
             service = {
                 firebaseUser.updateInformationUser(userModel)
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 callback.invoke()
             },
             onErrorThrowable = {}
@@ -70,8 +68,8 @@ class UserInformationViewModel: BaseViewModel() {
             service = {
                 firebaseUser.updateNewPassword(oldPassword, newPassword)
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 callback.invoke(it)
             },
             onErrorThrowable = {}
@@ -94,8 +92,8 @@ class UserInformationViewModel: BaseViewModel() {
                 )
                 task.first()
             },
-            progressInBackground = {},
-            progressInLayout = {
+            doOnBeforeService = {},
+            doOnAfterService = {
                 callback.invoke()
             },
             onErrorThrowable = { e ->
