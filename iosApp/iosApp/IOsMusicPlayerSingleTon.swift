@@ -14,12 +14,24 @@ class IOsMusicPlayerSingleTon: MusicPlayerSingleTonIOs {
         return "IOs Text"
     }
     
+    // Make singleton item share
     static let shared = IOsMusicPlayerSingleTon()
     
+    // Firebase FCM helper
     var firebaseFCMHelper: FirebaseFCMHelper = FirebaseFCMHelper()
+    
+    // Save app deleagte
+    var appDelegate: IOsAppDelegate? = nil
     
     init() {
         firebaseFCMHelper.loadFCMToken()
+    }
+    
+    /**
+     * Init app detgate for handle if need.
+     */
+    func initAppDelegate(iosAppDelegate: IOsAppDelegate) {
+        self.appDelegate = iosAppDelegate
     }
 
     func initObjectSendBack() {

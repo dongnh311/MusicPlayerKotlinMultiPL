@@ -192,6 +192,12 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
     private lateinit var focusManager: FocusManager
     private var keyboardController : SoftwareKeyboardController? = null
 
+    // Screen
+    private val favouritesScreen by lazy { FavouritesScreen() }
+    private val playlistScreen by lazy { PlaylistScreen() }
+    private val playHistoryScreen by lazy { PlayHistoryScreen() }
+    private val userInformationScreen by lazy { UserInformationScreen() }
+
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
@@ -439,7 +445,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                     user.loginType = LOGIN_BY_EMAIL
                                     user.email = emailLogin.value
                                     if (user.userName.isEmpty()) {
-                                        val userInformationScreen = UserInformationScreen(user)
+                                        userInformationScreen.userModel = user
                                         navigator.push(userInformationScreen)
                                     } else {
                                         isLogin.value = true
@@ -598,7 +604,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                 title = "",
                 content = stringResource(Res.string.user_information_error_information),
                 callBackOk = {
-                    val userInformationScreen = UserInformationScreen(userModel.value)
+                    userInformationScreen.userModel = userModel.value
                     navigator.push(userInformationScreen)
                 }
             )
@@ -611,7 +617,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                     Card(
                         modifier = Modifier
                             .fillMaxWidth().padding(16.dp).clickable(enabled = true) {
-                                val userInformationScreen = UserInformationScreen(userModel.value)
+                                userInformationScreen.userModel = userModel.value
                                 navigator.push(userInformationScreen)
                             }
                         ,
@@ -721,7 +727,6 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         ),
                         colors = buttonColorAccount(),
                         onClick = {
-                            val playHistoryScreen = PlayHistoryScreen()
                             navigator.push(playHistoryScreen)
                         }) {
                         Row(horizontalArrangement = Arrangement.Start,
@@ -751,7 +756,6 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         ),
                         colors = buttonColorAccount(),
                         onClick = {
-                            val playlistScreen = PlaylistScreen()
                             navigator.push(playlistScreen)
                         }) {
                         Row(horizontalArrangement = Arrangement.Start,
@@ -812,7 +816,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         ),
                         colors = buttonColorAccount(),
                         onClick = {
-
+                            navigator.push(favouritesScreen)
                         }) {
                         Row(horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,
@@ -1188,7 +1192,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
      */
     private fun handleUpdateUserInformation(userModel: UserModel?) {
         if (userModel != null) {
-            val userInformationScreen = UserInformationScreen(userModel)
+            userInformationScreen.userModel = userModel
             navigator.push(userInformationScreen)
         } else {
             isErrorCreateAccount.value = true

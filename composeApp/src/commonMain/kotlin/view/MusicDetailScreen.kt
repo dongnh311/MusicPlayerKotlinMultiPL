@@ -53,6 +53,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_add
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_fav_active
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_fav_unactive
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_next
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_pause
@@ -163,18 +164,23 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                      Column(modifier = Modifier.fillMaxWidth().padding(start = 16.dp)) {
                                          Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
                                              // Favourite
+                                             var colorTint = Color.Unspecified
+                                             val iconFav = if (musicModel.value.isFavourite.value.isNotEmpty()) {
+                                                 colorTint = Color.Red
+                                                 painterResource(Res.drawable.btn_fav_active)
+                                             } else painterResource(Res.drawable.btn_fav_unactive)
                                              IconButton(
                                                  onClick = {
-
+                                                     updateFavorite()
                                                  },
                                                  modifier = Modifier.size(45.dp),
                                                  content = {
                                                      // Specify the icon using the icon parameter
                                                      androidx.compose.material.Icon(
-                                                         painter = painterResource(Res.drawable.btn_fav_unactive),
+                                                         painter = iconFav,
                                                          contentDescription = null,
                                                          modifier = Modifier.size(35.dp),
-                                                         tint = Color.Unspecified,
+                                                         tint = colorTint,
                                                      )
                                                  }
                                              )
@@ -437,5 +443,12 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
      */
     private fun startPlayMusic() {
         viewModel.writePlayMusicToHistory()
+    }
+
+    /**
+     * Update fav
+     */
+    private fun updateFavorite() {
+        viewModel.updateOrDeleteFavouriteItem(musicModel.value.isFavourite.value.isEmpty())
     }
 }

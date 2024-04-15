@@ -57,6 +57,7 @@ import commonShare.formatNumberToMoney
 import commonShare.loadPermissionControl
 import const.ACCOUNT_TYPE_FREE
 import const.ACCOUNT_TYPE_VIP
+import const.LOGIN_BY_EMAIL
 import const.LOGIN_BY_FACEBOOK
 import const.LOGIN_BY_GOOGLE
 import const.PERMISSION_GRAND
@@ -112,7 +113,8 @@ import viewModel.UserInformationViewModel
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
-class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserInformationViewModel>() {
+class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
+    var userModel: UserModel = UserModel()
 
     override var viewModel: UserInformationViewModel = UserInformationViewModel()
     private lateinit var focusManager: FocusManager
@@ -168,9 +170,9 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                         bottom = it.calculateBottomPadding()
                     )
             ) {
-                Column(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Column(modifier = Modifier.fillMaxWidth().fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top) {
                     Column(modifier = Modifier.fillMaxWidth().fillMaxHeight().weight(1f).padding(all = 16.dp).verticalScroll(rememberScrollState()),
-                        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top) {
                         val painter = if (userAvatar.value.isNotEmpty()) rememberImagePainter(userAvatar.value) else painterResource(Res.drawable.avatar_default)
                         Box(modifier = Modifier) {
                             Image(
@@ -418,72 +420,72 @@ class UserInformationScreen(private val userModel: UserModel): BaseScreen<UserIn
                             )
                         }
 
-                        // Old Password
-                        InputPasswordField(
-                            value = currentPassword.value,
-                            onChange = {newValue ->
-                                currentPassword.value = newValue
-                                isEnableButtonSave.value = checkToEnableButtonSave()
-                            },
-                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    focusManager.moveFocus(FocusDirection.Down)
-                                }
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                imeAction = ImeAction.Next,
-                                keyboardType = KeyboardType.Password
-                            ),
-                            label = stringResource(Res.string.user_information_old_password),
-                            placeholder = stringResource(Res.string.user_information_old_password_pl),
-                        )
+                        // Only email have password
+                        if (userModel.loginType == LOGIN_BY_EMAIL) {
+                            // Old Password
+                            InputPasswordField(
+                                value = currentPassword.value,
+                                onChange = {newValue ->
+                                    currentPassword.value = newValue
+                                    isEnableButtonSave.value = checkToEnableButtonSave()
+                                },
+                                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        focusManager.moveFocus(FocusDirection.Down)
+                                    }
+                                ),
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Next,
+                                    keyboardType = KeyboardType.Password
+                                ),
+                                label = stringResource(Res.string.user_information_old_password),
+                                placeholder = stringResource(Res.string.user_information_old_password_pl),
+                            )
 
-                        // Password
-                        InputPasswordField(
-                            value = newPassword.value,
-                            onChange = {newValue ->
-                                newPassword.value = newValue
-                                isEnableButtonSave.value = checkToEnableButtonSave()
-                            },
-                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    focusManager.moveFocus(FocusDirection.Down)
-                                }
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                imeAction = ImeAction.Next,
-                                keyboardType = KeyboardType.Password
-                            ),
-                            label = stringResource(Res.string.user_information_password),
-                            placeholder = stringResource(Res.string.user_information_old_password_pl),
-                        )
+                            // Password
+                            InputPasswordField(
+                                value = newPassword.value,
+                                onChange = {newValue ->
+                                    newPassword.value = newValue
+                                    isEnableButtonSave.value = checkToEnableButtonSave()
+                                },
+                                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        focusManager.moveFocus(FocusDirection.Down)
+                                    }
+                                ),
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Next,
+                                    keyboardType = KeyboardType.Password
+                                ),
+                                label = stringResource(Res.string.user_information_password),
+                                placeholder = stringResource(Res.string.user_information_old_password_pl),
+                            )
 
-                        // Re-password
-                        InputPasswordField(
-                            value = newRePassword.value,
-                            onChange = {newValue ->
-                                newRePassword.value = newValue
-                                isEnableButtonSave.value = checkToEnableButtonSave()
-                            },
-                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    keyboardController?.hide()
-                                }
-                            ),
-                            keyboardOptions = KeyboardOptions(
-                                imeAction = ImeAction.Done,
-                                keyboardType = KeyboardType.Password
-                            ),
-                            label = stringResource(Res.string.user_information_re_password),
-                            placeholder = stringResource(Res.string.user_information_old_password_pl),
-                        )
-
-                        Spacer(modifier = Modifier.heightIn(min = 50.dp).weight(1f).padding(bottom = 16.dp))
-
-
+                            // Re-password
+                            InputPasswordField(
+                                value = newRePassword.value,
+                                onChange = {newValue ->
+                                    newRePassword.value = newValue
+                                    isEnableButtonSave.value = checkToEnableButtonSave()
+                                },
+                                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        keyboardController?.hide()
+                                    }
+                                ),
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Done,
+                                    keyboardType = KeyboardType.Password
+                                ),
+                                label = stringResource(Res.string.user_information_re_password),
+                                placeholder = stringResource(Res.string.user_information_old_password_pl),
+                            )
+                        }
+                        Spacer(modifier = Modifier.heightIn(min = 16.dp))
                     }
 
                     // Button Save

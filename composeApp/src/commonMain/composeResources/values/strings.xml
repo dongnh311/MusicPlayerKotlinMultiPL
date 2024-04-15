@@ -148,4 +148,6 @@
     <string name="dialog_add_create">Create Playlist</string>
     <string name="dialog_add_btn_add">Add</string>
 
+    <string name="favourite_title">My Favourites</string>
+
 </resources>

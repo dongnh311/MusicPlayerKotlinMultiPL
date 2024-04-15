@@ -1,7 +1,9 @@
 package model
 
+import androidx.compose.runtime.mutableStateOf
 import const.FAVOURITE_MUSIC
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -17,4 +19,7 @@ class FavouriteModel {
     var favouriteItemId: String = ""
     var favType: Int = FAVOURITE_MUSIC
     var createAt: Long = 0
+
+    @Transient
+    var musicItem: MusicModel? = MusicModel()
 }

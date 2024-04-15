@@ -1,5 +1,6 @@
 package model
 
+import androidx.compose.runtime.mutableStateOf
 import const.COUNTRY_CN
 import const.COUNTRY_KR
 import const.COUNTRY_US
@@ -33,6 +34,9 @@ class MusicModel {
 
     @Transient
     var authorModel: AuthorModel? = AuthorModel()
+
+    @Transient
+    var isFavourite = mutableStateOf("")
 }
 
 // Dummy data for new music

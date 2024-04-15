@@ -1,5 +1,6 @@
 package utils.helper
 
+import co.touchlab.kermit.Logger
 import const.FB_DATABASE_FAVOURITE
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
@@ -28,11 +29,31 @@ class FirebaseFavouriteHelper {
     }
 
     /**
+     * Delete favourite
+     *
+     * @param favouriteId
+     */
+    suspend fun deleteFavourite(favouriteId: String)  {
+        if (favouriteId.isNotEmpty()) {
+            firebaseStore.collection(FB_DATABASE_FAVOURITE).document(favouriteId).delete()
+        } else {
+            Logger.e("deleteFavourite favouriteId empty")
+        }
+    }
+
+    /**
      * Load list favourite of user
      *
      * @param userId
      */
     fun loadListFavouriteFromFB(userId: String) = callbackFlow {
+        if (userId.isEmpty()) {
+            trySend(arrayListOf())
+
+            awaitClose {
+                close()
+            }
+        }
         val documents = firebaseStore.collection(FB_DATABASE_FAVOURITE)
         val listFavourite = mutableListOf<FavouriteModel>()
 

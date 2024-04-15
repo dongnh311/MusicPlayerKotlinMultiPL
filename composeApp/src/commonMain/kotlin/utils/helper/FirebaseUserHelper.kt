@@ -1,5 +1,6 @@
 package utils.helper
 
+import co.touchlab.kermit.Logger
 import const.FB_DATABASE_USER
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseAuth
@@ -126,10 +127,16 @@ class FirebaseUserHelper {
      * @param userId : User Id
      */
     fun loadUserDetailInformation(userId: String) = callbackFlow {
-        val document = firebaseStore.collection(FB_DATABASE_USER).document(userId).get()
-        val userData = document.data<UserModel>()
-        userData.id = userId
-        trySend(userData)
+        if (userId.isEmpty()) {
+            val document = firebaseStore.collection(FB_DATABASE_USER).document(userId).get()
+            val userData = document.data<UserModel>()
+            userData.id = userId
+            trySend(userData)
+        } else {
+            trySend(UserModel())
+            Logger.e("loadUserDetailInformation userId empty")
+        }
+
         awaitClose {
             close()
         }
@@ -174,7 +181,6 @@ class FirebaseUserHelper {
     /**
      * Update new Password
      *
-     * @param email
      * @param oldPassword
      * @param newPassword
      * @return

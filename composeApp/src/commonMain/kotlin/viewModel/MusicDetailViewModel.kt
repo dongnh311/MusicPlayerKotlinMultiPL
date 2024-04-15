@@ -3,12 +3,15 @@ package viewModel
 import androidx.compose.runtime.mutableStateListOf
 import base.BaseViewModel
 import commonShare.loadTimestamp
+import const.FAVOURITE_MUSIC
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import model.FavouriteModel
 import model.MusicModel
 import model.PlayHistoryModel
 import model.PlayListModel
 import model.TopicModel
+import utils.helper.FirebaseFavouriteHelper
 import utils.helper.FirebaseMusicsHelper
 import utils.helper.FirebasePlayHelper
 import utils.helper.FirebaseUserHelper
@@ -19,6 +22,7 @@ import utils.helper.FirebaseUserHelper
  * Email : hoaidongit5@gmail.com or hoaidongit5@dnkinno.com.
  * Phone : +84397199197.
  */
+
 class MusicDetailViewModel: BaseViewModel() {
     // Save list topic
     val listTopic = mutableStateListOf<TopicModel>()
@@ -40,6 +44,9 @@ class MusicDetailViewModel: BaseViewModel() {
 
     // Save playlists
     val listPlaylist = mutableStateListOf<PlayListModel>()
+
+    // Fav
+    private val firebaseFavouriteHelper = FirebaseFavouriteHelper()
 
     /**
      * Load more information for show music detail
@@ -68,6 +75,8 @@ class MusicDetailViewModel: BaseViewModel() {
                 if (listPlaylist.isEmpty()) {
                     loadListPlaylist()
                 }
+
+                checkFavouriteOfMusic()
             },
             doOnAfterService = {
                 listMusicsSameSinger.clear()
@@ -126,6 +135,44 @@ class MusicDetailViewModel: BaseViewModel() {
             },
             doOnBeforeService = {},
             doOnAfterService = {},
+        )
+    }
+
+    /**
+     * Load status of favourite
+     */
+    private fun checkFavouriteOfMusic() {
+        workingWithApiNonDialog(
+            service = {
+                val listFavourite = firebaseFavouriteHelper.loadListFavouriteFromFB(firebaseUserHelper.loadUserId()).first()
+                listFavourite.forEach {item ->
+                    if (item.favType == FAVOURITE_MUSIC && item.favouriteItemId == saveMusic.id) {
+                        saveMusic.isFavourite.value = item.id
+                    }
+                }
+            },
+            nextProgressStep = {}
+        )
+    }
+
+    fun updateOrDeleteFavouriteItem(isFavourite: Boolean) {
+        workingWithApiHaveDialog(
+            service = {
+                if (isFavourite) {
+                    val favouriteModel = FavouriteModel()
+                    favouriteModel.userId = firebaseUserHelper.loadUserId()
+                    favouriteModel.favouriteItemId = saveMusic.id
+                    favouriteModel.favType = FAVOURITE_MUSIC
+                    favouriteModel.createAt = loadTimestamp().toLong()
+                    firebaseFavouriteHelper.writeFavouriteToFB(favouriteModel)
+                } else {
+                    firebaseFavouriteHelper.deleteFavourite(saveMusic.isFavourite.value)
+                }
+            },
+            doOnBeforeService = {},
+            doOnAfterService = {
+                checkFavouriteOfMusic()
+            }
         )
     }
 }

@@ -10,6 +10,7 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
+		2B8B16492BCCC3AB007C8422 /* IOsAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8B16482BCCC3AB007C8422 /* IOsAppDelegate.swift */; };
 		2BA6954A2BBBE02400A9982C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 2BA695492BBBE02400A9982C /* FirebaseMessaging */; };
 		2BA6954C2BBBE1B000A9982C /* FirebaseFCMHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6954B2BBBE1B000A9982C /* FirebaseFCMHelper.swift */; };
 		2BA6954E2BBBE87700A9982C /* IOsMusicPlayerSingleTon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA6954D2BBBE87700A9982C /* IOsMusicPlayerSingleTon.swift */; };
@@ -27,6 +28,7 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		2B8B16482BCCC3AB007C8422 /* IOsAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOsAppDelegate.swift; sourceTree = "<group>"; };
 		2BA6954B2BBBE1B000A9982C /* FirebaseFCMHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseFCMHelper.swift; sourceTree = "<group>"; };
 		2BA6954D2BBBE87700A9982C /* IOsMusicPlayerSingleTon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOsMusicPlayerSingleTon.swift; sourceTree = "<group>"; };
 		2BB6E9AC2BA42305006E0A16 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../composeApp/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 				058557D7273AAEEB004C7B11 /* Preview Content */,
 				2BA6954B2BBBE1B000A9982C /* FirebaseFCMHelper.swift */,
 				2BA6954D2BBBE87700A9982C /* IOsMusicPlayerSingleTon.swift */,
+				2B8B16482BCCC3AB007C8422 /* IOsAppDelegate.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -217,6 +220,7 @@
 			files = (
 				2BA6954C2BBBE1B000A9982C /* FirebaseFCMHelper.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				2B8B16492BCCC3AB007C8422 /* IOsAppDelegate.swift in Sources */,
 				2BA6954E2BBBE87700A9982C /* IOsMusicPlayerSingleTon.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 			);

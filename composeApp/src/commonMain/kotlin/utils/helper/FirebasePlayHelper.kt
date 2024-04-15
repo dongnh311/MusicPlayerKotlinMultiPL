@@ -1,5 +1,6 @@
 package utils.helper
 
+import co.touchlab.kermit.Logger
 import const.FB_DATABASE_HISTORY
 import const.FB_DATABASE_PLAY_LIST
 import dev.gitlive.firebase.Firebase
@@ -31,6 +32,13 @@ class FirebasePlayHelper {
      * @param userId
      */
     fun loadPlayHistoryList(userId: String) = callbackFlow {
+        if (userId.isEmpty()) {
+            trySend(arrayListOf())
+            awaitClose {
+                close()
+            }
+        }
+
         val documents = firebaseStore.collection(FB_DATABASE_HISTORY)
         val listMusics = mutableListOf<PlayHistoryModel>()
 
@@ -57,9 +65,13 @@ class FirebasePlayHelper {
      * @param userId
      */
     suspend fun deleteAllPlayHistory(userId: String) {
-        val documents = firebaseStore.collection(FB_DATABASE_HISTORY)
-        documents.where { "userId" equalTo userId }.get().documents.forEach {documentSnapshot ->
-            documentSnapshot.reference.delete()
+        if (userId.isNotEmpty()) {
+            val documents = firebaseStore.collection(FB_DATABASE_HISTORY)
+            documents.where { "userId" equalTo userId }.get().documents.forEach {documentSnapshot ->
+                documentSnapshot.reference.delete()
+            }
+        } else {
+            Logger.e("deleteAllPlayHistory userId is empty")
         }
     }
 
@@ -69,7 +81,12 @@ class FirebasePlayHelper {
      * @param historyId
      */
     suspend fun deletePlayHistory(historyId: String)  {
-        firebaseStore.collection(FB_DATABASE_HISTORY).document(historyId).delete()
+        if (historyId.isNotEmpty()) {
+            firebaseStore.collection(FB_DATABASE_HISTORY).document(historyId).delete()
+        } else {
+            Logger.e("deletePlayHistory historyId is empty")
+        }
+
     }
 
     /**
@@ -96,6 +113,13 @@ class FirebasePlayHelper {
      * @param userId
      */
     fun loadPlayListOfUser(userId: String) = callbackFlow {
+        if (userId.isEmpty()) {
+            trySend(arrayListOf())
+            awaitClose {
+                close()
+            }
+        }
+
         val documents = firebaseStore.collection(FB_DATABASE_PLAY_LIST)
         val listPlaylist = mutableListOf<PlayListModel>()
 
@@ -122,7 +146,11 @@ class FirebasePlayHelper {
      * @param playlistId
      */
     suspend fun deletePlayList(playlistId: String)  {
-        firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playlistId).delete()
+        if (playlistId.isNotEmpty()) {
+            firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playlistId).delete()
+        } else  {
+            Logger.e("deletePlayList playlistId is empty")
+        }
     }
 
     /**
@@ -153,13 +181,18 @@ class FirebasePlayHelper {
      * @param playlistId
      */
     fun findPlaylistWithId(playlistId: String) = callbackFlow {
-        val documents = firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playlistId).get()
-        val listPlaylist = mutableListOf<PlayListModel>()
+        if (playlistId.isNotEmpty()) {
+            val documents = firebaseStore.collection(FB_DATABASE_PLAY_LIST).document(playlistId).get()
 
-        val playHistoryModel = documents.data<PlayListModel>()
-        playHistoryModel.id = documents.id
+            val playHistoryModel = documents.data<PlayListModel>()
+            playHistoryModel.id = documents.id
 
-        trySend(playHistoryModel)
+            trySend(playHistoryModel)
+        } else  {
+            Logger.e("findPlaylistWithId playlistId is empty")
+            trySend(PlayListModel())
+        }
+
         awaitClose {
             close()
         }

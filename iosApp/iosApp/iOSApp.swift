@@ -5,6 +5,9 @@ import ComposeApp
 
 @main
 struct iOSApp: App {
+    // Make delegate
+    @UIApplicationDelegateAdaptor(IOsAppDelegate.self) var delegate
+    
     init() {
         FirebaseApp.configure()
         //IOsMusicPlayerSingleTon.shared
