@@ -170,6 +170,16 @@
     <string name="dialog_vip_day_expire">Day Expire :</string>
 
     <string name="setting_title">Setting</string>
+    <string name="setting_language">Language :</string>
+    <string name="setting_language_vn">Việt Nam</string>
+    <string name="setting_language_en">English</string>
+    <string name="setting_dark_mode">Theme :</string>
+    <string name="setting_dark_mode_light">Light</string>
+    <string name="setting_dark_mode_dark">Dark</string>
+    <string name="setting_dark_auto">Auto Play :</string>
+    <string name="setting_play_background">Play On Background :</string>
+    <string name="setting_play_background_on">On</string>
+    <string name="setting_play_background_off">Off</string>
 
     <string name="about_title">About</string>
 

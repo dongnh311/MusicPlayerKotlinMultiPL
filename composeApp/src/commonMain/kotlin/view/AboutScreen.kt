@@ -3,6 +3,7 @@ package view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,12 +21,14 @@ import base.BaseScreen
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.about_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
+import musicplayerkotlinmultipl.composeapp.generated.resources.setting_play_background
 import musicplayerkotlinmultipl.composeapp.generated.resources.setting_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import styles.buttonSize32dp
 import styles.colorPrimaryBackground
+import styles.textButton
 import styles.textTittleHome
 import viewModel.AboutViewModel
 import viewModel.SettingViewModel
@@ -61,7 +64,9 @@ class AboutScreen: BaseScreen<AboutViewModel>() {
                     Spacer(modifier = Modifier.height(45.dp))
                 }
             }) {
-
+            Box(modifier = Modifier.fillMaxSize().padding(bottom = it.calculateBottomPadding()), contentAlignment = Alignment.Center) {
+                Text(text = stringResource(Res.string.about_title), style = textButton(), modifier = Modifier.padding(start = 8.dp))
+            }
         }
     }
 

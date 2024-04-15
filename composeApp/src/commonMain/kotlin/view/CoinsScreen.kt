@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material3.Card
@@ -52,10 +51,8 @@ import commonShare.viewTimeByTimestamp
 import const.PAYMENT_TYPE_VIP
 import model.UserModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
-import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_buy_coin
-import musicplayerkotlinmultipl.composeapp.generated.resources.btn_fav_active
 import musicplayerkotlinmultipl.composeapp.generated.resources.coins_buy_more
 import musicplayerkotlinmultipl.composeapp.generated.resources.coins_number_coin
 import musicplayerkotlinmultipl.composeapp.generated.resources.coins_tab_buy
@@ -198,13 +195,8 @@ class CoinsScreen : BaseScreen<CoinsViewModel>() {
     }
 
     override fun onStartedScreen() {
-        if (viewModel.listCoinsToBuy.isEmpty()) {
-            viewModel.loadCoinsAndVipOnFirebase()
-        }
-
-        if (viewModel.listCoinsToBuy.isEmpty() || viewModel.listCoinUsed.isEmpty()) {
-            viewModel.loadListBuyCoinHistory()
-        }
+        viewModel.loadListBuyCoinHistory()
+        viewModel.loadListCoinUsed()
     }
 
     override fun onDisposedScreen() {
@@ -282,7 +274,8 @@ class CoinsScreen : BaseScreen<CoinsViewModel>() {
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     private fun showTabCoinUsed(paddingBottomDp: Dp) {
-        if (viewModel.listCoinUsed.isEmpty()) {
+
+        if (viewModel.listCoinUsedHistory.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize().padding(bottom = paddingBottomDp), contentAlignment = Alignment.Center) {
                 EmptyDataView()
             }
@@ -290,8 +283,8 @@ class CoinsScreen : BaseScreen<CoinsViewModel>() {
             LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = paddingBottomDp),
                 horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top) {
 
-                items(viewModel.listCoinUsed.size) { index ->
-                    val itemCoinUsed = viewModel.listCoinUsed[index]
+                items(viewModel.listCoinUsedHistory.size) { index ->
+                    val itemCoinUsed = viewModel.listCoinUsedHistory[index]
                     Card(modifier = Modifier
                         .fillMaxWidth().paddingTop16StartEnd16().clickable(enabled = true) {
 

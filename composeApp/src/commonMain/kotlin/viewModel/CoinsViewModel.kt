@@ -34,30 +34,10 @@ class CoinsViewModel: BaseViewModel() {
     val listCoinBuyHistory = mutableStateListOf<BuyCoinModel>()
 
     // List used coin
-    val listCoinUsed = mutableStateListOf<PaymentModel>()
+    val listCoinUsedHistory = mutableStateListOf<PaymentModel>()
 
     // Save list Vip
     val listItemVip = mutableStateListOf<VipModel>()
-
-    /**
-     * Load data form firebase
-     */
-    fun loadCoinsAndVipOnFirebase() {
-        workingWithApiNonDialog(
-            service = {
-                val listVips = firebaseCoinHelper.loadListVipFromFB().first()
-                listItemVip.clear()
-                listItemVip.addAll(listVips)
-                val listCoin = firebaseCoinHelper.loadListCoinFromFB().first()
-                listCoin
-            },
-            nextProgressStep = {
-                listCoinsToBuy.clear()
-                it.sortedWith(compareBy({ item -> item.id }, { v -> extractInt(v.id) }))
-                listCoinsToBuy.addAll(it)
-            }
-        )
-    }
 
     /**
      * Load all data con buy and payment
@@ -65,22 +45,40 @@ class CoinsViewModel: BaseViewModel() {
     fun loadListBuyCoinHistory() {
         workingWithApiHaveDialog(
             service = {
-                val listPayments = firebaseCoinHelper.loadPaymentOfUser(firebaseUserHelper.loadUserId()).first()
-                listCoinUsed.clear()
-                listCoinUsed.addAll(listPayments)
+                val listCoin = firebaseCoinHelper.loadListCoinFromFB().first()
+                listCoinsToBuy.clear()
+                listCoin.sortedWith(compareBy({ item -> extractInt(item.id) }, { v -> extractInt(v.id) }))
+                listCoinsToBuy.addAll(listCoin)
 
                 // Coin buy
                 val listCoins= firebaseCoinHelper.loadCoinPurchaseOfUser(firebaseUserHelper.loadUserId()).first()
                 listCoins.forEach { item ->
                     item.coinModel = listCoinsToBuy.find { coin -> coin.id == item.coinId }
                 }
-                listCoins
+                listCoinBuyHistory.clear()
+                listCoinBuyHistory.addAll(listCoins)
             },
             doOnBeforeService = {},
-            doOnAfterService = {
-                listCoinBuyHistory.clear()
-                listCoinBuyHistory.addAll(it)
-            }
+            doOnAfterService = {}
+        )
+    }
+
+    /**
+     * Load list coin used
+     */
+    fun loadListCoinUsed() {
+        workingWithApiHaveDialog(
+            service = {
+                val listVips = firebaseCoinHelper.loadListVipFromFB().first()
+                listItemVip.clear()
+                listItemVip.addAll(listVips)
+
+                val listPayments = firebaseCoinHelper.loadPaymentOfUser(firebaseUserHelper.loadUserId()).first()
+                listCoinUsedHistory.clear()
+                listCoinUsedHistory.addAll(listPayments)
+            },
+            doOnBeforeService = {},
+            doOnAfterService = {}
         )
     }
 

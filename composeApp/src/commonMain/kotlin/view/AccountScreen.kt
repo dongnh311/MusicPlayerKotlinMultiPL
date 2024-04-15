@@ -64,6 +64,8 @@ import commonShare.formatNumberToMoney
 import commonShare.getPlatform
 import commonShare.loadFireBaseAuthControl
 import const.ACCOUNT_TYPE_FREE
+import const.ACCOUNT_TYPE_MAX
+import const.ACCOUNT_TYPE_SUPPER_VIP
 import const.ACCOUNT_TYPE_VIP
 import const.LOGIN_BY_EMAIL
 import const.LOGIN_BY_FACEBOOK
@@ -110,6 +112,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_d
 import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_email
 import musicplayerkotlinmultipl.composeapp.generated.resources.forgot_password_email_pl
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin
+import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin_max_vip
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin_supper_vip
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin_vip
 import musicplayerkotlinmultipl.composeapp.generated.resources.login_with_email
@@ -132,6 +135,7 @@ import styles.buttonColorsFacebook
 import styles.buttonColorsGoogle
 import styles.colorAccountCard
 import styles.colorPrimaryApp
+import styles.iconSize28dp
 import styles.iconSize30dp
 import styles.paddingTop16
 import styles.paddingTop16StartEnd16
@@ -687,7 +691,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                             }
                                             Icon(
                                                 painter = icon,
-                                                modifier = iconSize30dp(),
+                                                modifier = iconSize28dp(),
                                                 contentDescription = stringResource(Res.string.user_information_login_with),
                                                 tint = Color.Unspecified
                                             )
@@ -700,6 +704,12 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                                 }
                                                 ACCOUNT_TYPE_VIP -> {
                                                     painterResource(Res.drawable.icon_coin_vip)
+                                                }
+                                                ACCOUNT_TYPE_SUPPER_VIP -> {
+                                                    painterResource(Res.drawable.icon_coin_supper_vip)
+                                                }
+                                                ACCOUNT_TYPE_MAX -> {
+                                                    painterResource(Res.drawable.icon_coin_max_vip)
                                                 }
                                                 else -> {
                                                     painterResource(Res.drawable.icon_coin_supper_vip)
