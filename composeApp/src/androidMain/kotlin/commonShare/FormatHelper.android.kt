@@ -1,7 +1,5 @@
 package commonShare
 
-import android.icu.text.DecimalFormat
-import android.icu.text.DecimalFormatSymbols
 import const.DATE_LOCAL_FORMAT_TYPE_COMMON_0
 import const.DATE_LOCAL_FORMAT_TYPE_COMMON_1
 import const.DATE_LOCAL_FORMAT_TYPE_COMMON_2
@@ -11,6 +9,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -20,13 +20,12 @@ import java.util.Locale
  */
 actual fun formatNumberToMoney(number: Number?, pattern: String): String {
     if (number == 0.0 || number == null) return "0"
-    val output = ""
     val format = DecimalFormat(pattern)
     val dfs = DecimalFormatSymbols()
     dfs.decimalSeparator = '.'
     dfs.groupingSeparator = ','
     format.decimalFormatSymbols = dfs
-    return format.format(output)
+    return format.format(number)
 }
 
 /**

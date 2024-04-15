@@ -150,4 +150,27 @@
 
     <string name="favourite_title">My Favourites</string>
 
+    <string name="coins_title">Coins History</string>
+    <string name="coins_total_available">Coins Available :</string>
+    <string name="coins_tab_buy">Coins purchased</string>
+    <string name="coins_buy_more">Get More Coins</string>
+    <string name="coins_tab_payment">Coins Used</string>
+    <string name="coins_number_coin">Coin :</string>
+
+    <string name="dialog_buy_coin_title">Get More Coins</string>
+    <string name="dialog_buy_money">Money :</string>
+    <string name="dialog_buy_discount">Discount :</string>
+    <string name="dialog_buy_expire">Expire At :</string>
+    <string name="dialog_buy_coin_done">Payment success.</string>
+
+    <string name="dialog_vip_title">Unlock Vip Account</string>
+    <string name="dialog_vip_coin">Coin :</string>
+    <string name="dialog_vip_day">Days :</string>
+    <string name="dialog_vip_bonus">Bonus :</string>
+    <string name="dialog_vip_day_expire">Day Expire :</string>
+
+    <string name="setting_title">Setting</string>
+
+    <string name="about_title">About</string>
+
 </resources>

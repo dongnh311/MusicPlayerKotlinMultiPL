@@ -28,10 +28,12 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
@@ -56,6 +58,8 @@ import commonShare.CallBackResultPermission
 import commonShare.formatNumberToMoney
 import commonShare.loadPermissionControl
 import const.ACCOUNT_TYPE_FREE
+import const.ACCOUNT_TYPE_MAX
+import const.ACCOUNT_TYPE_SUPPER_VIP
 import const.ACCOUNT_TYPE_VIP
 import const.LOGIN_BY_EMAIL
 import const.LOGIN_BY_FACEBOOK
@@ -74,6 +78,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.btn_facebook
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_google
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_android
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin
+import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin_max_vip
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin_supper_vip
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_coin_vip
 import musicplayerkotlinmultipl.composeapp.generated.resources.icon_ios
@@ -105,6 +110,7 @@ import styles.buttonCommonModifier
 import styles.buttonSize32dp
 import styles.primaryDark
 import styles.textContentPrimary
+import utils.dialogs.DialogBuyVip
 import viewModel.UserInformationViewModel
 
 /**
@@ -135,7 +141,10 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
 
     private val isShowDialogFailPermission = mutableStateOf(false)
 
-    @OptIn(ExperimentalResourceApi::class)
+    // Open dialog vip
+    private val isOpenDialogBuyVip = mutableStateOf(false)
+
+    @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
     @Composable
     override fun makeContentForView() {
         // Focus
@@ -328,8 +337,10 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
                             }
                         }
 
-                        // Type
-                        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).border(
+                        // Type Vip
+                        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp).clickable {
+                            isOpenDialogBuyVip.value = true
+                        }.border(
                             border = BorderStroke(1.dp, color = primaryDark),
                             shape = RoundedCornerShape(4.dp)
                         ),
@@ -347,13 +358,20 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
                                 ACCOUNT_TYPE_VIP -> {
                                     painterResource(Res.drawable.icon_coin_vip)
                                 }
+                                ACCOUNT_TYPE_SUPPER_VIP -> {
+                                    painterResource(Res.drawable.icon_coin_supper_vip)
+                                }
+                                ACCOUNT_TYPE_MAX -> {
+                                    painterResource(Res.drawable.icon_coin_max_vip)
+                                }
                                 else -> {
                                     painterResource(Res.drawable.icon_coin_supper_vip)
                                 }
                             }
                             IconButton(
                                 onClick = {
-
+                                          // Todo
+                                    isOpenDialogBuyVip.value = true
                                 },
                                 modifier = Modifier.size(width = 40.dp, height = 40.dp).padding(end = 16.dp),
                                 content = {
@@ -525,9 +543,28 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
                 }
             )
         }
+
+        // Show dialog buy vip
+        if (isOpenDialogBuyVip.value) {
+            DialogBuyVip(
+                isOpenDialogBuyVip,
+                viewModel.listVipToBuy,
+                sheetState = rememberModalBottomSheetState(),
+                onDismiss = {
+                    isOpenDialogBuyVip.value = false
+                },
+                callBackClickBuy = {
+                    isOpenDialogBuyVip.value = false
+                    viewModel.buyVipForUser(userModel, it)
+                }
+            )
+        }
     }
 
     override fun onStartedScreen() {
+        if (viewModel.listVipToBuy.isEmpty()) {
+            viewModel.loadListItemVip()
+        }
     }
 
     override fun onDisposedScreen() {

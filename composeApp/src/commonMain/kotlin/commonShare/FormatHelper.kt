@@ -17,7 +17,7 @@ import dev.gitlive.firebase.firestore.Timestamp
  * @param pattern
  * @return String
  */
-expect fun formatNumberToMoney(number: Number?, pattern: String = "###,###,##0.0"): String
+expect fun formatNumberToMoney(number: Number?, pattern: String = "###,###,##0"): String
 
 /**
  * Load timestamp local

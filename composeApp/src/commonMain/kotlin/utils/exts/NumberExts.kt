@@ -23,3 +23,15 @@ fun Double.pxToDp() = with(LocalDensity.current) { this@pxToDp.toInt().toDp() }
 
 @Composable
 fun Dp.dpToPx() = with(LocalDensity.current) { this@dpToPx.toPx() }
+
+/**
+ * Convert String to int
+ *
+ * @param inputString
+ * @return
+ */
+fun extractInt(inputString: String): Int {
+    val num = inputString.replace("\\D".toRegex(), "")
+    // return 0 if no digits found
+    return if (num.isEmpty()) 0 else num.toInt()
+}

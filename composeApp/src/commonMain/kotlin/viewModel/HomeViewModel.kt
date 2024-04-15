@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.toMutableStateList
 import base.BaseViewModel
 import co.touchlab.kermit.Logger
+import const.FB_DATABASE_COINS
 import const.FB_DATABASE_MUSICS
 import const.FB_DATABASE_SINGER
 import kotlinx.coroutines.channels.awaitClose
@@ -18,6 +19,7 @@ import network.response.NotifyResponse
 import network.services.EventServices
 import singleton.NetworkManager
 import singleton.NetworkManager.jsonManager
+import utils.helper.FirebaseCoinHelper
 import utils.helper.FirebaseMusicsHelper
 
 /**
@@ -44,6 +46,9 @@ class HomeViewModel: BaseViewModel() {
 
     // Save list topic
     val listTopic = mutableStateListOf<TopicModel>()
+
+    // Firebase coin
+    private val firebaseCoinHelper = FirebaseCoinHelper()
 
     /**
      * Load list event
@@ -134,6 +139,27 @@ class HomeViewModel: BaseViewModel() {
 
             listNewMusics.clear()
             listNewMusics.addAll(listMusicNewLocal)
+
+            // Init coin and vip if need
+            val coins = firebaseCoinHelper.loadListCoinFromFB().first()
+            if (coins.isEmpty()) {
+                firebaseCoinHelper.writeCoinsToFB()
+            } else {
+                coins.forEach {coin ->
+                    if (coin.thumbnail.startsWith("gs://")) {
+                        // Thumb
+                        val newAvatar =  firebaseMusicsHelper.findUrlLoadImage(coin.thumbnail)
+                        coin.thumbnail = newAvatar
+                        firebaseMusicsHelper.updateNewValueForMusic(FB_DATABASE_COINS, coin.id, "thumbnail", newAvatar)
+                    }
+
+                }
+            }
+
+            val vips = firebaseCoinHelper.loadListVipFromFB().first()
+            if (vips.isEmpty()) {
+                firebaseCoinHelper.writeVipToFB()
+            }
         }
     }
 

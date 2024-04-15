@@ -56,4 +56,22 @@ object MusicPlayerSingleton {
 
         return newHeight.pxToDp()
     }
+
+    /**
+     * Load max height to bottom sheet
+     *
+     * @return
+     */
+    @Composable
+    fun loadHeightBottomSheet() : Dp {
+        var newHeight = screenSize.value.second * 0.8F
+        val maxHeight = 650.dp.dpToPx()
+        println("ScreenHeight: ${screenSize.value.second}, 0.8% ScreenHeight: $newHeight ,limit width: $maxHeight")
+
+        if (newHeight > maxHeight || newHeight < 0) {
+            newHeight = maxHeight
+        }
+
+        return newHeight.pxToDp()
+    }
 }

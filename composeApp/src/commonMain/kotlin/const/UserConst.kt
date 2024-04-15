@@ -7,9 +7,10 @@ package const
  * Phone : +84397199197.
  */
 
-const val ACCOUNT_TYPE_FREE = 1
-const val ACCOUNT_TYPE_VIP = 2
-const val ACCOUNT_TYPE_SUPPER_VIP = 3
+const val ACCOUNT_TYPE_FREE = "1"
+const val ACCOUNT_TYPE_VIP = "2"
+const val ACCOUNT_TYPE_SUPPER_VIP = "3"
+const val ACCOUNT_TYPE_MAX = "4"
 
 const val PLATFORM_ANDROID = "Android"
 const val PLATFORM_IOS = "IOs"

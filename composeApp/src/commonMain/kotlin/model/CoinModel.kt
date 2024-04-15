@@ -15,24 +15,31 @@ class CoinModel {
     var money: Long = 0
     var discount: Double = 0.0
     var expireAt: Long? = 0
+    var thumbnail: String = ""
 }
 
 // Dummy coin
-fun createDummyCoinsDataList() : MutableList<CoinModel> {
+fun createListDummyCoins() : MutableList<CoinModel> {
     val listCoin = arrayListOf<CoinModel>()
 
-    for (index in 0 .. 5) {
+    for (index in 0 until 5) {
         val indexedValue = index + 1
         val coinModel = CoinModel()
         coinModel.id = indexedValue.toString()
         coinModel.coin = indexedValue * 1000L
         coinModel.money = indexedValue * 2000L
-        if (index == 2 || index == 2) {
-            coinModel.discount = 7.0 * indexedValue
-            coinModel.expireAt = 1712834218104
+        if (index == 1 || index == 3) {
+            coinModel.discount = 4.3 * indexedValue
+            coinModel.expireAt = 1713164089876 / 1000
         }
         listCoin.add(coinModel)
     }
+
+    listCoin[0].thumbnail = "gs://musicplayer-c39cb.appspot.com/common/coin_1.png"
+    listCoin[1].thumbnail = "gs://musicplayer-c39cb.appspot.com/common/coin_2.png"
+    listCoin[2].thumbnail = "gs://musicplayer-c39cb.appspot.com/common/coin_3.png"
+    listCoin[3].thumbnail = "gs://musicplayer-c39cb.appspot.com/common/coin_4.png"
+    listCoin[4].thumbnail = "gs://musicplayer-c39cb.appspot.com/common/coin_5.png"
 
     return listCoin
 }

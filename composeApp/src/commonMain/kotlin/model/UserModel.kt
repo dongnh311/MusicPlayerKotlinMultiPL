@@ -21,7 +21,7 @@ class UserModel: BaseModel() {
     var platform: String = PLATFORM_ANDROID
     var fcmToken: String = ""
     var coin: Double = 0.0
-    var accountType: Int = ACCOUNT_TYPE_FREE
+    var accountType: String = ACCOUNT_TYPE_FREE
     var loginType: String = LOGIN_BY_GOOGLE
     var expireVip: Long? = 0
 

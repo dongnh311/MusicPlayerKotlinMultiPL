@@ -19,7 +19,7 @@ const val FB_DATABASE_FAVOURITE = "favourites"
 const val FB_DATABASE_COINS = "coins"
 const val FB_DATABASE_PAYMENT_HISTORY = "buyCoinHistory"
 const val FB_DATABASE_VIP = "vips"
-const val FB_DATABASE_PAYMENT_VIP = "buyVipHistory"
+const val FB_DATABASE_PAYMENT_COIN = "paymentsHistory"
 
 // Upload storage
 const val FIREBASE_STORAGE_AVATAR = "avatar"
@@ -42,3 +42,7 @@ const val COUNTRY_CN = "CN"
 // Firebase Favourite
 const val FAVOURITE_MUSIC = 0
 const val FAVOURITE_SINGER = 1
+
+// Firebase payment
+const val PAYMENT_TYPE_VIP = 0
+const val PAYMENT_TYPE_UNLOCK = 1

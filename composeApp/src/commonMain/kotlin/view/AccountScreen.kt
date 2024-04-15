@@ -197,6 +197,9 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
     private val playlistScreen by lazy { PlaylistScreen() }
     private val playHistoryScreen by lazy { PlayHistoryScreen() }
     private val userInformationScreen by lazy { UserInformationScreen() }
+    private val aboutScreen by lazy { AboutScreen() }
+    private val coinsScreen by lazy { CoinsScreen() }
+    private val settingScreen by lazy { SettingScreen() }
 
     @OptIn(ExperimentalResourceApi::class)
     @Composable
@@ -845,7 +848,8 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         ),
                         colors = buttonColorAccount(),
                         onClick = {
-
+                            coinsScreen.userModel = userModel.value
+                            navigator.push(coinsScreen)
                         }) {
                         Row(horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,
@@ -874,7 +878,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         ),
                         colors = buttonColorAccount(),
                         onClick = {
-
+                            navigator.push(settingScreen)
                         }) {
                         Row(horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,
@@ -893,7 +897,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                     }
 
 
-                    // Button Setting
+                    // Button About
                     androidx.compose.material3.Button(modifier = Modifier.paddingTop8StartEnd16(),
                         border = BorderStroke(1.dp, colorPrimaryApp),
                         shape = RoundedCornerShape(5),
@@ -904,7 +908,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         ),
                         colors = buttonColorAccount(),
                         onClick = {
-
+                            navigator.push(aboutScreen)
                         }) {
                         Row(horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,

@@ -1,15 +1,23 @@
 package viewModel
 
+import androidx.compose.runtime.mutableStateListOf
 import base.BaseViewModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
 import commonShare.loadFireBaseStorage
+import commonShare.loadTimestamp
+import const.ACCOUNT_TYPE_FREE
+import const.PAYMENT_TYPE_VIP
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+import model.CoinModel
 import model.ImagePickerModel
+import model.PaymentModel
 import model.UserModel
+import model.VipModel
+import utils.helper.FirebaseCoinHelper
 import utils.helper.FirebaseUserHelper
 
 /**
@@ -25,6 +33,12 @@ class UserInformationViewModel: BaseViewModel() {
 
     // Load firebase storage
     private val firebaseStore = loadFireBaseStorage()
+
+    // Firebase coin
+    private val firebaseCoinHelper = FirebaseCoinHelper()
+
+    // List item to buy vip
+    val listVipToBuy = mutableStateListOf<VipModel>()
 
     /**
      * Logout
@@ -102,6 +116,49 @@ class UserInformationViewModel: BaseViewModel() {
                 stopWorking()
             }
         )
+    }
 
+    /**
+     * Load list item to buy vip
+     */
+    fun loadListItemVip() {
+        workingWithApiHaveDialog(
+            service = {
+                firebaseCoinHelper.loadListVipFromFB().first()
+            },
+            doOnBeforeService = {},
+            doOnAfterService = {
+                listVipToBuy.clear()
+                listVipToBuy.addAll(it)
+            }
+        )
+    }
+
+    /**
+     * Buy Vip for user
+     *
+     * @param userModel
+     * @param vipModel
+     */
+    fun buyVipForUser(userModel: UserModel, vipModel: VipModel) {
+        workingWithApiHaveDialog(
+            service = {
+                val paymentModel = PaymentModel()
+                paymentModel.userId = userModel.id
+                paymentModel.itemId = vipModel.id
+                paymentModel.bonus = vipModel.bonus
+                paymentModel.typeOfItem = PAYMENT_TYPE_VIP
+                paymentModel.createAt = loadTimestamp().toLong()
+                paymentModel.expireAt = loadTimestamp().toLong() + ((vipModel.dayToExpire + vipModel.bonus) * 86400)
+                firebaseCoinHelper.writePaymentToFB(paymentModel)
+                userModel.coin -= vipModel.coinNeedToPay
+                firebaseUser.updateVipForUser(userModel)
+                firebaseUser.updateCoinForUser(userModel)
+            },
+            doOnBeforeService = {},
+            doOnAfterService = {
+                userModel.accountType = userModel.id
+            }
+        )
     }
 }

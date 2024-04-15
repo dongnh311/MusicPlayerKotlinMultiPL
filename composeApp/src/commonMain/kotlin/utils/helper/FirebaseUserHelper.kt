@@ -127,7 +127,7 @@ class FirebaseUserHelper {
      * @param userId : User Id
      */
     fun loadUserDetailInformation(userId: String) = callbackFlow {
-        if (userId.isEmpty()) {
+        if (userId.isNotEmpty()) {
             val document = firebaseStore.collection(FB_DATABASE_USER).document(userId).get()
             val userData = document.data<UserModel>()
             userData.id = userId
@@ -164,6 +164,24 @@ class FirebaseUserHelper {
     suspend fun updatePlatformAndToken(userModel: UserModel) {
         firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("fcmToken", userModel.fcmToken))
         firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("platform", userModel.platform))
+    }
+
+    /**
+     * Update Coin for user
+     *
+     * @param userModel
+     */
+    suspend fun updateCoinForUser(userModel: UserModel) {
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("coin", userModel.coin))
+    }
+
+    /**
+     * Update Vip for user
+     *
+     * @param userModel
+     */
+    suspend fun updateVipForUser(userModel: UserModel) {
+        firebaseStore.collection(FB_DATABASE_USER).document(userModel.id).update(Pair("accountType", userModel.accountType))
     }
 
     /**
