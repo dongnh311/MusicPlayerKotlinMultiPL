@@ -9,7 +9,6 @@ struct iOSApp: App {
     @UIApplicationDelegateAdaptor(IOsAppDelegate.self) var delegate
     
     init() {
-        FirebaseApp.configure()
         //IOsMusicPlayerSingleTon.shared
         IOsMusicPlayerSingleTon.shared.initObjectSendBack()
     }
