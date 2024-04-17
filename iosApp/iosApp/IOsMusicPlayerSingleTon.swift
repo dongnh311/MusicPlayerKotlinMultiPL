@@ -10,9 +10,6 @@ import Foundation
 import ComposeApp
 
 class IOsMusicPlayerSingleTon: MusicPlayerSingleTonIOs {
-    func loadTextForTest() -> String {
-        return "IOs Text"
-    }
     
     // Make singleton item share
     static let shared = IOsMusicPlayerSingleTon()
@@ -22,6 +19,10 @@ class IOsMusicPlayerSingleTon: MusicPlayerSingleTonIOs {
     
     // Save app deleagte
     var appDelegate: IOsAppDelegate? = nil
+    
+    // Login
+    var firebaseLoginIos: FirebaseGoogleControl = FirebaseGoogleControl()
+    
     
     init() {
         firebaseFCMHelper.loadFCMToken()
@@ -35,7 +36,13 @@ class IOsMusicPlayerSingleTon: MusicPlayerSingleTonIOs {
     }
 
     func initObjectSendBack() {
+        FirebaseLoginShare_iosKt.configFirebaseLoginIos(input: firebaseLoginIos)
         FirebaseLoginShare_iosKt.configSingletonForIos(musicPlayerSingleTonIOs: IOsMusicPlayerSingleTon.shared)
     }
-
+    
+    func loadTextForTest() -> String {
+        return "IOs Text"
+    }
+    
+    
 }

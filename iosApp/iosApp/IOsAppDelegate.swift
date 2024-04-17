@@ -12,19 +12,25 @@ import FirebaseCore
 import FirebaseMessaging
 import FirebaseFirestore
 import FirebaseAuth
+import GoogleSignIn
 
 class IOsAppDelegate: NSObject, UIApplicationDelegate {
-      func application(_ application: UIApplication,
-                       didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-          print("FirebaseApp.configure()")
-          FirebaseApp.configure() //important
-          
-        return true
-      }
-        
+    func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+      print("FirebaseApp.configure()")
+      FirebaseApp.configure() //important
+      
+    return true
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        print("FCM registration apnsToken: \(deviceToken)")
+    }
 
-      func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-            Messaging.messaging().apnsToken = deviceToken
-            print("FCM registration apnsToken: \(deviceToken)")
-      }
+    func application(_ app: UIApplication,
+                     open url: URL,
+                     options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+      return GIDSignIn.sharedInstance.handle(url)
+    }
 }

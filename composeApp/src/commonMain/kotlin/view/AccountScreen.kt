@@ -159,7 +159,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
     override var viewModel: AccountViewModel = AccountViewModel()
 
     // Load firebase login
-    private val firebaseAuth = loadFireBaseAuthControl()
+    private val firebaseAuth by lazy {  loadFireBaseAuthControl() }
 
     private val isShowButtonBack = mutableStateOf(false)
 
