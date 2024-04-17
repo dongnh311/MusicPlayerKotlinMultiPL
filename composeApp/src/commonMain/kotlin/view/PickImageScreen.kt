@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import base.BaseScreen
+import co.touchlab.kermit.Logger
 import com.seiko.imageloader.model.ImageRequest
 import com.seiko.imageloader.rememberImagePainter
 import commonShare.toOkioPath
@@ -134,6 +135,7 @@ class PickImageScreen(private val listImage : MutableList<ImagePickerModel>) : B
 
                     val painter = if (itemImage.mediaPath.isNotEmpty()) {
                         val path = itemImage.mediaPath.toOkioPath()
+                        Logger.e("Path Okio : $path")
                         val imageRequest = ImageRequest { data(path) }
                         rememberImagePainter(imageRequest)
                     } else {

@@ -53,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import base.BaseScreen
+import cafe.adriel.voyager.core.model.screenModelScope
 import childView.TabAccountScreen.options
 import co.touchlab.kermit.Logger
 import com.seiko.imageloader.rememberImagePainter
@@ -64,6 +65,8 @@ import const.DATE_LOCAL_FORMAT_TYPE_COMMON_5
 import const.LIMIT_MUSIC_ON_PLAY_LIST
 import const.LIMIT_PLAY_LIST
 import const.PERMISSION_GRAND
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import model.ImagePickerModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
@@ -638,8 +641,10 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
         permissionControl.callBackResultPermission = object : CallBackResultPermission {
             override fun onResultPermission(result: Int) {
                 if (result == PERMISSION_GRAND) {
-                    val listImages = permissionControl.loadAllImageMedia()
-                    Logger.e("Load image on device : ${listImages.size}")
+                    viewModel.coroutineScope.launch {
+                        val listImages = permissionControl.loadAllImageMedia().first()
+                        Logger.e("Load image on device : ${listImages.size}")
+                    }
                 } else {
                     Logger.e("Fail to request permission")
                     isShowDialogFailPermission.value = true
@@ -648,19 +653,21 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
         }
 
         if (permissionControl.checkPermissionStorage()) {
-            val listImages = permissionControl.loadAllImageMedia()
-            Logger.e("Load image on device : ${listImages.size}")
-            val pickImageScreen = PickImageScreen(listImages)
-            navigator.push(pickImageScreen)
-            pickImageScreen.onSelectedImageAvatar = object : PickImageScreen.OnSelectedImageAvatar {
-                override fun onSelectedImage(imagePickerModel: ImagePickerModel) {
-                    Logger.e("Callback item image selected : ${imagePickerModel.mediaPath}")
-                    try {
-                        val item = viewModel.listPlayList[selectedIndex.value]
-                        item.thumbnail = imagePickerModel.mediaPath
-                        viewModel.uploadImageFileToThumb(item)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+            viewModel.screenModelScope.launch {
+                val listImages = permissionControl.loadAllImageMedia().first()
+                Logger.e("Load image on device : ${listImages.size}")
+                val pickImageScreen = PickImageScreen(listImages)
+                navigator.push(pickImageScreen)
+                pickImageScreen.onSelectedImageAvatar = object : PickImageScreen.OnSelectedImageAvatar {
+                    override fun onSelectedImage(imagePickerModel: ImagePickerModel) {
+                        Logger.e("Callback item image selected : ${imagePickerModel.mediaPath}")
+                        try {
+                            val item = viewModel.listPlayList[selectedIndex.value]
+                            item.thumbnail = imagePickerModel.mediaPath
+                            viewModel.uploadImageFileToThumb(item)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }

@@ -66,11 +66,8 @@ class FirebaseGoogleControl: IOsFireBaseAuth {
                     let userModelSendBack = UserModel()
                     userModelSendBack.id = user?.uid ?? ""
                     userModelSendBack.userName = user?.displayName ?? ""
-                    if #available(iOS 16.0, *) {
-                        userModelSendBack.profileImage = user?.photoURL?.path() ?? ""
-                    } else {
-                        userModelSendBack.profileImage = user?.photoURL?.absoluteString ?? ""
-                    }
+                    userModelSendBack.profileImage = user?.photoURL?.absoluteString ?? ""
+                    print("onLoginGoogleCallBack user profileImage: \(String(describing: userModelSendBack.profileImage))")
                     
                     userModelSendBack.loginType = UserConstKt.LOGIN_BY_GOOGLE
                     userModelSendBack.platform = UserConstKt.PLATFORM_ANDROID

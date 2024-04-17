@@ -1,5 +1,6 @@
 package commonShare
 
+import kotlinx.coroutines.flow.Flow
 import model.ImagePickerModel
 
 /**
@@ -16,7 +17,7 @@ interface PermissionControl {
 
     fun requestPermissionStorage()
 
-    fun loadAllImageMedia() : MutableList<ImagePickerModel>
+    fun loadAllImageMedia() : Flow<MutableList<ImagePickerModel>>
 }
 
 interface CallBackResultPermission {
