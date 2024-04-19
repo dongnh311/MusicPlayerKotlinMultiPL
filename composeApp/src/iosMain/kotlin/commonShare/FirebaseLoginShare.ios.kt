@@ -1,6 +1,8 @@
 package commonShare
 
 import co.touchlab.kermit.Logger
+import platform.AVFAudio.AVMusicTimeStamp
+import platform.Foundation.NSDate
 import platform.UserNotifications.UNAuthorizationOptions
 import singleton.MusicPlayerSingleton
 
@@ -64,5 +66,9 @@ fun configFirebaseLoginIos(input: IOsFireBaseAuth) {
  */
 interface MusicPlayerSingleTonIOs {
     fun loadTextForTest(): String
+
+    fun loadTimestampOfIOs() : Number
+
+    fun loadNSDateFormIOs(timeStamp: Number) : NSDate
 }
 

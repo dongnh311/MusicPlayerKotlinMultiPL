@@ -17,6 +17,8 @@ import FirebaseCore
  */
 class FirebaseGoogleControl: IOsFireBaseAuth {
     
+    let timeInterval = Int64(Date().timeIntervalSince1970 * 1000)
+    
     // Login with google
     override func logInWithGoogle() {
         var clientID = FirebaseApp.app()?.options.clientID

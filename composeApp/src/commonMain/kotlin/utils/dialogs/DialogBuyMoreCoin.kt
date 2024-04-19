@@ -43,6 +43,7 @@ import model.CoinModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_buy_coin
+import musicplayerkotlinmultipl.composeapp.generated.resources.dialog_buy_coin
 import musicplayerkotlinmultipl.composeapp.generated.resources.dialog_buy_coin_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.dialog_buy_discount
 import musicplayerkotlinmultipl.composeapp.generated.resources.dialog_buy_expire
@@ -146,7 +147,7 @@ fun DialogBuyMoreCoin(
                                                 modifier = Modifier.paddingStart16()
                                             ) {
                                                 Text(
-                                                    text = stringResource(Res.string.dialog_buy_money) + " ${formatNumberToMoney(itemCoin.coin)}",
+                                                    text = stringResource(Res.string.dialog_buy_coin) + " ${formatNumberToMoney(itemCoin.coin)}",
                                                     style = textContentPrimary(),
                                                     modifier = Modifier.padding(top = 8.dp)
                                                 )

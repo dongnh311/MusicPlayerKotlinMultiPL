@@ -10,6 +10,7 @@ import Foundation
 import ComposeApp
 
 class IOsMusicPlayerSingleTon: MusicPlayerSingleTonIOs {
+
     
     // Make singleton item share
     static let shared = IOsMusicPlayerSingleTon()
@@ -44,5 +45,17 @@ class IOsMusicPlayerSingleTon: MusicPlayerSingleTonIOs {
         return "IOs Text"
     }
     
+    /**
+     * Load timestamp
+     */
+    func loadTimestampOfIOs() -> Any {
+        return Int64(Date().timeIntervalSince1970 * 1000)
+    }
     
+    /**
+     * Load NS date form ios to kotlin
+     */
+    func loadNSDateFormIOs(timeStamp: Any) -> Date {
+        return Date(timeIntervalSince1970: timeStamp as! TimeInterval)
+    }
 }
