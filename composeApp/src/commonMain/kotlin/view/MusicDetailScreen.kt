@@ -47,7 +47,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import base.BaseScreen
 import childView.EmptyDataView
+import co.touchlab.kermit.Logger
 import com.seiko.imageloader.rememberImagePainter
+import commonShare.OnMusicPlayCallBack
 import model.MusicModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
@@ -68,6 +70,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.topic_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import singleton.MusicPlayerSingleton.musicPlayerManager
 import styles.buttonSize32dp
 import styles.colorAccountCard
 import styles.colorAccountLight
@@ -105,13 +108,16 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
     // To open dialog add
     private val isOpenDialogAddToPlaylist = mutableStateOf(false)
 
+    private val progressPlayed = mutableStateOf(0.00f)
+    private val statePlayMusic = mutableStateOf(false)
+
     @OptIn(ExperimentalResourceApi::class, ExperimentalLayoutApi::class)
     @Composable
     override fun makeContentForView() {
         val topicDetailScreen by lazy { TopicDetailScreen() }
 
-        val isPlay = remember { mutableStateOf(false) }
-        val progress by remember {  mutableStateOf(0.01f) }
+        val isPlay = remember { statePlayMusic }
+        val progress = remember {  progressPlayed }
 
         val title = musicModel.value.name.ifEmpty { stringResource(Res.string.music_detail_title) }
 
@@ -208,7 +214,7 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                  }
 
                                  LinearProgressIndicator(
-                                     progress = { progress },
+                                     progress = { progress.value },
                                      modifier = Modifier.height(12.dp).fillMaxWidth().clip(RoundedCornerShape(0.dp)).paddingTop8(),
                                      color = Color.White,
                                      trackColor = Color.Black,
@@ -239,7 +245,8 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                          // Pause
                                          IconButton(
                                              onClick = {
-
+                                                 musicPlayerManager.pause()
+                                                 isPlay.value = false
                                              },
                                              modifier = Modifier.size(45.dp),
                                              content = {
@@ -257,6 +264,10 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                          IconButton(
                                              onClick = {
                                                  startPlayMusic()
+                                                 musicPlayerManager.initPlayer()
+                                                 musicPlayerManager.addMusicToPlay(arrayListOf(musicModel.value))
+                                                 musicPlayerManager.play(null)
+                                                 isPlay.value = true
                                              },
                                              modifier = Modifier.size(45.dp),
                                              content = {
@@ -443,6 +454,33 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
      */
     private fun startPlayMusic() {
         viewModel.writePlayMusicToHistory()
+        musicPlayerManager.onMusicPlayCallBack = object : OnMusicPlayCallBack {
+            override fun onPlayingItem(
+                durationPlaying: Long,
+                totalDuration: Long,
+                musicId: String
+            ) {
+                if (musicModel.value.id == musicId) {
+                    val durationPercent =  (durationPlaying.toFloat()/totalDuration.toFloat())
+                    Logger.e("Duration played: $durationPlaying/$totalDuration, percent: $durationPercent")
+                    statePlayMusic.value = true
+                    progressPlayed.value = durationPercent
+                }
+            }
+
+            override fun onPlayDone(musicId: String) {
+                if (musicId == musicModel.value.id) {
+                    statePlayMusic.value = false
+                    progressPlayed.value = 0.00f
+                }
+            }
+
+            override fun onMoveNextItem(musicModel: MusicModel) {
+            }
+
+            override fun onMovePrevious(musicModel: MusicModel) {
+            }
+        }
     }
 
     /**

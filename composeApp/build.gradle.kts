@@ -61,6 +61,10 @@ kotlin {
 
             // Log helper
             implementation(libs.timber)
+
+            // Exo
+            implementation(libs.androidx.media3.exoplayer)
+            implementation(libs.androidx.media3.exoplayer.dash)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -144,6 +148,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     signingConfigs {
         getByName("debug") {

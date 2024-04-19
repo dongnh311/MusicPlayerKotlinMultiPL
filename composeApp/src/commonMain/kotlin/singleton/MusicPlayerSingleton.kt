@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import commonShare.loadMusicPlayerControl
 import kotlinx.coroutines.flow.MutableStateFlow
 import utils.exts.dpToPx
 import utils.exts.pxToDp
@@ -20,6 +21,9 @@ object MusicPlayerSingleton {
 
     // Save screen size
     val screenSize = mutableStateOf(Pair(-1, -1))
+
+    // Music player
+    val musicPlayerManager by lazy { loadMusicPlayerControl() }
 
     /**
      * Load max width for dialog
