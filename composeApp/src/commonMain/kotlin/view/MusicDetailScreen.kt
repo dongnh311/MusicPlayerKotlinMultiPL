@@ -18,11 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -32,10 +28,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,20 +60,15 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.music_detail_lyri
 import musicplayerkotlinmultipl.composeapp.generated.resources.music_detail_same_singer
 import musicplayerkotlinmultipl.composeapp.generated.resources.music_detail_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.music_detail_topic
-import musicplayerkotlinmultipl.composeapp.generated.resources.topic_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import singleton.MusicPlayerSingleton.musicPlayerManager
 import styles.buttonSize32dp
 import styles.colorAccountCard
-import styles.colorAccountLight
-import styles.colorBlack
+import styles.colorDisable
 import styles.colorPrimaryApp
 import styles.colorPrimaryBackground
-import styles.colorWhite
-import styles.paddingStartEnd16
-import styles.paddingTop16
 import styles.paddingTop16StartEnd16
 import styles.paddingTop8
 import styles.paddingTop8StartEnd16
@@ -90,6 +79,7 @@ import styles.textSingerWhite
 import styles.textTittleContent
 import styles.textTittleHome
 import utils.dialogs.DialogAddToPlaylist
+import utils.exts.makeDurationToViewString
 import utils.exts.toStringRemoveNull
 import viewModel.MusicDetailViewModel
 
@@ -111,6 +101,12 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
     private val progressPlayed = mutableStateOf(0.00f)
     private val statePlayMusic = mutableStateOf(false)
 
+    private val isHavePreview = mutableStateOf(false)
+    private val isHaveNext = mutableStateOf(false)
+
+    private val durationOfMusic = mutableStateOf(0L)
+    private val durationPlayed = mutableStateOf(0L)
+
     @OptIn(ExperimentalResourceApi::class, ExperimentalLayoutApi::class)
     @Composable
     override fun makeContentForView() {
@@ -121,6 +117,16 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
 
         val title = musicModel.value.name.ifEmpty { stringResource(Res.string.music_detail_title) }
 
+        durationOfMusic.value = musicModel.value.duration.toLong() * 1000
+
+        // find item player
+        musicPlayerManager.currentItemPlayer()?.let {music ->
+            if (music.id == musicModel.value.id) {
+                statePlayMusic.value = true
+                initHandelMusicCallBack()
+            }
+        }
+
         Scaffold(modifier = Modifier.background(Color.Red).fillMaxSize(), backgroundColor = colorPrimaryBackground,
             topBar = {
                 Row(horizontalArrangement = Arrangement.Start,
@@ -129,8 +135,7 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }
@@ -222,13 +227,14 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                  )
 
                                  // Button play
-                                 Row(modifier = Modifier.fillMaxWidth().paddingTop8()) {
+                                 Row(modifier = Modifier.fillMaxWidth().paddingTop8(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
+                                     val colorDisablePrevious = if (isHavePreview.value) Color.Unspecified else colorDisable
                                      // Previous
                                     IconButton(
                                         onClick = {
 
                                         },
-                                        enabled = false,
+                                        enabled = isHavePreview.value,
                                         modifier = Modifier.size(45.dp),
                                         content = {
                                             // Specify the icon using the icon parameter
@@ -236,7 +242,7 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                                 painter = painterResource(Res.drawable.btn_previous),
                                                 contentDescription = null,
                                                 modifier = Modifier.size(35.dp),
-                                                tint = Color.Unspecified,
+                                                tint = colorDisablePrevious,
                                             )
                                         }
                                     )
@@ -265,8 +271,10 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                              onClick = {
                                                  startPlayMusic()
                                                  musicPlayerManager.initPlayer()
-                                                 musicPlayerManager.addMusicToPlay(arrayListOf(musicModel.value))
-                                                 musicPlayerManager.play(null)
+                                                 musicPlayerManager.addOnlyOneMusicToPlay(musicModel.value)
+                                                 if (durationPlayed.value != 0L) musicPlayerManager.play(durationPlayed.value)
+                                                 else musicPlayerManager.play(null)
+
                                                  isPlay.value = true
                                              },
                                              modifier = Modifier.size(45.dp),
@@ -283,6 +291,7 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                      }
 
                                      // Next
+                                     val colorDisableNext = if (isHaveNext.value) Color.Unspecified else colorDisable
                                      IconButton(
                                          onClick = {
 
@@ -294,10 +303,18 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                                                  painter = painterResource(Res.drawable.btn_next),
                                                  contentDescription = null,
                                                  modifier = Modifier.size(35.dp),
-                                                 tint = Color.Unspecified,
+                                                 tint = colorDisableNext,
                                              )
                                          }
                                      )
+
+                                     //Space
+                                     Spacer(modifier = Modifier.weight(1f))
+                                     Row {
+                                         Text(text = makeDurationToViewString(durationPlayed.value), style = textSingerWhite())
+                                         Text(text = "/", style = textSingerWhite())
+                                         Text(text = makeDurationToViewString(durationOfMusic.value), style = textSingerWhite())
+                                     }
                                  }
                              }
                          }
@@ -454,6 +471,13 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
      */
     private fun startPlayMusic() {
         viewModel.writePlayMusicToHistory()
+        initHandelMusicCallBack()
+    }
+
+    /**
+     * Handle callback if need
+     */
+    private fun initHandelMusicCallBack() {
         musicPlayerManager.onMusicPlayCallBack = object : OnMusicPlayCallBack {
             override fun onPlayingItem(
                 durationPlaying: Long,
@@ -465,6 +489,8 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                     Logger.e("Duration played: $durationPlaying/$totalDuration, percent: $durationPercent")
                     statePlayMusic.value = true
                     progressPlayed.value = durationPercent
+                    if (durationOfMusic.value == 0L) { durationOfMusic.value = totalDuration }
+                    durationPlayed.value = durationPlaying
                 }
             }
 
@@ -472,6 +498,7 @@ class MusicDetailScreen: BaseScreen<MusicDetailViewModel>() {
                 if (musicId == musicModel.value.id) {
                     statePlayMusic.value = false
                     progressPlayed.value = 0.00f
+                    durationPlayed.value = 0L
                 }
             }
 

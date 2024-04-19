@@ -28,7 +28,21 @@ interface MusicPlayerManager {
      *
      * @param inputList
      */
-    fun addMusicToPlay(inputList : MutableList<MusicModel>)
+    fun addMusicsToPlay(inputList : MutableList<MusicModel>)
+
+    /**
+     * Add only one music to play
+     *
+     * @param musicModel
+     */
+    fun addOnlyOneMusicToPlay(musicModel: MusicModel)
+
+    /**
+     * Add only music, not allow duplicate
+     *
+     * @param musicModel
+     */
+    fun addMusicWithoutDuplicate(musicModel: MusicModel)
 
     /**
      * Play music

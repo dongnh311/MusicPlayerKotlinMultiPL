@@ -49,8 +49,7 @@ class SearchSingerScreen: BaseScreen<SearchSingerViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }

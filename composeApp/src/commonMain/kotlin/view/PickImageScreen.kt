@@ -11,23 +11,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,7 +32,6 @@ import co.touchlab.kermit.Logger
 import com.seiko.imageloader.model.ImageRequest
 import com.seiko.imageloader.rememberImagePainter
 import commonShare.toOkioPath
-import io.ktor.client.request.forms.formData
 import model.ImagePickerModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
@@ -48,17 +40,10 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.btn_checked
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import singleton.MusicPlayerSingleton.screenSize
-import singleton.ViewManager
-import styles.backgroundColor
 import styles.buttonSize32dp
-import styles.colorPrimaryBackground
-import styles.iconSize24dp
-import styles.iconSize28dp
-import styles.iconSize30dp
 import styles.iconSize32dp
 import utils.exts.pxToDp
 import viewModel.PickImageViewModel
-import kotlin.math.roundToInt
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -91,8 +76,7 @@ class PickImageScreen(private val listImage : MutableList<ImagePickerModel>) : B
                 Icon(
                     painter = painterResource(Res.drawable.btn_back),
                     contentDescription = "Back",
-                    modifier = Modifier
-                        .buttonSize32dp()
+                    modifier = buttonSize32dp()
                         .clickable {
                             navigator.pop()
                         }.align(Alignment.CenterStart)

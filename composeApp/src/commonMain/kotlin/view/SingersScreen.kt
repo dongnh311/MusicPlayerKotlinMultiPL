@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,7 +35,6 @@ import const.GENDER_MALE
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
-import musicplayerkotlinmultipl.composeapp.generated.resources.events_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_empty
 import musicplayerkotlinmultipl.composeapp.generated.resources.singers_gender
 import musicplayerkotlinmultipl.composeapp.generated.resources.singers_gender_female
@@ -78,8 +75,7 @@ class SingersScreen : BaseScreen<SingersViewModel> () {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }

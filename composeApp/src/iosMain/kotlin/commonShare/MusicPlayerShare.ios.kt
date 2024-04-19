@@ -13,7 +13,13 @@ class IOsMusicPlayer : MusicPlayerManager {
     override fun initPlayer() {
     }
 
-    override fun addMusicToPlay(inputList : MutableList<MusicModel>) {
+    override fun addMusicsToPlay(inputList : MutableList<MusicModel>) {
+    }
+
+    override fun addOnlyOneMusicToPlay(musicModel: MusicModel) {
+    }
+
+    override fun addMusicWithoutDuplicate(musicModel: MusicModel) {
     }
 
     override fun play(duration: Long?) {

@@ -165,8 +165,7 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
                 Icon(
                     painter = painterResource(Res.drawable.btn_back),
                     contentDescription = "Back",
-                    modifier = Modifier
-                        .buttonSize32dp()
+                    modifier = buttonSize32dp()
                         .clickable {
                             navigator.pop()
                         }.align(Alignment.CenterStart)

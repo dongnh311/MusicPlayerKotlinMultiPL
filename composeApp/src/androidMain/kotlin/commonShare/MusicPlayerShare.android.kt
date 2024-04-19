@@ -65,7 +65,7 @@ class AndroidMusicPlayer : MusicPlayerManager {
         }
 
         override fun onEvents(player: Player, events: Player.Events) {
-            Timber.e("onEvents")
+            Timber.e("onEvents : $events")
             if (events.contains(Player.EVENT_PLAYBACK_STATE_CHANGED) ||
                 events.contains(Player.EVENT_PLAY_WHEN_READY_CHANGED)) {
                 // TODO : callback
@@ -93,13 +93,18 @@ class AndroidMusicPlayer : MusicPlayerManager {
 
         override fun onPlaybackStateChanged(playbackState: Int) {
             super.onPlaybackStateChanged(playbackState)
-            Timber.e("onPlaybackStateChanged")
+            Timber.e("onPlaybackStateChanged state : $playbackState")
             if (playbackState == ExoPlayer.STATE_READY) {
-                Timber.e("onPlayerStateChanged STATE_READY : ${exoPlayer.currentPosition}")
+                Timber.e("onPlaybackStateChanged total duration of music: ${exoPlayer.currentPosition}")
                 currentItemPlayer()?.let {music ->
                     onMusicPlayCallBack?.onPlayingItem(exoPlayer.currentPosition / 1000, exoPlayer.duration, music.id)
                 }
                 looper.postDelayed(runnable, 1000)
+            } else if (playbackState == Player.STATE_ENDED) {
+                currentItemPlayer()?.let {music ->
+                    onMusicPlayCallBack?.onPlayingItem(exoPlayer.duration, exoPlayer.duration, music.id)
+                    onMusicPlayCallBack?.onPlayDone(music.id)
+                }
             }
         }
     }
@@ -138,17 +143,48 @@ class AndroidMusicPlayer : MusicPlayerManager {
         }
     }
 
-    override fun addMusicToPlay(inputList: MutableList<MusicModel>) {
+    override fun addMusicsToPlay(inputList: MutableList<MusicModel>) {
         inputList.forEach { musicModel ->
             // Build the media item.
             val mediaItem = MediaItem.fromUri(musicModel.url)
 
             // Set the media item to be played.
-            exoPlayer.setMediaItem(mediaItem)
+            exoPlayer.addMediaItem(mediaItem)
         }
         listItemPlayer.addAll(inputList)
         // Prepare
         exoPlayer.prepare()
+        exoPlayer.seekTo(0, 0L)
+    }
+
+    override fun addOnlyOneMusicToPlay(musicModel: MusicModel) {
+        listItemPlayer.clear()
+        listItemPlayer.add(musicModel)
+        val mediaItem = MediaItem.fromUri(musicModel.url)
+
+        // Set the media item to be played.
+        exoPlayer.setMediaItem(mediaItem)
+        // Prepare
+        exoPlayer.prepare()
+    }
+
+    override fun addMusicWithoutDuplicate(musicModel: MusicModel) {
+        var find = false
+        listItemPlayer.forEachIndexed { index, music ->
+            if (music.id == musicModel.id) {
+                find = true
+                exoPlayer.seekTo(index, 0L)
+            }
+        }
+        if (!find) {
+            listItemPlayer.add(musicModel)
+            val mediaItem = MediaItem.fromUri(musicModel.url)
+
+            // Set the media item to be played.
+            exoPlayer.setMediaItem(mediaItem)
+            // Prepare
+            exoPlayer.prepare()
+        }
     }
 
     override fun play(duration: Long?) {
@@ -218,11 +254,7 @@ class AndroidMusicPlayer : MusicPlayerManager {
         }
 
         return try {
-            if (exoPlayer.isPlaying) {
-                listItemPlayer[exoPlayer.currentMediaItemIndex]
-            } else {
-                null
-            }
+            listItemPlayer[exoPlayer.currentMediaItemIndex]
         } catch (e:Exception) {
             Timber.e(e)
             null

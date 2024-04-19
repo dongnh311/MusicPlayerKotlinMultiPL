@@ -34,7 +34,6 @@ import com.seiko.imageloader.rememberImagePainter
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
-import musicplayerkotlinmultipl.composeapp.generated.resources.events_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_empty
 import musicplayerkotlinmultipl.composeapp.generated.resources.topic_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -71,8 +70,7 @@ class TopicsScreen: BaseScreen<TopicsViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }
