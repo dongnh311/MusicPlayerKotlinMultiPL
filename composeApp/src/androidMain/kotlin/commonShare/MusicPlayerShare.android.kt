@@ -2,7 +2,6 @@ package commonShare
 
 import android.os.Handler
 import android.os.Looper
-import android.view.Gravity
 import androidx.annotation.OptIn
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
@@ -14,7 +13,6 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.dongnh.musicplayer.AndroidMusicPlayerSingleton
 import model.MusicModel
 import timber.log.Timber
-import java.util.Timer
 
 actual fun loadMusicPlayerControl(): MusicPlayerManager {
     return AndroidMusicPlayer()
