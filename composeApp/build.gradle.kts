@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -14,6 +15,13 @@ val ktorVersion = "2.3.6"
 val ktorfitVersion = "1.12.0"
 
 kotlin {
+    targets.all {
+        compilations.all {
+            compilerOptions.configure {
+                allWarningsAsErrors.set(true)
+            }
+        }
+    }
 
     androidTarget {
         compilations.all {
@@ -22,7 +30,11 @@ kotlin {
             }
         }
     }
-    
+
+    val xcf = XCFramework()
+    val commonBridgePath = "src/nativeInterop/cinterop/"
+    val commonSourcePath = "src/nativeInterop/includes/"
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -31,6 +43,25 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            xcf.add(this)
+        }
+
+        iosTarget.compilations.getByName("main") {
+            val myInterop by cinterops.creating {
+                // Def-file describing the native API.
+                // The default path is includes/nativeInterop/cinterop/<interop-name>.def
+                defFile(project.file("$commonBridgePath/MusicObserver.def"))
+                //defFile(project.file("MusicObserver.def"))
+
+                // Package to place the Kotlin API generated.
+                packageName("Bridge")
+
+                // Options to be passed to compiler by cinterop tool.
+                compilerOpts("-I$commonSourcePath")
+
+                // A shortcut for includeDirs.allHeaders.
+                includeDirs(commonSourcePath)
+            }
         }
     }
 

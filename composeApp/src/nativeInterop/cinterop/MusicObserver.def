@@ -1,0 +1,4 @@
+language = Objective-C
+package = Bridge
+headers = Foundation/Foundation.h MusicObserver.h
+compilerOpts = -Isrc/nativeInterop/includes

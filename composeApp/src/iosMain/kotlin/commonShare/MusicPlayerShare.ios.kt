@@ -5,15 +5,13 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import model.MusicModel
 import platform.AVFoundation.AVPlayerItem
+import platform.AVFoundation.AVPlayerItemDidPlayToEndTimeNotification
 import platform.AVFoundation.AVQueuePlayer
 import platform.AVFoundation.asset
 import platform.AVFoundation.currentItem
@@ -24,7 +22,17 @@ import platform.AVFoundation.replaceCurrentItemWithPlayerItem
 import platform.AVFoundation.seekToTime
 import platform.CoreMedia.CMTimeGetSeconds
 import platform.CoreMedia.CMTimeMake
+import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSURL
+import platform.Foundation.addObserver
+import platform.Foundation.removeObserver
+import platform.darwin.NSObject
+
+import Bridge.*
+import kotlinx.cinterop.COpaquePointer
+import kotlinx.cinterop.ObjCClass
+import objcnames.classes.Protocol
+import platform.darwin.NSUInteger
 
 actual fun loadMusicPlayerControl(): MusicPlayerManager {
     return IOsMusicPlayer()
@@ -40,10 +48,18 @@ class IOsMusicPlayer : MusicPlayerManager {
 
     // Player
     private var avplayer : AVQueuePlayer? = null
-    private var playerItem: AVPlayerItem? = null
 
     // Save is play
     private var isPlaying = false
+
+    // Handle observer current item change
+    private val observerCurrentItem = Observer()
+
+    // Handle observer status of player
+    private val observerStatus = Observer()
+
+    // Save repeat
+    private var isRepeatAllMusic = false
 
     override fun initPlayer() {
         avplayer = AVQueuePlayer()
@@ -52,33 +68,61 @@ class IOsMusicPlayer : MusicPlayerManager {
     private var durationPlayed = 0L
 
     private val jobRunningPlay = CoroutineScope(Dispatchers.IO).launch {
-        Logger.e("jobRunningPlay : runnable running")
-        runnable.run()
-        delay(1000)
+        flowRunningHandel.cancellable().collect {}
     }
 
-    // Runnable to handle duration
     @OptIn(ExperimentalForeignApi::class)
-    val runnable: Runnable =  object : Runnable {
-        override fun run() {
-            Logger.e("isPlaying : $isPlaying")
+    private val flowRunningHandel = flow {
+        while (true) {
             if (isPlaying) {
-                avplayer?.let {
+                try {
+                    avplayer?.let {
+                        durationPlayed = (CMTimeGetSeconds(it.currentTime()) * 1000).toLong()
+                        if (it.currentItem != null) {
+                            val durationMusic = (CMTimeGetSeconds(it.currentItem!!.asset.duration)).toLong() * 1000L
 
-                    durationPlayed = (CMTimeGetSeconds(it.currentTime()) * 1000).toLong()
-                    val durationMusic = (CMTimeGetSeconds(it.currentItem!!.asset.duration)).toLong()
-                    Logger.e("durationPlay : $durationPlayed, durationMusic: $durationMusic")
+                            Logger.e("durationPlay : $durationPlayed, durationMusic: $durationMusic")
 
-                    currentItemPlayer()?.let {music ->
-                        onMusicPlayCallBack?.onPlayingItem(durationPlayed, durationMusic, music.id)
+                            if (durationPlayed < durationMusic) {
+                                currentItemPlayer()?.let {music ->
+                                    onMusicPlayCallBack?.onPlayingItem(durationPlayed, durationMusic, music.id)
+                                    emit(music)
+                                }
+                            } else {
+                                currentItemPlayer()?.let {music ->
+                                    onMusicPlayCallBack?.onPlayDone(music.id)
+                                }
+                            }
+                        } else {
+                            // Play end all
+                            Logger.e("Play end all music on playlist")
+                            if (isRepeatAllMusic) {
+                                Logger.e("Repeat")
+                                avplayer?.removeAllItems()
+                                listAvPlayerItem.clear()
+                                listItemPlayer.forEach {music ->
+                                    val playerItem = AVPlayerItem(NSURL(string = music.url))
+                                    listAvPlayerItem.add(playerItem)
+                                    val lastItem = avplayer?.items()?.last()
+                                    avplayer?.insertItem(playerItem, lastItem as AVPlayerItem?)
+                                }
+                                avplayer?.play()
+                            } else {
+                                onMusicPlayCallBack?.onPlayDone(listItemPlayer.last().id)
+                                isPlaying = false
+                            }
+                        }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             } else {
-                Logger.e("cancel job")
-                jobRunningPlay.cancel()
+                Logger.e("Nothing to send, music is not play")
             }
+            delay(1000L)
         }
     }
+
 
     @OptIn(ExperimentalForeignApi::class)
     override fun addMusicsToPlay(inputList : MutableList<MusicModel>) {
@@ -89,6 +133,7 @@ class IOsMusicPlayer : MusicPlayerManager {
             listAvPlayerItem.add(playerItem)
         }
         listItemPlayer.addAll(inputList)
+        Logger.e("Size of music addOnlyOneMusicToPlay: ${listItemPlayer.size} ")
         // Prepare
         val seekTime  = CMTimeMake(0, 1)
         avplayer?.seekToTime(seekTime)
@@ -97,15 +142,18 @@ class IOsMusicPlayer : MusicPlayerManager {
     override fun addOnlyOneMusicToPlay(musicModel: MusicModel) {
         listItemPlayer.clear()
         listItemPlayer.add(musicModel)
+        listAvPlayerItem.clear()
+        Logger.e("Size of music addOnlyOneMusicToPlay: ${listItemPlayer.size} ")
         avplayer?.removeAllItems()
-        playerItem = AVPlayerItem(NSURL(string = musicModel.url))
+        val playerItem = AVPlayerItem(NSURL(string = musicModel.url))
+        listAvPlayerItem.add(playerItem)
         avplayer?.replaceCurrentItemWithPlayerItem(playerItem)
     }
 
     @OptIn(ExperimentalForeignApi::class)
     override fun addMusicWithoutDuplicate(musicModel: MusicModel) {
         var find = false
-        listItemPlayer.forEachIndexed { index, music ->
+        listItemPlayer.forEachIndexed { _, music ->
             if (music.id == musicModel.id) {
                 find = true
                 val seekTime  = CMTimeMake(0, 1)
@@ -129,31 +177,49 @@ class IOsMusicPlayer : MusicPlayerManager {
     override fun play(duration: Long?) {
         Logger.e("play : $duration")
         duration?.let {
-            val seekTime  = CMTimeMake(it, 1)
+            val seekTime  = CMTimeMake(it / 1000, 1)
             avplayer?.seekToTime(seekTime)
         }
         avplayer?.play()
         isPlaying = true
-        runBlocking {
-            jobRunningPlay.join()
+        jobRunningPlay.start()
+
+        NSNotificationCenter.defaultCenter.addObserverForName(
+            name = AVPlayerItemDidPlayToEndTimeNotification,
+            `object` = avplayer?.currentItem,
+            queue = null,
+        ) {
+            Logger.e("Track completed")
         }
+
+        avplayer?.addObserver(
+            observerCurrentItem, forKeyPath = "currentItem", options = 1u, context = null)
+
+        avplayer?.addObserver(
+            observerStatus, forKeyPath = "status", options = 1u, context = null)
     }
 
     override fun pause() {
         avplayer?.pause()
         isPlaying = false
-        jobRunningPlay.cancel()
+        avplayer?.removeObserver(observerCurrentItem, forKeyPath = "currentItem")
+        avplayer?.removeObserver(observerStatus, forKeyPath = "status")
     }
 
     override fun release() {
         avplayer = null
         isPlaying = false
+        jobRunningPlay.cancel()
+        avplayer?.removeObserver(observerCurrentItem, forKeyPath = "currentItem")
+        avplayer?.removeObserver(observerStatus, forKeyPath = "status")
     }
 
     override fun destroy() {
     }
 
     override fun clearListPlay() {
+        avplayer?.removeObserver(observerCurrentItem, forKeyPath = "currentItem")
+        avplayer?.removeObserver(observerStatus, forKeyPath = "status")
         listItemPlayer.clear()
         avplayer?.removeAllItems()
         listAvPlayerItem.clear()
@@ -177,14 +243,15 @@ class IOsMusicPlayer : MusicPlayerManager {
     override fun playPrevious() {
         listAvPlayerItem.forEachIndexed { index, avPlayerItem ->
             val track = avplayer?.currentItem
-            if (avPlayerItem == track) {
-                val itemInsert = listAvPlayerItem[index]
+            if (avPlayerItem == track && index > 0) {
+                val itemInsert = listAvPlayerItem[index - 1]
                 avplayer?.replaceCurrentItemWithPlayerItem(itemInsert)
             }
         }
     }
 
     override fun repeatMusic(isRepeat: Boolean) {
+        isRepeatAllMusic = isRepeat
     }
 
     override fun shuffleALlMedia(isShuffle: Boolean) {
@@ -192,7 +259,11 @@ class IOsMusicPlayer : MusicPlayerManager {
 
     override fun currentItemPlayer(): MusicModel? {
         return try {
-            listItemPlayer[loadCurrentIndexPlayer()]
+            if (listItemPlayer.size > 0) {
+                listItemPlayer[loadCurrentIndexPlayer()]
+            } else {
+                return null
+            }
         } catch (e:Exception) {
             Logger.e("currentItemPlayer : error : $e")
             null
@@ -210,9 +281,26 @@ class IOsMusicPlayer : MusicPlayerManager {
             val track = avplayer?.currentItem
             if (avPlayerItem == track) {
                 indexReturn = index
-                return index
+                return indexReturn
             }
         }
         return indexReturn
+    }
+}
+
+@OptIn(ExperimentalForeignApi::class)
+class Observer : MusicObserverProtocol, NSObject() {
+
+    @OptIn(ExperimentalForeignApi::class)
+    override fun observeValueForKeyPath(
+        keyPath: String,
+        ofObject: Any,
+        change: Map<Any?, *>,
+        context: COpaquePointer?
+    ) {
+        Logger.e("keyPath $keyPath")
+        Logger.e("ofObject $ofObject")
+        Logger.e("change $change")
+        Logger.e("context $context")
     }
 }
