@@ -116,8 +116,6 @@ class IOsMusicPlayer : MusicPlayerManager {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-            } else {
-                Logger.e("Nothing to send, music is not play")
             }
             delay(1000L)
         }
@@ -196,7 +194,7 @@ class IOsMusicPlayer : MusicPlayerManager {
             observerCurrentItem, forKeyPath = "currentItem", options = 1u, context = null)
 
         avplayer?.addObserver(
-            observerStatus, forKeyPath = "status", options = 1u, context = null)
+            observerStatus, forKeyPath = "status", options = 2u, context = null)
     }
 
     override fun pause() {
@@ -223,6 +221,8 @@ class IOsMusicPlayer : MusicPlayerManager {
         listItemPlayer.clear()
         avplayer?.removeAllItems()
         listAvPlayerItem.clear()
+        isPlaying = false
+        avplayer?.pause()
     }
 
     override fun playOnBackground(isPlayOnBackground: Boolean) {
