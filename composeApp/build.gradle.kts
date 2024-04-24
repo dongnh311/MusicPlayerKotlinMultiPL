@@ -1,4 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
@@ -22,6 +24,8 @@ kotlin {
             }
         }
     }
+
+    jvm("desktop")
 
     androidTarget {
         compilations.all {
@@ -67,6 +71,8 @@ kotlin {
 
     // Init lib
     sourceSets {
+
+        val desktopMain by getting
         
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
@@ -147,6 +153,12 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.native.driver)
         }
+
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            //implementation("com.google.firebase:firebase-admin:9.2.0")
+            implementation(libs.firebase.java.sdk)
+        }
     }
 }
 
@@ -211,10 +223,23 @@ android {
     }
 }
 
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "com.dongnh.musicplayer"
+            packageVersion = "1.0.0"
+        }
+    }
+}
+
 dependencies {
     with("de.jensklingenberg.ktorfit:ktorfit-ksp:$ktorfitVersion") {
         add("kspCommonMainMetadata", this)
         add("kspAndroid", this)
+        add("kspDesktop", this)
         add("kspIosX64", this)
         add("kspIosArm64", this)
         add("kspIosSimulatorArm64", this)

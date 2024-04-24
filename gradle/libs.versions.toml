@@ -17,6 +17,7 @@ composeBom = "2024.02.02"
 firebaseBom = "32.7.4"
 firebaseCommonKtx = "20.4.2"
 firebaseFirestore = "1.11.1"
+firebaseJavaSdk = "0.4.1"
 gradle = "7.3.1"
 gson = "2.10.1"
 imageLoader = "1.7.8"
@@ -66,6 +67,7 @@ firebase-common = { module = "dev.gitlive:firebase-common", version.ref = "fireb
 firebase-common-ktx = { module = "com.google.firebase:firebase-common-ktx", version.ref = "firebaseCommonKtx" }
 firebase-database = { module = "dev.gitlive:firebase-database", version.ref = "firebaseFirestore" }
 firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebaseFirestore" }
+firebase-java-sdk = { module = "dev.gitlive:firebase-java-sdk", version.ref = "firebaseJavaSdk" }
 firebase-storage = { module = "dev.gitlive:firebase-storage", version.ref = "firebaseFirestore" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
