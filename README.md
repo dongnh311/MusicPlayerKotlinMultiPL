@@ -20,3 +20,28 @@ This is a demo application written in multi platform Kotlin.
 Use compose UI to implement views for all 3 platforms. All logic and view handling are implemented in composeApp, only special logic will be handled separately depending on the platform.
 
 App content: App music can play music stream.
+
+<img width="300" alt="Screenshot 2024-04-26 at 10 10 29" src="https://github.com/dongnh311/MusicPlayerKotlinMultiPL/assets/40257252/864e624d-567f-44d3-98c9-5bc0e9e3f80a">
+<img width="300" alt="Screenshot 2024-04-26 at 10 10 29" src="https://github.com/dongnh311/MusicPlayerKotlinMultiPL/assets/40257252/ce133f79-f7d9-4990-b074-fb3dde5787dc">
+<img width="300" alt="Screenshot 2024-04-26 at 10 10 29" src="https://github.com/dongnh311/MusicPlayerKotlinMultiPL/assets/40257252/38feea4f-92d0-48ce-b466-c7f6ea90d2f4">
+
+Built-in libraries:
+* Compose
+* Coroutines
+* Datetime
+* Ktor
+* Ktorfit
+* Voyager navigator
+* Kermit Logger
+* Compose ImageLoader
+* Moko
+* Gitlive firebase
+
+Special functions:
+* Login with email.
+* Login with facebook (not implement).
+* Login with google.
+* Load data form rest full API, firebase store.
+* Upload image, load resource, from firebase storage.
+* Load image on local device.
+* Stream music.
