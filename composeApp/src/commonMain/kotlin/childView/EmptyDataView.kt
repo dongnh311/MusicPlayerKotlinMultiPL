@@ -22,6 +22,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.icon_empty_data
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import styles.colorPrimaryText
 import styles.paddingTop16
 import styles.paddingTop8
 
@@ -44,6 +45,7 @@ fun EmptyDataView() {
             contentScale = ContentScale.Crop,
         )
         Text(text = stringResource(Res.string.home_ranking_empty), modifier = Modifier.fillMaxWidth()
-            .paddingTop8(), textAlign = TextAlign.Center)
+            .paddingTop8(), textAlign = TextAlign.Center, color = colorPrimaryText
+        )
     }
 }

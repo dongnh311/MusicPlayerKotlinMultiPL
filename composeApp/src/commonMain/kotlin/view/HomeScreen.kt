@@ -108,7 +108,7 @@ class HomeScreen: BaseScreen<HomeViewModel>() {
 
         Column(modifier = Modifier.fillMaxSize()) {
 
-            Box(modifier = Modifier.fillMaxWidth().height(45.dp), contentAlignment = Alignment.CenterStart) {
+            Box(modifier = Modifier.fillMaxWidth().height(45.dp).background(color = colorPrimaryBackground), contentAlignment = Alignment.CenterStart) {
                 Text(text = stringResource(Res.string.home_title), style = textTittleHome(), modifier = Modifier.fillMaxWidth().padding(start = 16.dp))
             }
 

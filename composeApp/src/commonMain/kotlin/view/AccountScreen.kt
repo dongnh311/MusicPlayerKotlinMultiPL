@@ -2,8 +2,10 @@ package view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -135,6 +137,7 @@ import styles.buttonColorsFacebook
 import styles.buttonColorsGoogle
 import styles.colorAccountCard
 import styles.colorPrimaryApp
+import styles.colorPrimaryBackground
 import styles.iconSize28dp
 import styles.iconSize30dp
 import styles.paddingTop16
@@ -222,7 +225,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
 
             showViewAccount(userModel)
         } else {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.fillMaxSize().background(color = colorPrimaryBackground), contentAlignment = Alignment.Center) {
                 if (isShowButtonBack.value) {
                     IconButton(
                         onClick = {
@@ -234,7 +237,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                             Icon(painter = painterResource(Res.drawable.btn_back),
                                 contentDescription = null,
                                 modifier = Modifier.size(30.dp),
-                                tint = Color.Unspecified,
+                                tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
                             )
                             Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing
                         }
@@ -616,7 +619,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                 }
             )
         } else {
-            Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.fillMaxSize().background(color = colorPrimaryBackground)) {
                 Column (modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top) {
