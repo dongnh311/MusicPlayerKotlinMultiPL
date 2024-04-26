@@ -77,6 +77,7 @@ import styles.buttonColorsGoogle
 import styles.buttonSize32dp
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
+import styles.colorPrimaryText
 import styles.paddingTop16StartEnd16
 import styles.paddingTop8
 import styles.paddingTop8StartEnd16
@@ -159,9 +160,12 @@ class CoinsScreen : BaseScreen<CoinsViewModel>() {
                         }
                     }
 
-                    TabRow(selectedTabIndex = tabIndex, modifier = Modifier.fillMaxWidth().paddingTop8()) {
+                    TabRow(selectedTabIndex = tabIndex, modifier = Modifier.fillMaxWidth().paddingTop8(),
+                        containerColor = colorPrimaryBackground,
+                        contentColor = colorPrimaryText
+                    ) {
                         listTab.forEachIndexed { index, title ->
-                            Tab(text = { Text(title) },
+                            Tab(text = { Text(title, style = textContentPrimary()) },
                                 selected = tabIndex == index,
                                 onClick = { tabIndex = index }
                             )

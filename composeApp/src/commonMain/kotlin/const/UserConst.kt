@@ -13,6 +13,7 @@ const val ACCOUNT_TYPE_SUPPER_VIP = "3"
 const val ACCOUNT_TYPE_MAX = "4"
 
 const val PLATFORM_ANDROID = "Android"
+const val PLATFORM_DESKTOP = "Desktop"
 const val PLATFORM_IOS = "IOs"
 
 const val LOGIN_BY_GOOGLE = "Google"

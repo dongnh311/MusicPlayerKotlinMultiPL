@@ -47,7 +47,7 @@ actual fun loadTimestamp(): Number {
  * @return String
  */
 actual fun viewTimeByTimestamp(timestamp: Number?, pattern: String): String {
-    var dateReturn: String = ""
+    var dateReturn = ""
     var isNeedStop = false
     var patternInput = pattern
     if (timestamp == null || timestamp == 0L) {

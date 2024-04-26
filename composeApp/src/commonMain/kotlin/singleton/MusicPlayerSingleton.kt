@@ -78,4 +78,22 @@ object MusicPlayerSingleton {
 
         return newHeight.pxToDp()
     }
+
+    /**
+     * Load max width for card view
+     *
+     * @return Dp
+     */
+    @Composable
+    fun loadMaxWidthCardView(): Dp {
+        var newWidth = screenSize.value.first * 0.8F
+        val maxWidth = 450.dp.dpToPx()
+        println("ScreenWidth: ${screenSize.value.first}, 0.8% ScreenWith: $newWidth ,limit width: $maxWidth")
+
+        if (newWidth > maxWidth || newWidth < 0) {
+            newWidth = maxWidth
+        }
+
+        return newWidth.pxToDp()
+    }
 }

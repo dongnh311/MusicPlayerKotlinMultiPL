@@ -96,6 +96,7 @@ import styles.buttonSize32dp
 import styles.buttonSize36dp
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
+import styles.colorPrimaryText
 import styles.iconSize40dp
 import styles.paddingStart16
 import styles.paddingTop16
@@ -179,12 +180,15 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
                 }
             }) {
                 Box(modifier = Modifier.fillMaxSize().padding(bottom = it.calculateBottomPadding()), contentAlignment = Alignment.Center) {
-                    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
-                        TabRow(selectedTabIndex = tabIndex) {
+                    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()
+                    ) {
+                        TabRow(selectedTabIndex = tabIndex,
+                            containerColor = colorPrimaryBackground,
+                            contentColor = colorPrimaryText) {
                             listTab.forEachIndexed { index, title ->
-                                Tab(text = { Text(title) },
+                                Tab(text = { Text(title, style = textContentPrimary()) },
                                     selected = tabIndex == index,
-                                    onClick = { tabIndex = index }
+                                    onClick = { tabIndex = index },
                                 )
                             }
                         }
@@ -532,7 +536,7 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
                             )
                             Text(
                                 text = stringResource(Res.string.playlist_add_music),
-                                color = Color.Black,
+                                color = colorPrimaryText,
                                 textAlign = TextAlign.Center,
                                 style = textButton(),
                                 modifier = Modifier.padding(start = 8.dp)
@@ -646,9 +650,13 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
         }
 
         LaunchedEffect(selectPlaylistIndex) {
-            val playlist = viewModel.listPlayList[selectPlaylistIndex.value]
-            // Load new music
-            viewModel.loadListMusicOnPlayList(playlist)
+            try {
+                val playlist = viewModel.listPlayList[selectPlaylistIndex.value]
+                // Load new music
+                viewModel.loadListMusicOnPlayList(playlist)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
         }
     }
 
@@ -676,7 +684,7 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
                 }
             )
             Text(text = stringResource(Res.string.playlist_create_new_pl), modifier = Modifier.fillMaxWidth()
-                .paddingTop8(), textAlign = TextAlign.Center)
+                .paddingTop8(), textAlign = TextAlign.Center, color = colorPrimaryText)
         }
     }
 

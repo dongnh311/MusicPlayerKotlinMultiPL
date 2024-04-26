@@ -131,6 +131,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.user_information_
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import singleton.MusicPlayerSingleton.loadMaxWidthCardView
 import styles.buttonColorAccount
 import styles.buttonColorsEmail
 import styles.buttonColorsFacebook
@@ -408,7 +409,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
     fun showViewLoginByEmail() {
         Card(
             modifier = Modifier
-                .fillMaxWidth()
+                .width(loadMaxWidthCardView())
                 .padding(16.dp),
             elevation = CardDefaults.cardElevation(
                 defaultElevation =  10.dp,
@@ -520,7 +521,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
     fun showViewCreateAccount() {
         Card(
             modifier = Modifier
-                .fillMaxWidth()
+                .width(loadMaxWidthCardView())
                 .padding(16.dp),
             elevation = CardDefaults.cardElevation(
                 defaultElevation =  10.dp,
@@ -626,7 +627,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                     // User info
                     Card(
                         modifier = Modifier
-                            .fillMaxWidth().padding(16.dp).clickable(enabled = true) {
+                            .width(loadMaxWidthCardView()).padding(16.dp).clickable(enabled = true) {
                                 userInformationScreen.userModel = userModel.value
                                 navigator.push(userInformationScreen)
                             }
@@ -754,7 +755,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                 painter = painterResource(Res.drawable.btn_play_history),
                                 modifier = iconSize30dp(),
                                 contentDescription = stringResource(Res.string.account_play_history),
-                                tint = Color.Unspecified
+                                tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified
                             )
 
                             Text(text = stringResource(Res.string.account_play_history), style = textButton(), modifier = Modifier.padding(start = 8.dp))
@@ -783,7 +784,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                 painter = painterResource(Res.drawable.btn_playlist),
                                 modifier = iconSize30dp(),
                                 contentDescription = stringResource(Res.string.account_play_list),
-                                tint = Color.Unspecified
+                                tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified
                             )
 
                             Text(text = stringResource(Res.string.account_play_list), style = textButton(), modifier = Modifier.padding(start = 8.dp))
@@ -813,7 +814,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                     painter = painterResource(Res.drawable.btn_album),
                                     modifier = iconSize30dp(),
                                     contentDescription = stringResource(Res.string.account_albums),
-                                    tint = Color.Unspecified
+                                    tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified
                                 )
 
                                 Text(text = stringResource(Res.string.account_albums), style = textButton(), modifier = Modifier.padding(start = 8.dp))
@@ -843,7 +844,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                 painter = painterResource(Res.drawable.btn_fav_unactive),
                                 modifier = iconSize30dp(),
                                 contentDescription = stringResource(Res.string.account_my_favourite),
-                                tint = Color.Unspecified
+                                tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified
                             )
 
                             Text(text = stringResource(Res.string.account_my_favourite), style = textButton(), modifier = Modifier.padding(start = 8.dp))
@@ -873,7 +874,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                 painter = painterResource(Res.drawable.btn_my_coin),
                                 modifier = iconSize30dp(),
                                 contentDescription = stringResource(Res.string.account_coin_history),
-                                tint = Color.Unspecified
+                                tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified
                             )
 
                             Text(text = stringResource(Res.string.account_coin_history), style = textButton(), modifier = Modifier.padding(start = 8.dp))
@@ -902,7 +903,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                 painter = painterResource(Res.drawable.btn_setting),
                                 modifier = iconSize30dp(),
                                 contentDescription = stringResource(Res.string.account_settings),
-                                tint = Color.Unspecified
+                                tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified
                             )
 
                             Text(text = stringResource(Res.string.account_settings), style = textButton(), modifier = Modifier.padding(start = 8.dp))
@@ -932,7 +933,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                                 painter = painterResource(Res.drawable.btn_about),
                                 modifier = iconSize30dp(),
                                 contentDescription = stringResource(Res.string.account_about),
-                                tint = Color.Unspecified
+                                tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified
                             )
 
                             Text(text = stringResource(Res.string.account_about), style = textButton(), modifier = Modifier.padding(start = 8.dp))
@@ -950,7 +951,7 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
                         painter = painterResource(Res.drawable.btn_version),
                         modifier = iconSize30dp(),
                         contentDescription = stringResource(Res.string.account_version),
-                        tint = Color.Unspecified,
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified
                     )
 
                     Text(text = stringResource(Res.string.account_version) + " ${getPlatform().versionApp}", style = textButton(), modifier = Modifier.padding(start = 8.dp))
