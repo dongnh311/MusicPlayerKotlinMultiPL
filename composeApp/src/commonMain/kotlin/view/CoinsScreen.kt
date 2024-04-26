@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -76,6 +77,7 @@ import styles.buttonColorsGoogle
 import styles.buttonSize32dp
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
+import styles.colorPrimaryText
 import styles.paddingTop16StartEnd16
 import styles.paddingTop8
 import styles.paddingTop8StartEnd16
@@ -119,8 +121,8 @@ class CoinsScreen : BaseScreen<CoinsViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }
@@ -158,9 +160,12 @@ class CoinsScreen : BaseScreen<CoinsViewModel>() {
                         }
                     }
 
-                    TabRow(selectedTabIndex = tabIndex, modifier = Modifier.fillMaxWidth().paddingTop8()) {
+                    TabRow(selectedTabIndex = tabIndex, modifier = Modifier.fillMaxWidth().paddingTop8(),
+                        containerColor = colorPrimaryBackground,
+                        contentColor = colorPrimaryText
+                    ) {
                         listTab.forEachIndexed { index, title ->
-                            Tab(text = { Text(title) },
+                            Tab(text = { Text(title, style = textContentPrimary()) },
                                 selected = tabIndex == index,
                                 onClick = { tabIndex = index }
                             )

@@ -10,9 +10,7 @@ import Foundation
 import ComposeApp
 
 class IOsMusicPlayerSingleTon: MusicPlayerSingleTonIOs {
-    func loadTextForTest() -> String {
-        return "IOs Text"
-    }
+
     
     // Make singleton item share
     static let shared = IOsMusicPlayerSingleTon()
@@ -22,6 +20,10 @@ class IOsMusicPlayerSingleTon: MusicPlayerSingleTonIOs {
     
     // Save app deleagte
     var appDelegate: IOsAppDelegate? = nil
+    
+    // Login
+    var firebaseLoginIos: FirebaseGoogleControl = FirebaseGoogleControl()
+    
     
     init() {
         firebaseFCMHelper.loadFCMToken()
@@ -35,7 +37,25 @@ class IOsMusicPlayerSingleTon: MusicPlayerSingleTonIOs {
     }
 
     func initObjectSendBack() {
+        FirebaseLoginShare_iosKt.configFirebaseLoginIos(input: firebaseLoginIos)
         FirebaseLoginShare_iosKt.configSingletonForIos(musicPlayerSingleTonIOs: IOsMusicPlayerSingleTon.shared)
     }
-
+    
+    func loadTextForTest() -> String {
+        return "IOs Text"
+    }
+    
+    /**
+     * Load timestamp
+     */
+    func loadTimestampOfIOs() -> Any {
+        return Int64(Date().timeIntervalSince1970 * 1000)
+    }
+    
+    /**
+     * Load NS date form ios to kotlin
+     */
+    func loadNSDateFormIOs(timeStamp: Any) -> Date {
+        return Date(timeIntervalSince1970: timeStamp as! TimeInterval)
+    }
 }

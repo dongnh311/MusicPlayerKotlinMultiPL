@@ -57,10 +57,10 @@ fun Modifier.paddingAll16() = this.padding(all = 16.dp)
 fun Modifier.paddingAll8() = this.padding(all = 8.dp)
 
 @Composable
-fun iconSize24dp() = Modifier.size(24.dp)
+fun iconSize20dp() = Modifier.size(20.dp)
 
 @Composable
-fun iconSize20dp() = Modifier.size(20.dp)
+fun iconSize24dp() = Modifier.size(24.dp)
 
 @Composable
 fun iconSize28dp() = Modifier.size(28.dp)
@@ -72,7 +72,19 @@ fun iconSize30dp() = Modifier.size(30.dp)
 fun iconSize32dp() = Modifier.size(32.dp)
 
 @Composable
-fun Modifier.buttonSize32dp() = Modifier.size(32.dp)
+fun iconSize34dp() = Modifier.size(34.dp)
+
+@Composable
+fun iconSize36dp() = Modifier.size(36.dp)
+
+@Composable
+fun iconSize40dp() = Modifier.size(40.dp)
+
+@Composable
+fun buttonSize32dp() = Modifier.size(32.dp)
+
+@Composable
+fun buttonSize36dp() = Modifier.size(36.dp)
 
 @Composable
 fun buttonDialog() = Modifier.clip(RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))

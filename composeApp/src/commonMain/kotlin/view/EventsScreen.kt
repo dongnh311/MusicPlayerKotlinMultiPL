@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,8 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
@@ -45,7 +44,6 @@ import org.jetbrains.compose.resources.stringResource
 import styles.buttonSize32dp
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
-import styles.colorPrimaryText
 import styles.paddingTop16StartEnd16
 import styles.primaryDark
 import styles.textTittleContent
@@ -75,8 +73,8 @@ class EventsScreen : BaseScreen<EventsViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }

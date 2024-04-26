@@ -158,6 +158,7 @@
     <string name="coins_number_coin">Coin :</string>
 
     <string name="dialog_buy_coin_title">Get More Coins</string>
+    <string name="dialog_buy_coin">Coins :</string>
     <string name="dialog_buy_money">Money :</string>
     <string name="dialog_buy_discount">Discount :</string>
     <string name="dialog_buy_expire">Expire At :</string>

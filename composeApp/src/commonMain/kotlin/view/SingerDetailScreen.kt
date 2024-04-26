@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,15 +41,12 @@ import model.SingerModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
-import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_empty
-import musicplayerkotlinmultipl.composeapp.generated.resources.icon_empty_data
 import musicplayerkotlinmultipl.composeapp.generated.resources.singer_musics
 import musicplayerkotlinmultipl.composeapp.generated.resources.singer_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.singers_gender
 import musicplayerkotlinmultipl.composeapp.generated.resources.singers_gender_female
 import musicplayerkotlinmultipl.composeapp.generated.resources.singers_gender_male
 import musicplayerkotlinmultipl.composeapp.generated.resources.singers_year_of_birth
-import musicplayerkotlinmultipl.composeapp.generated.resources.topic_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.wall_paper
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -57,7 +54,6 @@ import org.jetbrains.compose.resources.stringResource
 import styles.buttonSize32dp
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
-import styles.paddingTop16
 import styles.paddingTop16StartEnd16
 import styles.paddingTop8
 import styles.textContentPrimary
@@ -89,8 +85,8 @@ class SingerDetailScreen: BaseScreen<SingerDetailViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }

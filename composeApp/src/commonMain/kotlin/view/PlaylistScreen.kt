@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,13 +49,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import base.BaseScreen
-import childView.TabAccountScreen.options
+import cafe.adriel.voyager.core.model.screenModelScope
 import co.touchlab.kermit.Logger
 import com.seiko.imageloader.rememberImagePainter
 import commonShare.CallBackResultPermission
@@ -64,14 +63,19 @@ import const.DATE_LOCAL_FORMAT_TYPE_COMMON_5
 import const.LIMIT_MUSIC_ON_PLAY_LIST
 import const.LIMIT_PLAY_LIST
 import const.PERMISSION_GRAND
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import model.ImagePickerModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_add
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_buy_coin
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_cancel
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_delete
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_edit
+import musicplayerkotlinmultipl.composeapp.generated.resources.btn_play_all
+import musicplayerkotlinmultipl.composeapp.generated.resources.coins_buy_more
 import musicplayerkotlinmultipl.composeapp.generated.resources.pick_image_fail_permission
 import musicplayerkotlinmultipl.composeapp.generated.resources.playlist_add_music
 import musicplayerkotlinmultipl.composeapp.generated.resources.playlist_confirm_delete
@@ -89,8 +93,11 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import styles.buttonColorsGoogle
 import styles.buttonSize32dp
+import styles.buttonSize36dp
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
+import styles.colorPrimaryText
+import styles.iconSize40dp
 import styles.paddingStart16
 import styles.paddingTop16
 import styles.paddingTop16StartEnd16
@@ -133,10 +140,13 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
     // Select playlist on musics tab
     private val selectPlaylistIndex = mutableStateOf(0)
 
+    // Save tab selected
+    private val tabIndexSelected = mutableStateOf(0)
+
     @OptIn(ExperimentalResourceApi::class)
     @Composable
     override fun makeContentForView() {
-        var tabIndex by remember { mutableStateOf(0) }
+        var tabIndex by remember { tabIndexSelected }
         val listTab = arrayListOf(stringResource(Res.string.playlist_tab_playlist), stringResource(Res.string.playlist_tab_detail))
 
         Scaffold(modifier = Modifier.background(Color.Red).fillMaxSize(), backgroundColor = colorPrimaryBackground,
@@ -147,23 +157,38 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }
                     )
                     Text(text = stringResource(Res.string.playlist_title), style = textTittleHome(), modifier = Modifier.padding(start = 8.dp))
-                    Spacer(modifier = Modifier.height(45.dp))
+                    Spacer(modifier = Modifier.height(45.dp).weight(1f))
+
+                    // Only tab playlist detail have button play
+                    if (tabIndex == 1) {
+                        Icon(
+                            painter = painterResource(Res.drawable.btn_play_all),
+                            contentDescription = "Back",
+                            modifier = iconSize40dp()
+                                .clickable {
+                                    // TODO play all music on playlist
+                                }
+                        )
+                    }
                 }
             }) {
                 Box(modifier = Modifier.fillMaxSize().padding(bottom = it.calculateBottomPadding()), contentAlignment = Alignment.Center) {
-                    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
-                        TabRow(selectedTabIndex = tabIndex) {
+                    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()
+                    ) {
+                        TabRow(selectedTabIndex = tabIndex,
+                            containerColor = colorPrimaryBackground,
+                            contentColor = colorPrimaryText) {
                             listTab.forEachIndexed { index, title ->
-                                Tab(text = { Text(title) },
+                                Tab(text = { Text(title, style = textContentPrimary()) },
                                     selected = tabIndex == index,
-                                    onClick = { tabIndex = index }
+                                    onClick = { tabIndex = index },
                                 )
                             }
                         }
@@ -245,9 +270,7 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
     }
 
     override fun onStartedScreen() {
-        if (viewModel.listPlayList.isEmpty()) {
-            viewModel.loadListPlaylist()
-        }
+        viewModel.loadListPlaylist()
     }
 
     override fun onDisposedScreen() {
@@ -304,7 +327,8 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
                 items(viewModel.listPlayList.size) {index ->
                     Card(modifier = Modifier
                         .fillMaxWidth().paddingTop8StartEnd16().clickable(enabled = true) {
-                            // TODO : open detail
+                            tabIndexSelected.value = 1
+                            selectPlaylistIndex.value = index
                         },
                         elevation = CardDefaults.cardElevation(
                             defaultElevation =  10.dp,
@@ -439,7 +463,9 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
         if (viewModel.listPlayList.isEmpty()) {
             makeViewAddPlaylist()
         } else {
-            val itemSelectedTitle = remember { mutableStateOf(viewModel.listPlayList[0].name) }
+            val playlist = viewModel.listPlayList[selectPlaylistIndex.value]
+            val itemSelectedTitle = remember { mutableStateOf(playlist.name) }
+
             LazyColumn(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Top) {
                 // Select
                 item {
@@ -495,6 +521,28 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
                         Text(text = stringResource(Res.string.playlist_count_musics) + " ${viewModel.listMusicOnPlaylist.size}/$LIMIT_MUSIC_ON_PLAY_LIST", textAlign = TextAlign.Start,
                             modifier = Modifier.weight(1f), style = textContentPrimary()
                         )
+
+                        // Add music more
+                        Button(onClick = {
+                            val searchMusicScreen = SearchMusicScreen()
+                            searchMusicScreen.playListId = viewModel.listPlayList[selectPlaylistIndex.value].id
+                            navigator.push(searchMusicScreen)
+                        }, modifier = Modifier, shape = RoundedCornerShape(35.dp), colors = buttonColorsGoogle()) {
+                            androidx.compose.material.Icon(
+                                painter = painterResource(Res.drawable.btn_add),
+                                modifier = Modifier.size(20.dp),
+                                contentDescription = "drawable icons",
+                                tint = Color.Unspecified
+                            )
+                            Text(
+                                text = stringResource(Res.string.playlist_add_music),
+                                color = colorPrimaryText,
+                                textAlign = TextAlign.Center,
+                                style = textButton(),
+                                modifier = Modifier.padding(start = 8.dp)
+                                //default icon width = 24.dp
+                            )
+                        }
                     }
                 }
 
@@ -600,6 +648,16 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
                 }
             }
         }
+
+        LaunchedEffect(selectPlaylistIndex) {
+            try {
+                val playlist = viewModel.listPlayList[selectPlaylistIndex.value]
+                // Load new music
+                viewModel.loadListMusicOnPlayList(playlist)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        }
     }
 
     /**
@@ -621,12 +679,12 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
                         painter = painterResource(Res.drawable.btn_add),
                         contentDescription = null,
                         modifier = Modifier.size(35.dp),
-                        tint = Color.Unspecified,
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
                     )
                 }
             )
             Text(text = stringResource(Res.string.playlist_create_new_pl), modifier = Modifier.fillMaxWidth()
-                .paddingTop8(), textAlign = TextAlign.Center)
+                .paddingTop8(), textAlign = TextAlign.Center, color = colorPrimaryText)
         }
     }
 
@@ -638,8 +696,10 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
         permissionControl.callBackResultPermission = object : CallBackResultPermission {
             override fun onResultPermission(result: Int) {
                 if (result == PERMISSION_GRAND) {
-                    val listImages = permissionControl.loadAllImageMedia()
-                    Logger.e("Load image on device : ${listImages.size}")
+                    viewModel.coroutineScope.launch {
+                        val listImages = permissionControl.loadAllImageMedia().first()
+                        Logger.e("Load image on device : ${listImages.size}")
+                    }
                 } else {
                     Logger.e("Fail to request permission")
                     isShowDialogFailPermission.value = true
@@ -648,19 +708,21 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
         }
 
         if (permissionControl.checkPermissionStorage()) {
-            val listImages = permissionControl.loadAllImageMedia()
-            Logger.e("Load image on device : ${listImages.size}")
-            val pickImageScreen = PickImageScreen(listImages)
-            navigator.push(pickImageScreen)
-            pickImageScreen.onSelectedImageAvatar = object : PickImageScreen.OnSelectedImageAvatar {
-                override fun onSelectedImage(imagePickerModel: ImagePickerModel) {
-                    Logger.e("Callback item image selected : ${imagePickerModel.mediaPath}")
-                    try {
-                        val item = viewModel.listPlayList[selectedIndex.value]
-                        item.thumbnail = imagePickerModel.mediaPath
-                        viewModel.uploadImageFileToThumb(item)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+            viewModel.screenModelScope.launch {
+                val listImages = permissionControl.loadAllImageMedia().first()
+                Logger.e("Load image on device : ${listImages.size}")
+                val pickImageScreen = PickImageScreen(listImages)
+                navigator.push(pickImageScreen)
+                pickImageScreen.onSelectedImageAvatar = object : PickImageScreen.OnSelectedImageAvatar {
+                    override fun onSelectedImage(imagePickerModel: ImagePickerModel) {
+                        Logger.e("Callback item image selected : ${imagePickerModel.mediaPath}")
+                        try {
+                            val item = viewModel.listPlayList[selectedIndex.value]
+                            item.thumbnail = imagePickerModel.mediaPath
+                            viewModel.uploadImageFileToThumb(item)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                 }
             }

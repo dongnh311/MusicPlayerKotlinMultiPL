@@ -1,6 +1,8 @@
 package commonShare
 
 import co.touchlab.kermit.Logger
+import platform.AVFAudio.AVMusicTimeStamp
+import platform.Foundation.NSDate
 import platform.UserNotifications.UNAuthorizationOptions
 import singleton.MusicPlayerSingleton
 
@@ -11,10 +13,10 @@ import singleton.MusicPlayerSingleton
  * Phone : +84397199197.
  */
 
-val iosFireBaseAuth = IOsFireBaseAuth()
+var iosFireBaseAuth = IOsFireBaseAuth()
 var iosMusicPlayerSingleTon: MusicPlayerSingleTonIOs? = null
 
-class IOsFireBaseAuth: FireBaseAuthControl<Any, Any> {
+open class IOsFireBaseAuth: FireBaseAuthControl<Any, Any> {
     override lateinit var googleSignInClient: Any
 
     override lateinit var resultLauncherGoogle: Any
@@ -34,13 +36,39 @@ class IOsFireBaseAuth: FireBaseAuthControl<Any, Any> {
     }
 }
 
-actual fun loadFireBaseAuthControl(): FireBaseAuthControl<*, *>  = iosFireBaseAuth
+/**
+ * Public on kotlin common
+ *
+ * @return
+ */
+actual fun loadFireBaseAuthControl(): FireBaseAuthControl<*, *> = iosFireBaseAuth
 
+/**
+ * Config singleton from native
+ *
+ * @param musicPlayerSingleTonIOs
+ */
 fun configSingletonForIos(musicPlayerSingleTonIOs: MusicPlayerSingleTonIOs) {
     iosMusicPlayerSingleTon = musicPlayerSingleTonIOs
 }
 
+/**
+ * Config form ios native
+ *
+ * @param input
+ */
+fun configFirebaseLoginIos(input: IOsFireBaseAuth) {
+    iosFireBaseAuth = input
+}
+
+/**
+ * Interface singleton of ios
+ */
 interface MusicPlayerSingleTonIOs {
     fun loadTextForTest(): String
+
+    fun loadTimestampOfIOs() : Number
+
+    fun loadNSDateFormIOs(timeStamp: Number) : NSDate
 }
 

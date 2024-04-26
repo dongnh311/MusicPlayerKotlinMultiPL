@@ -4,8 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,7 +38,6 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
 import musicplayerkotlinmultipl.composeapp.generated.resources.home_ranking_empty
-import musicplayerkotlinmultipl.composeapp.generated.resources.music_detail_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.topic_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -78,8 +77,8 @@ class TopicDetailScreen: BaseScreen<TopicDetailViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }

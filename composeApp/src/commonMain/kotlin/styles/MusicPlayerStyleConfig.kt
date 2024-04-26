@@ -47,6 +47,10 @@ val colorThreeText = Color(0xFFA6ACAF)
 
 val colorGreen = Color(0x7061FF7E)
 
+val colorDarkMore = Color(0xFF757575)
+
+val colorForCard = Color(0xFFA4B0CB)
+
 // Text
 val colorPrimaryText: Color @Composable get() = if (!isSystemInDarkTheme()) colorBlack else colorWhite
 val colorSecondText: Color @Composable get() = if (!isSystemInDarkTheme()) darkSecondary else lightSecondary
@@ -54,6 +58,8 @@ val colorSecondText: Color @Composable get() = if (!isSystemInDarkTheme()) darkS
 val colorAccountCard: Color @Composable get() = if (!isSystemInDarkTheme()) colorWhite else colorAccountDark
 
 val colorButtonCancel: Color @Composable get() = if (isSystemInDarkTheme()) colorAccountDark else colorWhite
+
+val colorTabs: Color @Composable get() = if (isSystemInDarkTheme()) colorDarkMore else colorWhite
 
 private val lightThemeColors = lightColors(
     primary = primaryLight,

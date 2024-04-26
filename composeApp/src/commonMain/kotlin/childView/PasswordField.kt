@@ -34,6 +34,7 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.btn_show
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import styles.iconSize24dp
+import styles.textContentPrimary
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -91,9 +92,10 @@ fun PasswordField(
                 keyboardController?.hide()
             }
         ),
-        placeholder = { Text(placeholder) },
-        label = { Text(label) },
+        placeholder = { Text(placeholder, style = textContentPrimary()) },
+        label = { Text(label, style = textContentPrimary()) },
         singleLine = true,
-        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation()
+        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        textStyle = textContentPrimary()
     )
 }

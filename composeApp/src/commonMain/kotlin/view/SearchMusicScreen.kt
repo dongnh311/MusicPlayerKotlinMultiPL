@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,10 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,17 +42,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import base.BaseScreen
 import childView.EmptyDataView
-import childView.InputTextField
 import com.seiko.imageloader.rememberImagePainter
-import commonShare.loadTimestamp
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_add
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_fav_unactive
-import musicplayerkotlinmultipl.composeapp.generated.resources.btn_playlist
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_search
-import musicplayerkotlinmultipl.composeapp.generated.resources.new_music_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.search_musics_hint
 import musicplayerkotlinmultipl.composeapp.generated.resources.search_musics_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -67,7 +61,6 @@ import styles.paddingTop16StartEnd16
 import styles.paddingTop8StartEnd16
 import styles.textContentPrimary
 import styles.textContentSecond
-import styles.textContentThree
 import styles.textTittleHome
 import utils.dialogs.DialogAddToPlaylist
 import utils.dialogs.DialogCreatePlaylist
@@ -113,8 +106,8 @@ class SearchMusicScreen : BaseScreen<SearchMusicViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }

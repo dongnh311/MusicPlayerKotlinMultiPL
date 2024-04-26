@@ -9,9 +9,11 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.core.lifecycle.LifecycleEffect
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import cafe.adriel.voyager.transitions.SlideTransition
 import co.touchlab.kermit.Logger
 import view.RankingScreen
 
@@ -40,6 +42,10 @@ object TabRankingScreen : Tab {
         }
     @Composable
     override fun Content() {
-        rankingScreen.Content()
+        Navigator(screen = rankingScreen) { navigator ->
+            SlideTransition(navigator = navigator) {screen->
+                screen.Content()
+            }
+        }
     }
 }

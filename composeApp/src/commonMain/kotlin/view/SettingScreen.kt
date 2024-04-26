@@ -3,6 +3,7 @@ package view
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,10 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import base.BaseScreen
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
-import musicplayerkotlinmultipl.composeapp.generated.resources.account_play_history
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
-import musicplayerkotlinmultipl.composeapp.generated.resources.btn_play_history
-import musicplayerkotlinmultipl.composeapp.generated.resources.coins_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.setting_dark_auto
 import musicplayerkotlinmultipl.composeapp.generated.resources.setting_dark_mode
 import musicplayerkotlinmultipl.composeapp.generated.resources.setting_dark_mode_dark
@@ -47,14 +45,12 @@ import styles.buttonColorAccount
 import styles.buttonSize32dp
 import styles.colorPrimaryApp
 import styles.colorPrimaryBackground
-import styles.iconSize30dp
 import styles.paddingStart16
 import styles.paddingTop16StartEnd16
 import styles.paddingTop8StartEnd16
 import styles.textButton
 import styles.textContentSecond
 import styles.textTittleHome
-import viewModel.CoinsViewModel
 import viewModel.SettingViewModel
 
 /**
@@ -82,8 +78,8 @@ class SettingScreen: BaseScreen<SettingViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,16 +16,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
@@ -42,9 +40,6 @@ import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_delete
-import musicplayerkotlinmultipl.composeapp.generated.resources.btn_hide
-import musicplayerkotlinmultipl.composeapp.generated.resources.btn_show
-import musicplayerkotlinmultipl.composeapp.generated.resources.new_music_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.play_history_confirm_delete
 import musicplayerkotlinmultipl.composeapp.generated.resources.play_history_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -53,7 +48,6 @@ import org.jetbrains.compose.resources.stringResource
 import styles.buttonSize32dp
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
-import styles.iconSize24dp
 import styles.paddingTop16StartEnd16
 import styles.textContentPrimary
 import styles.textContentSecond
@@ -86,8 +80,8 @@ class PlayHistoryScreen: BaseScreen<PlayHistoryViewModel>() {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }
@@ -104,8 +98,7 @@ class PlayHistoryScreen: BaseScreen<PlayHistoryViewModel>() {
                             painterResource(Res.drawable.btn_delete),
                             contentDescription = "",
                             tint = Color.Unspecified,
-                            modifier = Modifier
-                                .buttonSize32dp()
+                            modifier = buttonSize32dp()
                                 .clickable(viewModel.listPlayHistory.isNotEmpty()) {
                                     isOpenDialogCheckDeleteAll.value = true
                                 }

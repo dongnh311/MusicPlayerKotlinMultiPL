@@ -2,8 +2,10 @@ package view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,6 +52,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import base.BaseScreen
+import cafe.adriel.voyager.core.model.screenModelScope
 import childView.InputPasswordField
 import childView.InputTextField
 import co.touchlab.kermit.Logger
@@ -66,6 +69,8 @@ import const.LOGIN_BY_FACEBOOK
 import const.LOGIN_BY_GOOGLE
 import const.PERMISSION_GRAND
 import const.PLATFORM_ANDROID
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import model.ImagePickerModel
 import model.UserModel
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
@@ -108,6 +113,7 @@ import org.jetbrains.compose.resources.stringResource
 import styles.buttonCircleAvatarColor
 import styles.buttonCommonModifier
 import styles.buttonSize32dp
+import styles.colorPrimaryBackground
 import styles.primaryDark
 import styles.textContentPrimary
 import utils.dialogs.DialogBuyVip
@@ -157,13 +163,13 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
         birthDay.value = userModel.dayOfBirth
         userAvatar.value = userModel.profileImage
 
-        Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-            Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+        Scaffold(modifier = Modifier.fillMaxSize().background(colorPrimaryBackground), topBar = {
+            Box(modifier = Modifier.fillMaxWidth().padding(8.dp).background(colorPrimaryBackground)) {
                 Icon(
                     painter = painterResource(Res.drawable.btn_back),
                     contentDescription = "Back",
-                    modifier = Modifier
-                        .buttonSize32dp()
+                    tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
+                    modifier = buttonSize32dp()
                         .clickable {
                             navigator.pop()
                         }.align(Alignment.CenterStart)
@@ -173,7 +179,7 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
         }, content = {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize().background(colorPrimaryBackground)
                     .padding(
                         top = it.calculateTopPadding(),
                         bottom = it.calculateBottomPadding()
@@ -626,8 +632,10 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
         permissionControl.callBackResultPermission = object : CallBackResultPermission {
             override fun onResultPermission(result: Int) {
                 if (result == PERMISSION_GRAND) {
-                    val listImages = permissionControl.loadAllImageMedia()
-                    Logger.e("Load image on device : ${listImages.size}")
+                    viewModel.coroutineScope.launch {
+                        val listImages = permissionControl.loadAllImageMedia().first()
+                        Logger.e("Load image on device : ${listImages.size}")
+                    }
                 } else {
                     Logger.e("Fail to request permission")
                     isShowDialogFailPermission.value = true
@@ -636,17 +644,20 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
         }
 
         if (permissionControl.checkPermissionStorage()) {
-            val listImages = permissionControl.loadAllImageMedia()
-            Logger.e("Load image on device : ${listImages.size}")
-            val pickImageScreen = PickImageScreen(listImages)
-            navigator.push(pickImageScreen)
-            pickImageScreen.onSelectedImageAvatar = object : PickImageScreen.OnSelectedImageAvatar {
-                override fun onSelectedImage(imagePickerModel: ImagePickerModel) {
-                    Logger.e("Callback item image selected : ${imagePickerModel.mediaPath}")
-                    userAvatar.value = imagePickerModel.mediaPath
-                    viewModel.uploadAvatar(this@UserInformationScreen.userModel, imagePickerModel) {
-                        viewModel.updateInformationOfUser(this@UserInformationScreen.userModel) {
-                            Logger.e("Update new path for avatar to firebase done")
+            viewModel.screenModelScope.launch {
+                val listImages = permissionControl.loadAllImageMedia().first()
+                Logger.e("Load image on device : ${listImages.size}")
+                Logger.e("Load image on device : ${listImages.size}")
+                val pickImageScreen = PickImageScreen(listImages)
+                navigator.push(pickImageScreen)
+                pickImageScreen.onSelectedImageAvatar = object : PickImageScreen.OnSelectedImageAvatar {
+                    override fun onSelectedImage(imagePickerModel: ImagePickerModel) {
+                        Logger.e("Callback item image selected : ${imagePickerModel.mediaPath}")
+                        userAvatar.value = imagePickerModel.mediaPath
+                        viewModel.uploadAvatar(this@UserInformationScreen.userModel, imagePickerModel) {
+                            viewModel.updateInformationOfUser(this@UserInformationScreen.userModel) {
+                                Logger.e("Update new path for avatar to firebase done")
+                            }
                         }
                     }
                 }

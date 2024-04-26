@@ -35,3 +35,35 @@ fun extractInt(inputString: String): Int {
     // return 0 if no digits found
     return if (num.isEmpty()) 0 else num.toInt()
 }
+
+/**
+ * Make duration to view time
+ *
+ * @param inputNumber
+ * @return
+ */
+fun makeDurationToViewString(inputNumber: Long) : String {
+    val convertToSecond = inputNumber/ 1000
+    
+    var minute = convertToSecond / 60
+    val second = convertToSecond - (minute * 60)
+    var hour = 0L
+    if (minute >= 60) {
+        hour = (minute / 60)
+        minute -= (hour * 60)
+    }
+
+    return if (hour != 0L) {
+        "${checkIfLessThanTen(hour)}:${checkIfLessThanTen(minute)}:${checkIfLessThanTen(second)}"
+    } else {
+        "${checkIfLessThanTen(minute)}:${checkIfLessThanTen(second)}"
+    }
+}
+
+fun checkIfLessThanTen(number: Long) : String {
+    if (number < 10) {
+        return "0$number"
+    } else {
+        return number.toString()
+    }
+}

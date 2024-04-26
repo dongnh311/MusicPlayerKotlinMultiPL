@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +36,6 @@ import com.seiko.imageloader.rememberImagePainter
 import musicplayerkotlinmultipl.composeapp.generated.resources.Res
 import musicplayerkotlinmultipl.composeapp.generated.resources.avatar_default
 import musicplayerkotlinmultipl.composeapp.generated.resources.btn_back
-import musicplayerkotlinmultipl.composeapp.generated.resources.events_title
 import musicplayerkotlinmultipl.composeapp.generated.resources.new_music_title
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -43,7 +43,6 @@ import org.jetbrains.compose.resources.stringResource
 import styles.buttonSize32dp
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
-import styles.paddingTop16StartEnd16
 import styles.paddingTop8StartEnd16
 import styles.textContentPrimary
 import styles.textContentSecond
@@ -70,9 +69,9 @@ class NewsMusicScreen: BaseScreen<NewMusicViewModel>() {
                     modifier = Modifier.padding(8.dp)) {
                     Icon(
                         painter = painterResource(Res.drawable.btn_back),
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
                         contentDescription = "Back",
-                        modifier = Modifier
-                            .buttonSize32dp()
+                        modifier = buttonSize32dp()
                             .clickable {
                                 navigator.pop()
                             }

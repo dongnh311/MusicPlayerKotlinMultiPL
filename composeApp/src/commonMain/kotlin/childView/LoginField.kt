@@ -16,6 +16,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
+import styles.textContentPrimary
 
 /**
  * Project : MusicPlayerKotlinMultiPL
@@ -51,9 +52,10 @@ fun LoginField(
         keyboardActions = KeyboardActions(
             onNext = { focusManager.moveFocus(FocusDirection.Down) }
         ),
-        placeholder = { Text(placeholder) },
-        label = { Text(label) },
+        placeholder = { Text(placeholder, style = textContentPrimary()) },
+        label = { Text(label, style = textContentPrimary()) },
         singleLine = true,
-        visualTransformation = VisualTransformation.None
+        visualTransformation = VisualTransformation.None,
+        textStyle = textContentPrimary()
     )
 }

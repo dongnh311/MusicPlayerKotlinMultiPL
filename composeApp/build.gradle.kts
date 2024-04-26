@@ -1,4 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -14,6 +17,15 @@ val ktorVersion = "2.3.6"
 val ktorfitVersion = "1.12.0"
 
 kotlin {
+    targets.all {
+        compilations.all {
+            compilerOptions.configure {
+                allWarningsAsErrors.set(true)
+            }
+        }
+    }
+
+    jvm("desktop")
 
     androidTarget {
         compilations.all {
@@ -22,7 +34,11 @@ kotlin {
             }
         }
     }
-    
+
+    val xcf = XCFramework()
+    val commonBridgePath = "src/nativeInterop/cinterop/"
+    val commonSourcePath = "src/nativeInterop/includes/"
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -31,11 +47,32 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            xcf.add(this)
+        }
+
+        iosTarget.compilations.getByName("main") {
+            val myInterop by cinterops.creating {
+                // Def-file describing the native API.
+                // The default path is includes/nativeInterop/cinterop/<interop-name>.def
+                defFile(project.file("$commonBridgePath/MusicObserver.def"))
+                //defFile(project.file("MusicObserver.def"))
+
+                // Package to place the Kotlin API generated.
+                packageName("Bridge")
+
+                // Options to be passed to compiler by cinterop tool.
+                compilerOpts("-I$commonSourcePath")
+
+                // A shortcut for includeDirs.allHeaders.
+                includeDirs(commonSourcePath)
+            }
         }
     }
 
     // Init lib
     sourceSets {
+
+        val desktopMain by getting
         
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
@@ -61,6 +98,10 @@ kotlin {
 
             // Log helper
             implementation(libs.timber)
+
+            // Exo
+            implementation(libs.androidx.media3.exoplayer)
+            implementation(libs.androidx.media3.exoplayer.dash)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -112,6 +153,12 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.native.driver)
         }
+
+        desktopMain.dependencies {
+            implementation(compose.desktop.currentOs)
+            //implementation("com.google.firebase:firebase-admin:9.2.0")
+            implementation(libs.firebase.java.sdk)
+        }
     }
 }
 
@@ -144,6 +191,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     signingConfigs {
         getByName("debug") {
@@ -175,10 +223,23 @@ android {
     }
 }
 
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+            packageName = "com.dongnh.musicplayer"
+            packageVersion = "1.0.0"
+        }
+    }
+}
+
 dependencies {
     with("de.jensklingenberg.ktorfit:ktorfit-ksp:$ktorfitVersion") {
         add("kspCommonMainMetadata", this)
         add("kspAndroid", this)
+        add("kspDesktop", this)
         add("kspIosX64", this)
         add("kspIosArm64", this)
         add("kspIosSimulatorArm64", this)

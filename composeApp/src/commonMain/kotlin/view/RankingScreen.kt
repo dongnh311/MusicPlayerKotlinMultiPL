@@ -68,6 +68,8 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import styles.colorAccountCard
 import styles.colorPrimaryBackground
+import styles.colorPrimaryText
+import styles.colorTabs
 import styles.paddingTop16
 import styles.paddingTop16StartEnd16
 import styles.textContentPrimary
@@ -88,6 +90,9 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
 
     override var viewModel: RankingViewModel  = RankingViewModel()
 
+    // Show detail
+    val musicDetailScreen by lazy { MusicDetailScreen() }
+
     @OptIn(ExperimentalResourceApi::class, ExperimentalFoundationApi::class)
     @Composable
     override fun makeContentForView() {
@@ -102,17 +107,18 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
             stringResource(Res.string.home_ranking_cn),
             stringResource(Res.string.home_ranking_rap))
 
-        Column (modifier = Modifier.fillMaxSize()) {
+        Column (modifier = Modifier.fillMaxSize().background(color = colorPrimaryBackground)) {
 
-            Box(modifier = Modifier.fillMaxWidth().height(45.dp), contentAlignment = Alignment.CenterStart) {
+            Box(modifier = Modifier.fillMaxWidth().height(45.dp).background(color = colorPrimaryBackground), contentAlignment = Alignment.CenterStart) {
                 Text(text = stringResource(Res.string.ranking_title), style = textTittleHome(), modifier = Modifier.fillMaxWidth().padding(start = 16.dp))
             }
 
             ScrollableTabRow(
                 selectedTabIndex = pagerState.currentPage,
-                contentColor = Color.White,
+                containerColor = colorPrimaryBackground,
+                contentColor = colorPrimaryText,
                 edgePadding = 0.dp,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(color = colorPrimaryBackground),
                 divider = {},
                 tabs = {
                     for (index in 0 until 7) {
@@ -128,8 +134,8 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
                             },
                             modifier = Modifier
                                 .zIndex(1f)
-                                .padding(end = 8.dp)
-                                .height(height = 36.dp)
+                                .padding(end = 0.dp)
+                                .height(height = 36.dp).background(colorPrimaryBackground)
                         )
                     }
                 }
@@ -143,7 +149,7 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
                 pageSize =  PageSize.Fill,
                 state = pagerState
             ) {indexPage ->
-                Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface), contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier.fillMaxSize().background(colorPrimaryBackground), contentAlignment = Alignment.Center) {
                     when (indexPage) {
                         0 -> {
                             showTrendingTab()
@@ -194,7 +200,8 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
             items(listTrending.size) { index ->
                 Card(modifier = Modifier
                     .fillMaxWidth().paddingTop16StartEnd16().clickable(enabled = true) {
-
+                        musicDetailScreen.musicModel.value =  listTrending[index]
+                        navigator.push(musicDetailScreen)
                     },
                     elevation = CardDefaults.cardElevation(
                         defaultElevation =  10.dp,
@@ -227,7 +234,8 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
             items(listVpop.size) { index ->
                 Card(modifier = Modifier
                     .fillMaxWidth().paddingTop16StartEnd16().clickable(enabled = true) {
-
+                        musicDetailScreen.musicModel.value = listVpop[index]
+                        navigator.push(musicDetailScreen)
                     },
                     elevation = CardDefaults.cardElevation(
                         defaultElevation =  10.dp,
@@ -260,7 +268,8 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
             items(listUs.size) { index ->
                 Card(modifier = Modifier
                     .fillMaxWidth().paddingTop16StartEnd16().clickable(enabled = true) {
-
+                        musicDetailScreen.musicModel.value = listUs[index]
+                        navigator.push(musicDetailScreen)
                     },
                     elevation = CardDefaults.cardElevation(
                         defaultElevation =  10.dp,
@@ -293,7 +302,8 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
             items(listKpop.size) { index ->
                 Card(modifier = Modifier
                     .fillMaxWidth().paddingTop16StartEnd16().clickable(enabled = true) {
-
+                        musicDetailScreen.musicModel.value = listKpop[index]
+                        navigator.push(musicDetailScreen)
                     },
                     elevation = CardDefaults.cardElevation(
                         defaultElevation =  10.dp,
@@ -326,7 +336,8 @@ class RankingScreen: BaseScreen<RankingViewModel>() {
             items(listCpop.size) { index ->
                 Card(modifier = Modifier
                     .fillMaxWidth().paddingTop16StartEnd16().clickable(enabled = true) {
-
+                        musicDetailScreen.musicModel.value = listCpop[index]
+                        navigator.push(musicDetailScreen)
                     },
                     elevation = CardDefaults.cardElevation(
                         defaultElevation =  10.dp,

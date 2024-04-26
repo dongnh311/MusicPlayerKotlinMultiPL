@@ -1,6 +1,8 @@
 package commonShare
 
 import com.dongnh.musicplayer.AndroidMusicPlayerSingleton
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 import model.ImagePickerModel
 import utils.exts.checkPermissionAudioStorage
 
@@ -22,8 +24,11 @@ class PermissionControlAndroid : PermissionControl {
         }
     }
 
-    override fun loadAllImageMedia(): MutableList<ImagePickerModel> {
-       return AndroidMusicPlayerSingleton.loadAllImageOnDevice()
+    override fun loadAllImageMedia() = callbackFlow {
+       trySend(AndroidMusicPlayerSingleton.loadAllImageOnDevice())
+        awaitClose {
+            close()
+        }
     }
 }
 
