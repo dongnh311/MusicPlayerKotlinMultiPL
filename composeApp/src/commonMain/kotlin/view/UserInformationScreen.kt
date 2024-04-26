@@ -2,6 +2,7 @@ package view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -112,6 +113,7 @@ import org.jetbrains.compose.resources.stringResource
 import styles.buttonCircleAvatarColor
 import styles.buttonCommonModifier
 import styles.buttonSize32dp
+import styles.colorPrimaryBackground
 import styles.primaryDark
 import styles.textContentPrimary
 import utils.dialogs.DialogBuyVip
@@ -161,8 +163,8 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
         birthDay.value = userModel.dayOfBirth
         userAvatar.value = userModel.profileImage
 
-        Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-            Box(modifier = Modifier.fillMaxWidth().padding(8.dp)) {
+        Scaffold(modifier = Modifier.fillMaxSize().background(colorPrimaryBackground), topBar = {
+            Box(modifier = Modifier.fillMaxWidth().padding(8.dp).background(colorPrimaryBackground)) {
                 Icon(
                     painter = painterResource(Res.drawable.btn_back),
                     contentDescription = "Back",
@@ -177,7 +179,7 @@ class UserInformationScreen: BaseScreen<UserInformationViewModel>() {
         }, content = {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize().background(colorPrimaryBackground)
                     .padding(
                         top = it.calculateTopPadding(),
                         bottom = it.calculateBottomPadding()

@@ -28,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -137,6 +138,7 @@ import styles.buttonColorsEmail
 import styles.buttonColorsFacebook
 import styles.buttonColorsGoogle
 import styles.colorAccountCard
+import styles.colorForCard
 import styles.colorPrimaryApp
 import styles.colorPrimaryBackground
 import styles.iconSize28dp
@@ -512,7 +514,10 @@ class AccountScreen : BaseScreen<AccountViewModel>(){
 
                     Spacer(modifier = Modifier.padding(bottom = 8.dp))
                 }
-            }
+            },
+            colors = CardDefaults.cardColors(
+                containerColor = colorForCard
+            )
         )
     }
 

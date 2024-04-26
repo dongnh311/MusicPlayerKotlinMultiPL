@@ -679,7 +679,7 @@ class PlaylistScreen: BaseScreen<PlaylistViewModel>() {
                         painter = painterResource(Res.drawable.btn_add),
                         contentDescription = null,
                         modifier = Modifier.size(35.dp),
-                        tint = Color.Unspecified,
+                        tint = if (isSystemInDarkTheme()) Color.White else Color.Unspecified,
                     )
                 }
             )

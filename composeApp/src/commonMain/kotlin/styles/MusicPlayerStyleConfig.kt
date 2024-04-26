@@ -49,6 +49,8 @@ val colorGreen = Color(0x7061FF7E)
 
 val colorDarkMore = Color(0xFF757575)
 
+val colorForCard = Color(0xFFA4B0CB)
+
 // Text
 val colorPrimaryText: Color @Composable get() = if (!isSystemInDarkTheme()) colorBlack else colorWhite
 val colorSecondText: Color @Composable get() = if (!isSystemInDarkTheme()) darkSecondary else lightSecondary

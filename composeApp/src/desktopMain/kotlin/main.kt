@@ -1,5 +1,8 @@
 import android.app.Application
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import com.google.firebase.FirebasePlatform
 import dev.gitlive.firebase.Firebase
@@ -27,7 +30,9 @@ fun main() = application {
         e.printStackTrace()
     }
 
+    val windowState = WindowState(size = DpSize(width = 400.dp, height = 950.dp))
     Window(
+        state = windowState,
         onCloseRequest = ::exitApplication,
         title = "Desktop-MusicPlayer",
     ) {
