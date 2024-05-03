@@ -21,9 +21,9 @@ Use compose UI to implement views for all 3 platforms. All logic and view handli
 
 App content: App music can play music stream.
 
-<img width="300" alt="Screenshot 2024-04-26 at 10 10 29" src="https://github.com/dongnh311/MusicPlayerKotlinMultiPL/assets/40257252/864e624d-567f-44d3-98c9-5bc0e9e3f80a">
-<img width="300" alt="Screenshot 2024-04-26 at 10 10 29" src="https://github.com/dongnh311/MusicPlayerKotlinMultiPL/assets/40257252/ce133f79-f7d9-4990-b074-fb3dde5787dc">
-<img width="300" alt="Screenshot 2024-04-26 at 10 10 29" src="https://github.com/dongnh311/MusicPlayerKotlinMultiPL/assets/40257252/38feea4f-92d0-48ce-b466-c7f6ea90d2f4">
+<img width="250" alt="Screenshot 2024-04-26 at 10 10 29" src="https://github.com/dongnh311/MusicPlayerKotlinMultiPL/assets/40257252/864e624d-567f-44d3-98c9-5bc0e9e3f80a">
+<img width="250" alt="Screenshot 2024-04-26 at 10 10 29" src="https://github.com/dongnh311/MusicPlayerKotlinMultiPL/assets/40257252/ce133f79-f7d9-4990-b074-fb3dde5787dc">
+<img width="250" alt="Screenshot 2024-04-26 at 10 10 29" src="https://github.com/dongnh311/MusicPlayerKotlinMultiPL/assets/40257252/38feea4f-92d0-48ce-b466-c7f6ea90d2f4">
 
 Built-in libraries:
 * Compose
