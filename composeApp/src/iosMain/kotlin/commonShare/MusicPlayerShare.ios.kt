@@ -62,7 +62,9 @@ class IOsMusicPlayer : MusicPlayerManager {
     private var isRepeatAllMusic = false
 
     override fun initPlayer() {
-        avplayer = AVQueuePlayer()
+        if (avplayer == null) {
+            avplayer = AVQueuePlayer()
+        }
     }
 
     private var durationPlayed = 0L

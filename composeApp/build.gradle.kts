@@ -156,6 +156,10 @@ kotlin {
 
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+
+            // Media player for desktop
+            implementation(libs.vlcj.v482)
+            //implementation(libs.mp3spi)
             //implementation("com.google.firebase:firebase-admin:9.2.0")
             implementation(libs.firebase.java.sdk)
         }
