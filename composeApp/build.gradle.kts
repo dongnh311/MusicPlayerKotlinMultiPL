@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     id("kotlinx-serialization")
-    id("com.google.devtools.ksp") version "1.9.22-1.0.16"
+    id("com.google.devtools.ksp") version "1.9.23-1.0.20"
     id("de.jensklingenberg.ktorfit") version "1.12.0"
     id("com.google.gms.google-services")
 }
@@ -85,13 +85,16 @@ kotlin {
 
             // Add the dependency for the Firebase Authentication library
             // When using the BoM, you don't specify versions in Firebase library dependencies
+            //noinspection UseTomlInstead
             implementation("com.google.firebase:firebase-auth")
 
             // Also add the dependency for the Google Play services library and specify its version
-            implementation("com.google.android.gms:play-services-auth:21.0.0")
+            //noinspection UseTomlInstead
+            implementation("com.google.android.gms:play-services-auth:21.1.1")
 
             // Add the dependency for the Cloud Storage library
             // When using the BoM, you don't specify versions in Firebase library dependencies
+            //noinspection UseTomlInstead
             implementation("com.google.firebase:firebase-storage")
 
             implementation(libs.firebase.messaging.ktx)
