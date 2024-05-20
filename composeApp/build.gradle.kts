@@ -2,15 +2,17 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+    alias(libs.plugins.googleService)
     id("kotlinx-serialization")
-    id("com.google.devtools.ksp") version "1.9.23-1.0.20"
     id("de.jensklingenberg.ktorfit") version "1.12.0"
-    id("com.google.gms.google-services")
 }
 
 val ktorVersion = "2.3.6"
@@ -48,6 +50,9 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
             xcf.add(this)
+
+            // Required when using NativeSQLiteDriver
+            linkerOpts.add("-lsqlite3")
         }
 
         iosTarget.compilations.getByName("main") {
@@ -81,22 +86,26 @@ kotlin {
             implementation(libs.android.driver)
 
             // Import the BoM for the Firebase platform
-            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:32.8.0"))
+            implementation(project.dependencies.platform("com.google.firebase:firebase-bom:33.0.0"))
 
             // Add the dependency for the Firebase Authentication library
             // When using the BoM, you don't specify versions in Firebase library dependencies
             //noinspection UseTomlInstead
             implementation("com.google.firebase:firebase-auth")
 
-            // Also add the dependency for the Google Play services library and specify its version
-            //noinspection UseTomlInstead
-            implementation("com.google.android.gms:play-services-auth:21.1.1")
-
             // Add the dependency for the Cloud Storage library
             // When using the BoM, you don't specify versions in Firebase library dependencies
             //noinspection UseTomlInstead
             implementation("com.google.firebase:firebase-storage")
 
+            // Also add the dependency for the Google Play services library and specify its version
+            //noinspection UseTomlInstead
+            implementation("com.google.android.gms:play-services-auth:21.1.1")
+            implementation(libs.androidx.credentials)
+            implementation(libs.androidx.credentials.play.services.auth)
+            implementation(libs.google.googleid)
+
+            // Firebase message
             implementation(libs.firebase.messaging.ktx)
 
             // Log helper
@@ -152,6 +161,9 @@ kotlin {
             implementation(libs.firebase.auth)
             implementation(libs.firebase.storage)
             implementation(libs.firebase.database)
+
+            // Room
+            implementation(libs.androidx.room.runtime)
         }
         iosMain.dependencies {
             implementation(libs.native.driver)
@@ -251,6 +263,16 @@ dependencies {
         add("kspIosArm64", this)
         add("kspIosSimulatorArm64", this)
     }
+
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    debugImplementation(libs.compose.ui.tooling)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
@@ -270,3 +292,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().all {
     }
 }
 
+kotlin.targets.withType(KotlinNativeTarget::class.java) {
+    compilations["main"].kotlinOptions.freeCompilerArgs += listOf("-module-name", "${project.group}.custom-module-name")
+}

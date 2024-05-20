@@ -30,7 +30,7 @@ fun main() = application {
         e.printStackTrace()
     }
 
-    val windowState = WindowState(size = DpSize(width = 400.dp, height = 950.dp))
+    val windowState = WindowState(size = DpSize(width = 450.dp, height = 950.dp))
     Window(
         state = windowState,
         onCloseRequest = ::exitApplication,
